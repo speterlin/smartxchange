@@ -202,7 +202,7 @@ class User < ApplicationRecord
     self.package = Package.first
   end
 
-  def has_payment_info?
+  def has_braintree_info?
     self.braintree_customer_id
   end
 

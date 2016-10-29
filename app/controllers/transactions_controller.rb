@@ -3,7 +3,7 @@ class TransactionsController < ApplicationController
   before_action :user_has_premium?, only: [:new, :create]
 
   def new
-    if current_user.has_payment_info?
+    if current_user.has_braintree_info?
       gon.client_token = generate_client_token
     else
       render :new_customer
