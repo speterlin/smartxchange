@@ -4,8 +4,8 @@ class BoardsController < ApplicationController
   include BoardsHelper
 
   def show
-    @board = Board.first
-    # refactor sql query, right now orders by sum(value) then updated_at, also assuming all posts are associated with the first board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
+    @board = Board.find(params[:id])
+    # refactor sql query, right now orders by sum(value) then updated_at, also not filtering posts based on board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
     # coalesce because postgres does not return sum of empty column
     @posts = Post.find_by_sql("
       select p.*, v.votable_id, count(v.votable_id) as votes_count, coalesce(sum(v.value),0) as votes_value_sum
@@ -15,6 +15,17 @@ class BoardsController < ApplicationController
       order by votes_value_sum desc, p.updated_at desc")
       # only way to get includes to work on the array returned from the sql statement above, maybe refactor don't need all followers information
       ActiveRecord::Associations::Preloader.new.preload(@posts, [:owner, :comments, {comments: :owner}, :followers])
+    if @board.id == 2
+      @jobs_offered_posts = @posts.select {|post| post.category == 'Jobs-Offered'}
+      @jobs_wanted_posts = @posts.select {|post| post.category == 'Jobs-Wanted'}
+    else
+      @interest_posts = @posts.select {|post| post.category == 'Interest'}
+      @educational_posts = @posts.select {|post| post.category == 'Educational'}
+      @tutoring_posts = @posts.select {|post| post.category == 'Tutoring'}
+      @meetup_posts = @posts.select {|post| post.category == 'Meetup'}
+      @other_posts = @posts.select {|post| post.category == 'Other'}
+    end
+
     if user_count_unread_posts(current_user) > 0
       @notification = user_first_unread_post(current_user)
       # maybe refactor this and chat_room_mark_read to notification_mark_read, and delete notification

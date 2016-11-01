@@ -91,6 +91,19 @@
   height: 50px;
 }
 
+#post-category {
+  float:left;
+  clear:both;
+}
+
+ul {
+  padding: 0px;
+}
+
+ul.post-comments {
+  margin-left: 35px;
+}
+
 //800px for tablets and phones.
 @media all and (max-width:800px)
 {

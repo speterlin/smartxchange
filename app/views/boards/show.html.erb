@@ -4,13 +4,40 @@
 </div>
 <br>
 
-<div id="posts">
-    <ul>
-      <% if @posts.any?  %>
-        <%= render @posts %>
-      <% end %>
+
+<ul id="posts">
+  <% if @board.id == 2 %>
+    <ul id="jobs-offered">
+      <h3>Jobs Offered</h3>
+      <%= render @jobs_offered_posts if @jobs_offered_posts.any? %>
     </ul>
-</div>
+    <ul id="jobs-wanted">
+      <h3>Jobs Wanted</h3>
+      <%= render @jobs_wanted_posts if @jobs_wanted_posts.any? %>
+    </ul>
+  <% else %>
+    <ul id="interest">
+      <h3>Interest</h3>
+      <%= render @interest_posts if @interest_posts.any? %>
+    </ul>
+    <ul id="educational">
+      <h3>Educational</h3>
+      <%= render @educational_posts if @educational_posts.any? %>
+    </ul>
+    <ul id="tutoring">
+      <h3>Tutoring</h3>
+      <%= render @tutoring_posts if @tutoring_posts.any? %>
+    </ul>
+    <ul id="meetup">
+      <h3>Meetups</h3>
+      <%= render @meetup_posts if @meetup_posts.any? %>
+    </ul>
+    <ul id="other">
+      <h3>Other</h3>
+      <%= render @other_posts if @other_posts.any? %>
+    </ul>
+  <% end %>
+</ul>
 <br>
 
 <div class="post-form new">
@@ -19,6 +46,20 @@
     <textarea id="message-body" name="post[content]"></textarea>
     <input type="hidden" name="post[board_id]" value="<%= @board.id %>">
     <input type="submit" class="btn btn-primary send-post"  value="Post">
+    <div id="post-category">
+      Category: <select name="post[category]">
+        <% if @board.id == 2 %>
+          <option value="Jobs-Offered">Jobs Offered</option>
+          <option value="Jobs-Wanted">Jobs Wanted</option>
+        <% else %>
+          <option value="Interest">Interest</option>
+          <option value="Educational">Educational</option>
+          <option value="Tutoring">Tutoring</option>
+          <option value="Meetup">Meetup</option>
+          <option value="Other">Other</option>
+        <% end %>
+      </select>
+    </div>
   </form>
 </div>
 <br>
@@ -30,7 +71,7 @@
   })
   $('.edit-comment').each(function(index, value) {
     // regex and parents() hack to get post parent may need to change later
-    var post_id = $(value).parents().eq(5)[0].id.match(/[0-9]+/i)[0];
+    var post_id = $(value).parents().eq(4)[0].id.match(/[0-9]+/i)[0];
     addEventEditComment(value, post_id);
   })
   // probably need to refactor, location.reload(true) clears cache, currently every time page is loaded cached items are loaded and new, essentially script tag is being called twice

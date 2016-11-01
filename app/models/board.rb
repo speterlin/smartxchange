@@ -17,4 +17,5 @@ class Board < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :reads, as: :readable, dependent: :destroy
   has_many :readers, through: :reads, source: :user
+
 end

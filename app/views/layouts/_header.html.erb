@@ -25,12 +25,20 @@
             <% else %>
               <li><a href="<%= user_settings_path(current_user) %>"><%= image_tag('green-dot-0-exposure-0-contrast.png', alt: 'Inactive') %></a></li>
             <% end %>
-            <!-- maybe refactor later, especially yellow class  part -->
-            <% if board_has_unread?(Board.first) %>
-                <li id="board-header"><%= link_to "Board#{@unread_posts}", board_path + "#post-#{Post.first.id}", style: "color:yellow" %> </li>
-            <% else %>
-              <li id="board-header"><%= link_to "Board#{@unread_posts}", board_path %> </li>
-            <% end %>
+            <li class="board-header dropdown">
+              <%= link_to "Boards#{@unread_posts}", "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: "#{'color:yellow' if boards_have_unread?}"  %>
+              <ul class="dropdown-menu" style="background-color: #000;">
+                <!-- maybe refactor later, especially yellow class  part -->
+                <% Board.all.each do |board| %>
+                  <% @unread_board_posts = user_count_unread_board_notifications(current_user, board) > 0 ? " (#{user_count_unread_board_notifications(current_user, board)})" : "" %>
+                  <% if board_has_unread?(board) %>
+                    <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{@unread_board_posts}", board_path(board) + "#post-#{board.posts.first.id}", style: "color:yellow" %> </li>
+                  <% else %>
+                    <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{@unread_board_posts}", board_path(board) %> </li>
+                  <% end %>
+                <% end %>
+              </ul>
+            </li>
             <li><%= link_to "Network", users_path %></li>
             <li id="chat-rooms-header"><%= link_to "Conversations#{@unread_chat_rooms}", chat_rooms_path %></li>
             <li><%= link_to "My profile", user_path(current_user) %></li>

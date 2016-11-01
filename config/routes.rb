@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   resources :chat_rooms, only: [:new, :create, :show, :index, :destroy]
   resources :messages, only: [:create]
 
-  resource :board, only: [:show]
+  resources :boards, only: [:show]
   resources :posts, only: [:create, :update, :destroy] do
     post "upvote", on: :member
     post "downvote", on: :member

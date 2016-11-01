@@ -13,6 +13,24 @@ module UsersHelper
     user.posts_notifications.count
   end
 
+  # probably need to refactor this and method below
+  def user_count_unread_board_notifications(user, board)
+    count = 0
+    user.posts_notifications.each do |post_notification|
+      count += 1 if post_notification.notifiable.board_id == board.id
+    end
+    count
+  end
+
+  def user_boards_notifications(user)
+    boards_notifications = Hash.new
+    Board.all.each do |board|
+      # maybe refactor get rid of board title
+      boards_notifications[board.id] = [board.title, user_count_unread_board_notifications(user, board)]
+    end
+    boards_notifications
+  end
+
   def user_first_unread_post(user)
     user.posts_notifications.first
   end

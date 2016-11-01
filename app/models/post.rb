@@ -8,11 +8,13 @@
 #  board_id   :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  category   :string           not null
 #
 
 class Post < ApplicationRecord
-  validates_presence_of :owner, :board, :content
+  validates_presence_of :owner, :board, :content, :category
   validates :content, length: {minimum: 5, maximum: 255}
+  validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Other"]}
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true

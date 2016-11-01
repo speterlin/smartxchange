@@ -45,6 +45,7 @@ module PostsHelper
       WebNotificationsChannel.broadcast_to(
         notified,
         posts_notifications: user_count_unread_posts(notified),
+        boards_notifications: user_boards_notifications(notified),
         total_notifications: user_count_unread(notified),
         sound: true
       )

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161025144328) do
+ActiveRecord::Schema.define(version: 20161031093813) do
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string   "first_name"
@@ -189,6 +189,7 @@ ActiveRecord::Schema.define(version: 20161025144328) do
     t.integer  "board_id",   null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "category",   null: false
     t.index ["owner_id"], name: "index_posts_on_owner_id"
     t.index ["updated_at"], name: "index_posts_on_updated_at"
   end

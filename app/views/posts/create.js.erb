@@ -1,20 +1,7 @@
 $('.post-form.new textarea').val("")
-$('#posts ul').first().append("<%= j(render(:partial => 'post', :locals => {post: @post})) %>")
+$('#posts ul#<%= @post.category.downcase %>').append("<%= j(render(:partial => 'post', :locals => {post: @post})) %>")
 
 addEventEditPost($('#post-<%= @post.id %> .edit-post'));
 
-// Upvotes will always be 0 for new post, refactor both this and upvote use the same code, maybe sync with downvote as well
-var up_votes = 0;
-var prev_numbers = $('#post-<%= @post.id %>').prev().find('.vote-numbers').text().replace(/[(|)]/g,'').split(" ");
-var prev_up_votes = parseInt(prev_numbers[0]);
-
-var moved = false;
-while (up_votes >= prev_up_votes) {
-  $('#post-<%= @post.id %>').insertBefore($('#post-<%= @post.id %>').prev())
-  var prev_numbers = $('#post-<%= @post.id %>').prev().find('.vote-numbers').text().replace(/[(|)]/g,'').split(" ");
-  var prev_up_votes = parseInt(prev_numbers[0]);
-  if (!moved) {moved = true};
-}
-
-// to track post if it moves up, maybe refactor, used in upvote and downvote
-if (moved) {document.getElementById('post-<%= @post.id %>').scrollIntoView()};
+// Upvotes will always be 0 for new post
+<%= render partial: 'layouts/move_post_up', locals: { up_votes: 0, post: @post }  %>

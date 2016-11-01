@@ -1,0 +1,13 @@
+var prev_numbers = $('#post-<%= post.id %>').prev().find('.vote-numbers').text().replace(/[(|)]/g,'').split(" ");
+var prev_up_votes = parseInt(prev_numbers[0]);
+
+var moved = false;
+while (<%= up_votes %> >= prev_up_votes) {
+  $('#post-<%= post.id %>').insertBefore($('#post-<%= post.id %>').prev())
+  var prev_numbers = $('#post-<%= post.id %>').prev().find('.vote-numbers').text().replace(/[(|)]/g,'').split(" ");
+  var prev_up_votes = parseInt(prev_numbers[0]);
+  if (!moved) {moved = true};
+}
+
+// to track post if it moves up, maybe refactor, used in upvote and downvote
+if (moved) {document.getElementById('post-<%= post.id %>').scrollIntoView()};

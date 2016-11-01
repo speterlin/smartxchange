@@ -9,6 +9,13 @@ module BoardsHelper
     false
   end
 
+  def boards_have_unread?
+    Board.all.each do |board|
+      return true if board_has_unread?(board)
+    end
+    false
+  end
+
   def board_mark_read(board)
     current_user.reads.where(readable: board).first.update(updated_at: Time.now)
   end

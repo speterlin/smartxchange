@@ -11,6 +11,7 @@
     </p>
     <time datetime="<%= post.created_at %>">
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>
+      <span style="display: inline;" id="post-category-display" ><%= "• #{post.category}" %></span>
       <% if post.owner == current_user %>
         <%= link_to "• Edit", "#", class: "edit-post", :data => { :'post-id' => post.id, :clicked => "false" } %>
         <%= link_to "• Delete", post_path(post), remote: true, method: :delete, data: {confirm: "Are you sure you want to delete this post? All associated comments, votes, and follows will be destroyed as well."}  %>
@@ -27,11 +28,9 @@
     </time>
   </div>
   <% if post.comments.any? %>
-    <div class="post-comments">
-      <ul>
-        <%= render :partial => 'comments/comment', :collection => post.comments %>
-      </ul>
-    </div>
+    <ul class="post-comments">
+      <%= render :partial => 'comments/comment', :collection => post.comments %>
+    </ul>
   <% end %>
   <%= render :partial => 'comments/form', :locals => {post: post } %>
   <br>

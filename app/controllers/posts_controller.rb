@@ -99,7 +99,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:content, :board_id)
+    params.require(:post).permit(:content, :board_id, :category)
   end
 
   def vote_limit
