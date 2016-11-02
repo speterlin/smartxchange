@@ -40,7 +40,7 @@ class UserMailer < ApplicationMailer
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     add_campaign_to_footer(notifications_campaign)
     set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'smartXchange introduces Premium')
+    mail(to: email_with_name, subject: 'smartXchange enters its 4th month!')
   end
 
   def reset_password(user, password)
@@ -167,19 +167,19 @@ class UserMailer < ApplicationMailer
   end
 
   def notifications_campaign
-    "?utm_source=notifications_email&utm_medium=email&utm_campaign=october_notifications"
+    "?utm_source=notifications_email&utm_medium=email&utm_campaign=november_notifications"
   end
 
   def matches_campaign
-    "?utm_source=matches_email&utm_medium=email&utm_campaign=october_matches"
+    "?utm_source=matches_email&utm_medium=email&utm_campaign=november_matches"
   end
 
   def conversations_campaign
-    "?utm_source=conversation_email&utm_medium=email&utm_campaign=october_conversations"
+    "?utm_source=conversation_email&utm_medium=email&utm_campaign=november_conversations"
   end
 
   def reviews_campaign
-    "?utm_source=review_email&utm_medium=email&utm_campaign=october_reviews"
+    "?utm_source=review_email&utm_medium=email&utm_campaign=november_reviews"
   end
 
   def prevent_delivery_to_unsubscribed
