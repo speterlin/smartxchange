@@ -12,7 +12,7 @@
 class Board < ApplicationRecord
   validates_presence_of :title, :description
   validates :title, uniqueness: true, length: {minimum: 5, maximum: 50}
-  validates :description, length: {minimum: 5, maximum: 500}
+  validates :description, length: {minimum: 5, maximum: 600}
 
   has_many :posts, dependent: :destroy
   has_many :reads, as: :readable, dependent: :destroy

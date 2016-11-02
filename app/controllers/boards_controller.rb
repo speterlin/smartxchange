@@ -11,6 +11,7 @@ class BoardsController < ApplicationController
       select p.*, v.votable_id, count(v.votable_id) as votes_count, coalesce(sum(v.value),0) as votes_value_sum
       from posts p
       left join votes v on p.id = v.votable_id
+      where p.board_id = #{@board.id}
       group by p.id, v.votable_id
       order by votes_value_sum desc, p.updated_at desc")
       # only way to get includes to work on the array returned from the sql statement above, maybe refactor don't need all followers information
