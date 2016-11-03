@@ -144,26 +144,29 @@
 .user-reviews ul {
   padding: 0px;
 }
-// 25% and 80% seem to work best maybe refactor later
+// 33% and 90% seem to work best maybe refactor later
 .g-recaptcha {
   margin: auto;
-  width: 25%;
+  width: 33%;
 }
 
-//800px for tablets and phones.
+//800pxfor tablets
 @media all and (max-width:800px)
 {
-    .user-content.profile, .linkedin-content
-    {
-        display: block;
-        float: none;
-        width: 100%;
-
-    }
+  .user-content.profile, .linkedin-content
+  {
+      display: block;
+      float: none;
+      width: 100%;
+  }
+}
+//500px for phones
+@media all and (max-width:500px)
+{
     .reset-password input[type="submit"] {
       margin-top: 10px;
     }
     .g-recaptcha {
-      width: 80%;
+      width: 90%;
     }
 }
