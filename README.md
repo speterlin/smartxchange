@@ -16,6 +16,8 @@ Ruby on Rails basic application to allow users to find each other for the purpos
 
 * Geocoder for location
 
+* Recaptcha to protect against spam and abuse
+
 * Database using Sqlite3 for development and Postgres in production
 
 * Security test results from Acunetix, Beyond Security, and Detectify show medium to low vulnerability
