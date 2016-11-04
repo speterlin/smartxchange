@@ -1,8 +1,9 @@
 module UsersHelper
 
-  #false in quotations works on heroku but not local server
+  # maybe refactor and get rid of the below 3 methods since kind of redundant
+  # false in quotations works on heroku but not local server
   def user_count_unread(user)
-    user.notifications.where(read: false).count
+    user.notifications.count
   end
 
   def user_count_unread_chat_rooms(user)
