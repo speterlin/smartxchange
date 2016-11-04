@@ -15,19 +15,3 @@
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  user_id: 
-  subscribed_user_id: 
-  chat_id: 
-  identifier: 1
-  type: 
-  read: false
-
-two:
-  user_id: 
-  subscribed_user_id: 
-  chat_id: 
-  identifier: 1
-  type: 
-  read: false

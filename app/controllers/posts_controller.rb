@@ -46,12 +46,11 @@ class PostsController < ApplicationController
 
   def upvote
     @post = Post.includes(:votes).find(params[:id])
-    @vote = Vote.new(value: 1, owner_id: current_user.id)
-    @post.votes << @vote
+    vote = Vote.new(value: 1, owner_id: current_user.id)
+    @post.votes << vote
     @up_votes = @post.votes.sum(:value)
-    @total_votes = @post.votes.size
     post_create_follow(@post)
-    post_create_notifications(@vote, @post)
+    post_create_notifications(vote, @post)
     respond_to do |format|
       format.js
     end
@@ -59,12 +58,11 @@ class PostsController < ApplicationController
 
   def downvote
     @post = Post.includes(:votes).find(params[:id])
-    @vote = Vote.new(value: -1, owner_id: current_user.id)
-    @post.votes << @vote
+    vote = Vote.new(value: -1, owner_id: current_user.id)
+    @post.votes << vote
     @up_votes = @post.votes.sum(:value)
-    @total_votes = @post.votes.size
     post_destroy_follow(@post)
-    post_create_notifications(@vote, @post)
+    post_create_notifications(vote, @post)
     respond_to do |format|
       format.js
     end
@@ -72,8 +70,8 @@ class PostsController < ApplicationController
 
   def follow
     @post = Post.find(params[:id])
-    @follow = post_create_follow(@post)
-    post_create_notifications(@follow, @post)
+    follow = post_create_follow(@post)
+    post_create_notifications(follow, @post)
     respond_to do |format|
       format.js
     end
@@ -81,8 +79,8 @@ class PostsController < ApplicationController
 
   def unfollow
     @post = Post.find(params[:id])
-    @follow = post_destroy_follow(@post)
-    post_create_notifications(@follow, @post)
+    follow = post_destroy_follow(@post)
+    post_create_notifications(follow, @post)
     respond_to do |format|
       format.js
     end

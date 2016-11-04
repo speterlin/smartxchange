@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :current_user, :signed_in?
 
-  before_action :require_signed_in!, :set_timezone, :protect_from_host_header_attack
+  before_action :require_signed_in!, :set_timezone
 
   private
 
@@ -75,10 +75,6 @@ class ApplicationController < ActionController::Base
     flash[:success] = "Welcome to smartXchange. Complete your profile and start networking and practicing your language! Make sure to update your nationality so that your country's flag will be displayed to others when they talk with you"
     UserMailer.welcome_new(user).deliver_later
     redirect_to user_path(user)
-  end
-
-  def protect_from_host_header_attack
-    env['HTTP_HOST'] = default_url_options.fetch(:host, env['HTTP_HOST'])
   end
 
 end
