@@ -12,12 +12,14 @@
             <li>
               <div class="mail-user">
                 <div class="mail-user-img">
-                  <%= image_tag(attachments["#{match.name}.jpg"].url, alt: "#{match.name}") %>
-                  <%= image_tag(attachments["linkedin.png"].url, alt: "Linkedin") if match.linkedin %>
+                  <!-- maybe refactor sort of a hackjob to get it to work -->
+                  <div class="circle">
+                   <p><%= link_to image_tag(attachments["#{match.name}.jpg"].url, alt: "#{match.name}"), @match_urls[match.id][1] %></p>
+                  </div>
                 </div>
                 <div class="mail-user-text">
-                  <span style="text-transform:uppercase;font-weight: 700"> <%= "#{match.name}" %></span>, <%= "#{match.title}" %>
-                  <br><%= link_to "Notify", @match_urls[match.id], class: 'mail-btn' %>
+                  <span style="text-transform:uppercase;font-weight: 700"><%= "#{match.name}" %></span>, <%= "#{match.title}" %>
+                  <br><%= link_to "Notify", @match_urls[match.id][0], class: 'mail-btn' %>
                 </div>
               </div>
             </li>

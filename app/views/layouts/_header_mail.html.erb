@@ -13,15 +13,31 @@
     .mail-user {
       overflow:auto;
       display: table;
-      height: 55px;
       margin-top: 15px;
       padding-left: 10px;
     }
-    /*maybe refactor, width is so images don't overlap if there is linkedin*/
+    /*maybe refactor, the below 3 methods are somewhat of a hack - table-cell within table-cell etc */
     .mail-user-img {
       display:table-cell;
       vertical-align:middle;
       width: 50px;
+    }
+    .mail-user-img .circle {
+      background-color: #000;
+      border-radius: 50%;
+      overflow: hidden;
+      height: 50px;
+      width: 50px;
+      display: table;
+    }
+    .mail-user-img .circle p {
+      display: table-cell;
+      vertical-align: middle;
+    }
+    /*maybe refactor, display block to get rid of space around img within mail-user-img and margin auto to get image to center horizontally*/
+    .mail-user-img .circle p img {
+      display: block;
+      margin: auto;
     }
     .mail-user-text {
       display:table-cell;

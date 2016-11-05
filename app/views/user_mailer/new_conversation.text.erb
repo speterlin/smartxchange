@@ -2,6 +2,5 @@ Dear <%= @user.name %>,
 ===============================================
 
   <%= image_tag(attachments["#{@initiator.name}.jpg"].url, alt: "#{@initiator.name}") %>
-  <%= image_tag(attachments["linkedin.png"].url, alt: "Linkedin") if @initiator.linkedin %>
     <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@initiator.name}" %></span>, <%= "#{@initiator.title}, has started #{a_or_an(@initiator.language)} " %><span style="text-transform:uppercase;font-weight: 700;"><%= "#{@initiator.language}"%></span><%=" conversation with you" %>
     <br><%= link_to "View Conversation", @chat_room_url, class: 'mail-btn' %>

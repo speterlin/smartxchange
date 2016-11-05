@@ -60,8 +60,8 @@ class UserMailer < ApplicationMailer
     if @matches.any?
       @match_urls = Hash.new
       @matches.each do |match|
-        fetch_user_image_and_linkedin(match)
-        @match_urls[match.id] = @url_email_match + match.id.to_s + matches_campaign
+        fetch_user_image(match)
+        @match_urls[match.id] = [@url_email_match + match.id.to_s + matches_campaign, "http://www.smartxchange.es/users/#{match.id}" + matches_campaign]
       end
     end
     @url = "http://www.smartxchange.es/login" + matches_campaign
@@ -76,7 +76,7 @@ class UserMailer < ApplicationMailer
     @user = matched_user
     # not using add_campaign since this is less lines of code, only need to add campaign to the view profile link
     @url_interested_user = "http://www.smartxchange.es/users/#{@interested_user.id}#{matches_campaign}"
-    fetch_user_image_and_linkedin(@interested_user)
+    fetch_user_image(@interested_user)
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "#{@interested_user.name} wants to practice #{@interested_user.language}")
@@ -108,7 +108,7 @@ class UserMailer < ApplicationMailer
     @initiator = chat_room.initiator
     # not get @chat_room since for now chat_room is always initiated in initiator's language (to practice)
     @chat_room_url = "http://www.smartxchange.es/chat_rooms/#{chat_room.id}" + conversations_campaign
-    fetch_user_image_and_linkedin(@initiator)
+    fetch_user_image(@initiator)
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
@@ -119,7 +119,7 @@ class UserMailer < ApplicationMailer
     @sender = message.sender
     @chat_room = message.chat_room
     @chat_room_url = "http://www.smartxchange.es/chat_rooms/#{message.chat_room.id}" + conversations_campaign
-    fetch_user_image_and_linkedin(@sender)
+    fetch_user_image(@sender)
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
@@ -131,7 +131,7 @@ class UserMailer < ApplicationMailer
     @chat_room = chat_room
     @peer_review_hash = Rails.application.message_verifier(:peer_review).generate(@other_user.id)
     @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}/reviews/new#{reviews_campaign}&chat_room_id=#{@chat_room.id}&id=#{@peer_review_hash}"
-    fetch_user_image_and_linkedin(@other_user)
+    fetch_user_image(@other_user)
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "Please review #{@other_user.name} in your #{@chat_room.title} conversation together")
@@ -142,7 +142,7 @@ class UserMailer < ApplicationMailer
     @other_user = other_user
     @review = review
     @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}#{reviews_campaign}#review-#{@review.id}"
-    fetch_user_image_and_linkedin(@other_user)
+    fetch_user_image(@other_user)
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "#{@other_user.name} has left you a review")
@@ -190,7 +190,7 @@ class UserMailer < ApplicationMailer
     @unsubscribe_hash = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
   end
 
-  def fetch_user_image_and_linkedin(user)
+  def fetch_user_image(user)
     # in production .url works as url should, but in development .url works as path and vice versa
     if Rails.env.production?
       # maybe refactor, if no image uploaded, need to fetch the image from default_url method, which for some reason wasn't finding the file - Errno::ENOENT: No such file or directory @ rb_sysopen - http://www.smartxchange.es/images/fallback/user/small_thumb_default.png  even though the file exists and the link works (also wasn't able to use Rails.root since prepends 'app' to path), but this method works with remote fetch
@@ -201,7 +201,6 @@ class UserMailer < ApplicationMailer
     else
       attachments.inline["#{user.name}.jpg"] = File.read("#{Rails.root}/public/#{user.image.small_thumb.url}")
     end
-    attachments.inline['linkedin.png'] = File.read("#{Rails.root}/app/assets/images/linkedin-button-small.png") if user.linkedin
   end
 
 end

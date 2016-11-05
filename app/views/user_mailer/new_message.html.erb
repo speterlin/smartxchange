@@ -5,8 +5,9 @@
     <h4>Dear <%= @user.name %>,</h4>
       <div class="mail-user">
         <div class="mail-user-img">
-          <%= image_tag(attachments["#{@sender.name}.jpg"].url, alt: "#{@sender.name}") %>
-          <%= image_tag(attachments["linkedin.png"].url, alt: "Linkedin") if @sender.linkedin %>
+          <div class="circle">
+            <p><%= image_tag(attachments["#{@sender.name}.jpg"].url, alt: "#{@sender.name}") %></p>
+          </div>
         </div>
         <div class="mail-user-text">
           <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@sender.name}" %></span>, <%= "#{@sender.title}, has sent you a message in your " %><span style="text-transform:uppercase;font-weight: 700;"><%= "#{@chat_room.title}"%></span><%=" conversation" %>

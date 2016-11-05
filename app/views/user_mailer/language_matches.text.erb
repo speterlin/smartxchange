@@ -6,10 +6,9 @@ Are you interested in practicing <%= @user.language %> with any of the following
   <ul>
     <% @matches.each do |match| %>
         <li>
-          <%= image_tag(attachments["#{match.name}.jpg"].url, alt: "#{match.name}") %>
-          <%= image_tag(attachments["linkedin.png"].url, alt: "Linkedin") if match.linkedin %>
+          <%= link_to image_tag(attachments["#{match.name}.jpg"].url, alt: "#{match.name}"), @match_urls[match.id][1] %>
           <%= "#{match.name}, #{match.title}" %>
-          <%= link_to "Notify", @match_urls[match.id], class: 'mail-btn' %>
+          <%= link_to "Notify", @match_urls[match.id][0], class: 'mail-btn' %>
         </li>
     <% end %>
   </ul>

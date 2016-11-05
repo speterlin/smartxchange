@@ -5,8 +5,9 @@
     <h4>Dear <%= @user.name %>,</h4>
       <div class="mail-user">
         <div class="mail-user-img">
-          <%= image_tag(attachments["#{@initiator.name}.jpg"].url, alt: "#{@initiator.name}") %>
-          <%= image_tag(attachments["linkedin.png"].url, alt: "Linkedin") if @initiator.linkedin %>
+          <div class="circle">
+            <p><%= image_tag(attachments["#{@initiator.name}.jpg"].url, alt: "#{@initiator.name}") %></p>
+          </div>
         </div>
         <div class="mail-user-text">
           <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@initiator.name}" %></span>, <%= "#{@initiator.title}, has started #{a_or_an(@initiator.language)} " %><span style="text-transform:uppercase;font-weight: 700;"><%= "#{@initiator.language}"%></span><%=" conversation with you" %>
