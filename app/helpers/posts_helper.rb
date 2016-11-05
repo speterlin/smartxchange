@@ -52,20 +52,20 @@ module PostsHelper
     end
   end
 
-  def post_create_follow(post)
-    return if post.followers.include?(current_user)
-    return if post.owner == current_user
-    follow = Follow.new(follower_id: current_user.id)
+  def post_create_follow(post, user)
+    return if post.followers.include?(user)
+    return if post.owner == user
+    follow = Follow.new(follower_id: user.id)
     post.follows << follow
     follow
   end
 
-  def post_destroy_follow(post)
-    return unless post.followers.include?(current_user)
+  def post_destroy_follow(post, user)
+    return unless post.followers.include?(user)
     # shouldn't be a problem since owner can't be follower but a precautionary line of code
-    return if post.owner == current_user
+    return if post.owner == user
     # should be only 1 follows per person per post, may need to refactor
-    follow = post.follows.where(follower_id: current_user.id).first
+    follow = post.follows.where(follower_id: user.id).first
     follow.destroy
     follow
   end

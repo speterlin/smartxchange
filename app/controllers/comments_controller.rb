@@ -12,7 +12,7 @@ class CommentsController < ApplicationController
     if @comment.save
       # assuming that the comment is for a post, will have to add code if add comment on a comment
       @post = @comment.commentable
-      post_create_follow(@post)
+      post_create_follow(@post, current_user)
       post_create_notifications(@comment, @post)
       respond_to do |format|
         format.js
