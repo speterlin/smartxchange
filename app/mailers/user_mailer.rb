@@ -2,7 +2,7 @@ class UserMailer < ApplicationMailer
   # Call this in rails console to email everyone without redirect_to, make sure to do <9 every 10min after initial batch due to smtp settings
   # @users = User.all
   # @users[0..48].each do |user|
-  #     UserMailer.monthly_update(user, user_count_unread(user)).deliver_now
+  #     UserMailer.monthly_update(user, user.notifications.count).deliver_now
   # end
 
   # for using a_or_an method in emails

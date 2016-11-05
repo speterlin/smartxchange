@@ -37,20 +37,19 @@ module ChatRoomsHelper
       )
     end
     # using message.sender in code below because of potential conflict if chatbot is responding
-    # need to include UsersHelper in order to use the below methods, for now everytime I include ChatRoomsHelper also include UsersHelper
     if !@notification.nil?
       WebNotificationsChannel.broadcast_to(
         recipient,
-        chat_rooms_notifications: user_count_unread_chat_rooms(recipient),
-        total_notifications: user_count_unread(recipient),
+        chat_rooms_notifications: recipient.chat_rooms_notifications.count,
+        total_notifications: recipient.notifications.count,
         sound: true
       )
       # if sending from this chat room mark last notification from sender as read
       chat_room_mark_read(message.chat_room, message.sender)
       WebNotificationsChannel.broadcast_to(
         message.sender,
-        chat_rooms_notifications: user_count_unread_chat_rooms(message.sender),
-        total_notifications: user_count_unread(message.sender),
+        chat_rooms_notifications: message.sender.chat_rooms_notifications.count,
+        total_notifications: message.sender.notifications.count,
         sound: false
       )
     end

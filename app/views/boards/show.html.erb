@@ -78,9 +78,9 @@
     <% if @notification.sourceable_type == "Comment" %>
       $('#comment-<%= @notification.sourceable_id %>').css("background-color", "yellow");
     <% elsif @notification.sourceable_type == "Vote" %>
-      $('#post-<%= @notification.notifiable_id %> .post-content .vote-numbers').css("background-color", "yellow");
+      $('#post-<%= @notification.notifiable_id %> .vote-numbers').css("background-color", "yellow");
     <% elsif @notification.sourceable_type == "Follow" %>
-      $('#post-<%= @notification.notifiable_id %> .post-content time .post-followers').css("background-color", "yellow")
+      $('#post-<%= @notification.notifiable_id %> .post-followers').css("background-color", "yellow")
     <% elsif @notification.sourceable_type == "Post" %>
       //these are the two elements that can change if a post is updated
       $('#post-<%= @notification.notifiable_id %> .post-text').css("background-color", "yellow");
@@ -89,7 +89,7 @@
     // only way to make it work is with setTimeout, prefer scrollIntoView over window.location.href
     setTimeout(function(){document.getElementById('post-<%= @notification.notifiable_id %>').scrollIntoView()},500);
   <% end %>
-  if (window.location.href.indexOf("#post-") != -1) {
+  if (window.location.href.indexOf("#post-") != -1 && <%= !@notification %>) {
     var post = window.location.href.split('#')[1]
     $('#'+post+' .post-content').css("background-color", "yellow");
   }

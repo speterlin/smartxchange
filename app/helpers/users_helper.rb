@@ -1,39 +1,28 @@
 module UsersHelper
 
-  # maybe refactor and get rid of the below 3 methods since kind of redundant
-  # false in quotations works on heroku but not local server
-  def user_count_unread(user)
-    user.notifications.count
-  end
-
-  def user_count_unread_chat_rooms(user)
-    user.chat_rooms_notifications.count
-  end
-
-  def user_count_unread_posts(user)
-    user.posts_notifications.count
-  end
-
-  # probably need to refactor this and method below
+  # probably need to refactor the below 3 methods, this method has a bug - counting twice if there's a match
   def user_count_unread_board_notifications(user, board)
     count = 0
     user.posts_notifications.each do |post_notification|
-      count += 1 if post_notification.notifiable.board_id == board.id
+      # refactor, hack job for now have to add where read == false since association is lagging
+      count += 1 if post_notification.notifiable.board_id == board.id && post_notification.read == false
     end
     count
   end
 
-  def user_boards_notifications(user)
+  def user_first_unread_board_notification(user, board)
+    user.posts_notifications.each do |post_notification|
+      return post_notification if post_notification.notifiable.board_id == board.id
+    end
+  end
+
+  def user_boards_notifications_with_title(user)
     boards_notifications = Hash.new
     Board.all.each do |board|
-      # maybe refactor get rid of board title
+      # maybe refactor get rid of board title, need for web notifications channel displaying in header
       boards_notifications[board.id] = [board.title, user_count_unread_board_notifications(user, board)]
     end
     boards_notifications
-  end
-
-  def user_first_unread_post(user)
-    user.posts_notifications.first
   end
 
   def user_convert_language_level(rating)

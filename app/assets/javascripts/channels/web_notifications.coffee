@@ -17,9 +17,11 @@ App.web_notifications = App.cable.subscriptions.create "WebNotificationsChannel"
       $('#chat-rooms-header a')[0].innerHTML = if data['chat_rooms_notifications'] > 0 then "Conversations (#{data['chat_rooms_notifications']})" else "Conversations"
     if (typeof data['posts_notifications'] != 'undefined')
       $('.board-header a')[0].innerHTML = if data['posts_notifications'] > 0 then "Boards (#{data['posts_notifications']})" else "Boards"
+      $('.dropdown-toggle').css("color", "yellow")
     if (typeof data['boards_notifications'] != 'undefined')
       for k,v of data['boards_notifications']
         $('#board-'+k+'-header a')[0].innerHTML = if v[1] > 0 then "#{v[0]} (#{v[1]})" else "#{v[0]}"
+        $('#board-'+k+'-header a').css("color", "yellow") if v[1] > 0
     if (typeof data['total_notifications'] != 'undefined')
       $('title')[0].innerHTML = if data['total_notifications'] > 0 then "(#{data['total_notifications']}) smartXchange" else "smartXchange"
     $('#chatAudio')[0].play() if data['sound']

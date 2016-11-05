@@ -7,8 +7,8 @@
   <!-- title code -->
     <!-- maybe refactor and move this into an application controller helper method, maybe do count_total notifications for title since may add notifications for other things -->
     <% if signed_in? %>
-      <% count_unread_chat_rooms = user_count_unread_chat_rooms(current_user)  %>
-      <% count_unread_posts = user_count_unread_posts(current_user)  %>
+      <% count_unread_chat_rooms = current_user.chat_rooms_notifications.count  %>
+      <% count_unread_posts = current_user.posts_notifications.count  %>
       <% @unread_chat_rooms = count_unread_chat_rooms > 0 ? " (#{count_unread_chat_rooms})" : ""  %>
       <% @unread_posts = count_unread_posts > 0 ? " (#{count_unread_posts})" : "" %>
       <% title = (count_unread_chat_rooms + count_unread_posts > 0) ? "(#{count_unread_chat_rooms + count_unread_posts}) smartXchange" : "smartXchange" %>

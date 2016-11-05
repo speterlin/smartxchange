@@ -1,11 +1,8 @@
 task :send_weekly_notifications => :environment do
-  def user_count_unread(user)
-    user.notifications.where(read: false).count
-  end
   @users = User.all
   @users.each do |user|
-    if user_count_unread(user) > 0
-      UserMailer.weekly_notifications(user, user_count_unread(user)).deliver
+    if user.notifications.count > 0
+      UserMailer.weekly_notifications(user, user.notifications.count).deliver
     end
   end
 end

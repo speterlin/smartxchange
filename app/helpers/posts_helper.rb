@@ -40,13 +40,13 @@ module PostsHelper
         sourceable_id: vote_or_comment_or_follow_or_post_update.id
       )
     end
-    # maybe refactor, right now need to include UserHelper to call the below methods, could just call user.posts_notifications.where(read: false).count etc
+    # maybe refactor, right now need to include UserHelper to call the below method
     if !@notification.nil?
       WebNotificationsChannel.broadcast_to(
         notified,
-        posts_notifications: user_count_unread_posts(notified),
-        boards_notifications: user_boards_notifications(notified),
-        total_notifications: user_count_unread(notified),
+        posts_notifications: notified.posts_notifications.count,
+        boards_notifications: user_boards_notifications_with_title(notified),
+        total_notifications: notified.notifications.count,
         sound: true
       )
     end

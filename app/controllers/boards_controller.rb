@@ -27,8 +27,8 @@ class BoardsController < ApplicationController
       @other_posts = @posts.select {|post| post.category == 'Other'}
     end
 
-    if user_count_unread_posts(current_user) > 0
-      @notification = user_first_unread_post(current_user)
+    if user_count_unread_board_notifications(current_user, @board) > 0
+      @notification = user_first_unread_board_notification(current_user, @board)
       # maybe refactor this and chat_room_mark_read to notification_mark_read, and delete notification
       post_mark_read(@notification)
     end
