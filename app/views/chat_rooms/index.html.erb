@@ -1,6 +1,8 @@
-<h1> My Conversations </h1>
 <% unless @chat_rooms.empty? %>
-  <div id="chat-rooms">
-    <%= render @chat_rooms %>
-  </div>
+  <h1>My Conversations</h1>
+    <div id="chat-rooms">
+      <%= render @chat_rooms %>
+    </div>
+<% else %>
+  <h4>No conversations to display</h4>
 <% end %>

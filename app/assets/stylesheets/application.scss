@@ -15,7 +15,8 @@
  // *= require_self
  // *= require_tree
  */
-
+// sets website to collapse to either 900px or 1000px depending on device
+$grid-float-breakpoint: 1000px;
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
@@ -158,7 +159,8 @@ h1,h2,h3,h4,h5,h6 {
   color:#fff;
   background-color:#fec503
 }
-@media (min-width:768px) {
+// change to 1000px since now collapsing at 1000px instead of 768px
+@media (min-width:1000px) {
   .navbar-default {
     background-color: #8fb8e2;
     padding:0px;

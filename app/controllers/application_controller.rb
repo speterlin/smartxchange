@@ -28,6 +28,8 @@ class ApplicationController < ActionController::Base
   end
 
   def normal_sign_in
+    @random_match = current_user.sort_method[0..24].sample
+    flash[:notice] = "Welcome back #{current_user.name}! Have you tried messaging <a href=\"#{user_path(@random_match)}\">#{@random_match.name}, #{@random_match.title}</a>?"
     redirect_to(session[:return_to] || users_path)
     session[:return_to] = nil
   end
