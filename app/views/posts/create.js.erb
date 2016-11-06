@@ -5,3 +5,6 @@ addEventEditPost($('#post-<%= @post.id %> .edit-post'));
 
 // Upvotes will always be 0 for new post
 <%= render partial: 'layouts/move_post_up', locals: { up_votes: 0, post: @post }  %>
+
+//need this since if post doesn't move page doesn't scroll to new post
+document.getElementById('post-<%= @post.id %>').scrollIntoView()
