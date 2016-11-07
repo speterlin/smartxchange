@@ -31,7 +31,20 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+
+  setup do
+  end
+
+  test "Users set by fixtures" do
+    assert_equal(4, User.count)
+  end
+
+  test "test chat_bot? method" do
+    assert_equal(false, User.first.chat_bot?)
+  end
+
+  test "test sort_method" do
+    assert_equal(3, User.first.sort_method[0..2].count)
+  end
+
 end

@@ -54,8 +54,8 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if @user.update(user_params)
       # maybe refactor so array isn't generated everytime
-      @random_match = @user.sort_method[0..24].sample
-      messages = ["Now it's time for some networking", "Bored? Post something to the Board and see how many votes it can get :)", "Have you tried messaging <a href=\"#{user_path(@random_match)}\">#{@random_match.name}, #{@random_match.title}</a>?"]
+      random_match = @user.sort_method[0..24].sample
+      messages = ["Now it's time for some networking", "Bored? Post something to the Board and see how many votes it can get :)", "Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a>?"]
       flash[:success] = "Profile updated! " + messages.sample
       redirect_to user_path(@user)
     else

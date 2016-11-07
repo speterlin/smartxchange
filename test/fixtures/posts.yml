@@ -20,3 +20,9 @@
 # column: value
 #
 # column: value
+post:
+ id: 1
+ content: example post
+ owner_id: 1
+ board_id: 1
+ category: Interest

@@ -36,6 +36,50 @@
 #
 
 # column: value
+Sebastian:
+  id: 1
+  email: speterlin12@gmail.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  session_token: <%= SecureRandom.urlsafe_base64(16) %>
+  name: Sebastian Peterlin
+  language: Spanish
+  language_level: 3
+  title: Co-founder of smartXchange, IMBA 2016 Candidate at IE Business School
+  age: 27
+  nationality: American
+Patsy:
+  id: 2
+  email: example1@gmail.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  session_token: <%= SecureRandom.urlsafe_base64(16) %>
+  name: Patsy Purdy
+  language: Spanish
+  language_level: 4
+  title: English teacher, Masters in Communications graduate
+  age: 26
+  nationality: Algerian
+Abigale:
+  id: 3
+  email: example2@gmail.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  session_token: <%= SecureRandom.urlsafe_base64(16) %>
+  name: Abigale Jacobson
+  language: Spanish
+  language_level: 5
+  title: Dentistry student at Complutense University of Madrid
+  age: 24
+  nationality: Danish
+Coty:
+  id: 4
+  email: example3@gmail.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  session_token: <%= SecureRandom.urlsafe_base64(16) %>
+  name: Coty Smitham
+  language: Spanish
+  language_level: 2
+  title: PhD in Mathematical Science at Complutense University of Madrid
+  age: 28
+  nationality: Canadian
 #
 
 #  column: value
