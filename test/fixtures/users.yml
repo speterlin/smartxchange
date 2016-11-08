@@ -80,6 +80,41 @@ Coty:
   title: PhD in Mathematical Science at Complutense University of Madrid
   age: 28
   nationality: Canadian
+Person_of_interest:
+  id: 5
+  email: example4@gmail.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  session_token: <%= SecureRandom.urlsafe_base64(16) %>
+  name: Important
+  language: English
+  language_level: 4
+  title: Professor at IE Business School
+  age: 45
+  nationality: Spanish
+  person_of_interest: true
+Chat_bot:
+  id: 6
+  email: example5@gmail.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  session_token: <%= SecureRandom.urlsafe_base64(16) %>
+  name: UK Trivia Chat_bot
+  language: English
+  language_level: 5
+  title: Play me in trivia about the United Kingdom
+  age: 0
+  nationality: English
+Tutor:
+  id: 7
+  email: example6@gmail.com
+  password_digest: <%= BCrypt::Password.create('password') %>
+  session_token: <%= SecureRandom.urlsafe_base64(16) %>
+  name: Tutor
+  language: Spanish
+  language_level: 5
+  title: I will help you in Spanish
+  age: 36
+  nationality: Spanish
+  tutor: true
 #
 
 #  column: value

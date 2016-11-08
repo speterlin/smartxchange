@@ -20,3 +20,9 @@
 # column: value
 #
 # column: value
+comment:
+  id: 1
+  content: example comment
+  owner_id: 1
+  commentable_type: Post
+  commentable_id: 1

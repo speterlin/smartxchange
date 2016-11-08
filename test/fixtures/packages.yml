@@ -19,3 +19,11 @@
 # column: value
 #
 # column: value
+standard:
+  classification: Standard
+  description: Access to the Platform
+  price: 0
+premium:
+  classification: Premium
+  description: Access to conversations with persons of interest (Professors, Managers, CEOs, artists, etc), language learning aids (chatbots, tutoring), and tailored services to meet your needs!
+  price: 4.99

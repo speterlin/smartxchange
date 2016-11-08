@@ -11,3 +11,8 @@
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+chat_room:
+  id: 1
+  title: Spanish
+  initiator_id: 1
+  recipient_id: 2
