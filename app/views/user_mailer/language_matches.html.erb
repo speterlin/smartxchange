@@ -18,8 +18,8 @@
                   </div>
                 </div>
                 <div class="mail-user-text">
-                  <span style="text-transform:uppercase;font-weight: 700"><%= "#{match.name}" %></span>, <%= "#{match.title}" %>
-                  <br><%= link_to "Notify", @match_urls[match.id][0], class: 'mail-btn' %>
+                  <p><span class="bold-uppercase"><%= "#{match.name}" %></span>, <%= "#{match.title}" %></p>
+                  <%= link_to "Notify", @match_urls[match.id][0], class: 'mail-btn' %>
                 </div>
               </div>
             </li>

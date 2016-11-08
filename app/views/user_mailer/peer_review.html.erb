@@ -11,8 +11,8 @@
           </div>
         </div>
         <div class="mail-user-text">
-          Please review  <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@other_user.name}" %></span><%= " in your #{@chat_room.title} conversation together" %>
-          <br><%= link_to "Review", @peer_review_url, class: 'mail-btn' %>
+          <p>Please review  <span class="bold-uppercase"> <%= "#{@other_user.name}" %></span><%= " in your #{@chat_room.title} conversation together" %></p>
+          <%= link_to "Review", @peer_review_url, class: 'mail-btn' %>
         </div>
       </div>
   </body>

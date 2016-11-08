@@ -10,8 +10,8 @@
           </div>
         </div>
         <div class="mail-user-text">
-          <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@sender.name}" %></span>, <%= "#{@sender.title}, has sent you a message in your " %><span style="text-transform:uppercase;font-weight: 700;"><%= "#{@chat_room.title}"%></span><%=" conversation" %>
-          <br><%= link_to "View Conversation", @chat_room_url, class: 'mail-btn' %>
+          <p><span class="bold-uppercase"> <%= "#{@sender.name}" %></span>, <%= "#{@sender.title}, has sent you a message in your " %><span class="bold-uppercase"><%= "#{@chat_room.title}"%></span><%=" conversation" %></p>
+          <%= link_to "View Conversation", @chat_room_url, class: 'mail-btn' %>
         </div>
       </div>
   </body>

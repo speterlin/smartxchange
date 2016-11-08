@@ -10,8 +10,8 @@
           </div>
         </div>
         <div class="mail-user-text">
-          <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@other_user.name}" %></span><%= " has left you a review of your" %> <span style="text-transform:uppercase;font-weight: 700;"><%= "#{@review.language}" %></span> <%= "in your #{@review.chat_room.title} conversation together" %>
-          <br><%= link_to "See Review", @peer_review_url, class: 'mail-btn' %>
+          <p><span class="bold-uppercase"> <%= "#{@other_user.name}" %></span><%= " has left you a review of your" %> <span class="bold-uppercase"><%= "#{@review.language}" %></span> <%= "in your #{@review.chat_room.title} conversation together" %></p>
+          <%= link_to "See Review", @peer_review_url, class: 'mail-btn' %>
         </div>
       </div>
   </body>

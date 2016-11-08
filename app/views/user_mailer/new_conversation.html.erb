@@ -10,8 +10,8 @@
           </div>
         </div>
         <div class="mail-user-text">
-          <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@initiator.name}" %></span>, <%= "#{@initiator.title}, has started #{a_or_an(@initiator.language)} " %><span style="text-transform:uppercase;font-weight: 700;"><%= "#{@initiator.language}"%></span><%=" conversation with you" %>
-          <br><%= link_to "View Conversation", @chat_room_url, class: 'mail-btn' %>
+          <p><span class="bold-uppercase"> <%= "#{@initiator.name}" %></span>, <%= "#{@initiator.title}, has started #{a_or_an(@initiator.language)} " %><span class="bold-uppercase"><%= "#{@initiator.language}"%></span><%=" conversation with you" %></p>
+          <%= link_to "View Conversation", @chat_room_url, class: 'mail-btn' %>
         </div>
       </div>
   </body>

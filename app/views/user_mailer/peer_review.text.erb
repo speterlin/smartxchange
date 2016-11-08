@@ -2,5 +2,5 @@ Dear <%= @user.name %>,
 ===============================================
     You and <%= @other_user.name %> have exchanged more than <%= @chat_room.messages.size %> messages.<br>
       <%= image_tag(attachments["#{@other_user.name}.jpg"].url, alt: "#{@other_user.name}") %>
-        Please review  <span style="text-transform:uppercase;font-weight: 700;"> <%= "#{@other_user.name}" %></span><%= " in your #{@chat_room.title} conversation together" %>
-        <br><%= link_to "Review", @peer_review_url, class: 'mail-btn' %>
+        Please review  <%= "#{@other_user.name}" %><%= " in your #{@chat_room.title} conversation together" %>
+        <%= link_to "Review", @peer_review_url, class: 'mail-btn' %>
