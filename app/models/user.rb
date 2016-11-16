@@ -26,6 +26,7 @@
 #  braintree_customer_id :string
 #  person_of_interest    :boolean          default(FALSE), not null
 #  tutor                 :boolean          default(FALSE), not null
+#  interests             :text
 #
 
 #active is for instantaneous feature Tati talked about
@@ -40,7 +41,9 @@ class User < ApplicationRecord
   validates :language_level, numericality: {only_integer: true} #may change this since it's a dropdown
   # to prevent nil values in boolean field, according to stackoverflow
   validates :person_of_interest, :tutor, :inclusion => {:in => [true, false]}
+  validates :interests, length: {maximum: 10, message: "Only 10 interests allowed"}
   mount_uploader :image, AvatarUploader
+  serialize :interests, Array
 
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
   has_many :created_notifications, :foreign_key => :notifier_id, class_name: 'Notification', dependent: :destroy
@@ -183,6 +186,7 @@ class User < ApplicationRecord
     sort = (self.language_level.to_f + base_user.language_level.to_f) / denominator
     # using latitude in case there was a failed geocode on location, precaution but better this way
     sort *= 1.5 if base_user.latitude && self.latitude && base_user.distance_from(self) < 50
+    base_user.interests.each {|interest| sort *= 1.1 if self.interests.include?(interest)}
     sort
   end
 

@@ -187,20 +187,164 @@
 
 <div class="row">
 
-    <!-- User Reviews -->
-    <div class="user-reviews">
-      <br><br><h4>Reviews</h4>
-      <% if @user.reviews.any? %>
-        <ul>
-          <% @user.reviews.each do |review| %>
-          <li id="review-<%= review.id %>"><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_url(review.reviewer) %></li>
-          <% end %>
-        </ul>
-      <% else %>
-          <h5>No Reviews to display<%= ", exchange over 100 messages with another user to get reviews" if @user == current_user %></h5>
+  <!-- User Interests -->
+  <div class="user-interests">
+    <br><h4>Interests <%= "(Choose 10)" if @user == current_user %></h4>
+    <% if @user == current_user %>
+      <form action="<%= user_url(@user) %>" method="post">
+        <input type="hidden" name="_method" value="patch">
+        <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+        <div class="user-interests-column">
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-1" name="user[interests][]" value="1" <%= 'checked' if @user.interests.include?("1") %> >
+            <label for="user-interests-1"><%= user_convert_interests("1") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-2" name="user[interests][]" value="2" <%= 'checked' if @user.interests.include?("2") %> >
+            <label for="user-interests-2"><%= user_convert_interests("2") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-3" name="user[interests][]" value="3" <%= 'checked' if @user.interests.include?("3") %> >
+            <label for="user-interests-3"><%= user_convert_interests("3") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-4" name="user[interests][]" value="4" <%= 'checked' if @user.interests.include?("4") %> >
+            <label for="user-interests-4"><%= user_convert_interests("4") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-5" name="user[interests][]" value="5" <%= 'checked' if @user.interests.include?("5") %> >
+            <label for="user-interests-5"><%= user_convert_interests("5") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-6" name="user[interests][]" value="6" <%= 'checked' if @user.interests.include?("6") %> >
+            <label for="user-interests-6"><%= user_convert_interests("6") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-7" name="user[interests][]" value="7" <%= 'checked' if @user.interests.include?("7") %> >
+            <label for="user-interests-7"><%= user_convert_interests("7") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-8" name="user[interests][]" value="8" <%= 'checked' if @user.interests.include?("8") %> >
+            <label for="user-interests-8"><%= user_convert_interests("8") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-9" name="user[interests][]" value="9" <%= 'checked' if @user.interests.include?("9") %> >
+            <label for="user-interests-9"><%= user_convert_interests("9") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-10" name="user[interests][]" value="10" <%= 'checked' if @user.interests.include?("10") %> >
+            <label for="user-interests-10"><%= user_convert_interests("10") %></label><br>
+          </div>
+        </div>
+        <div class="user-interests-column">
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-11" name="user[interests][]" value="11" <%= 'checked' if @user.interests.include?("11") %> >
+            <label for="user-interests-11"><%= user_convert_interests("11") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-12" name="user[interests][]" value="12" <%= 'checked' if @user.interests.include?("12") %> >
+            <label for="user-interests-12"><%= user_convert_interests("12") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-13" name="user[interests][]" value="13" <%= 'checked' if @user.interests.include?("13") %> >
+            <label for="user-interests-13"><%= user_convert_interests("13") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-14" name="user[interests][]" value="14" <%= 'checked' if @user.interests.include?("14") %> >
+            <label for="user-interests-14"><%= user_convert_interests("14") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-15" name="user[interests][]" value="15" <%= 'checked' if @user.interests.include?("15") %> >
+            <label for="user-interests-15"><%= user_convert_interests("15") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-16" name="user[interests][]" value="16" <%= 'checked' if @user.interests.include?("16") %> >
+            <label for="user-interests-16"><%= user_convert_interests("16") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-17" name="user[interests][]" value="17" <%= 'checked' if @user.interests.include?("17") %> >
+            <label for="user-interests-17"><%= user_convert_interests("17") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-18" name="user[interests][]" value="18" <%= 'checked' if @user.interests.include?("18") %> >
+            <label for="user-interests-18"><%= user_convert_interests("18") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-19" name="user[interests][]" value="19" <%= 'checked' if @user.interests.include?("19") %> >
+            <label for="user-interests-19"><%= user_convert_interests("19") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-20" name="user[interests][]" value="20" <%= 'checked' if @user.interests.include?("20") %> >
+            <label for="user-interests-20"><%= user_convert_interests("20") %></label><br>
+          </div>
+        </div>
+        <div class="user-interests-column">
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-21" name="user[interests][]" value="21" <%= 'checked' if @user.interests.include?("21") %> >
+            <label for="user-interests-21"><%= user_convert_interests("21") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-22" name="user[interests][]" value="22" <%= 'checked' if @user.interests.include?("22") %> >
+            <label for="user-interests-22"><%= user_convert_interests("22") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-23" name="user[interests][]" value="23" <%= 'checked' if @user.interests.include?("23") %> >
+            <label for="user-interests-23"><%= user_convert_interests("23") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-24" name="user[interests][]" value="24" <%= 'checked' if @user.interests.include?("24") %> >
+            <label for="user-interests-24"><%= user_convert_interests("24") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-25" name="user[interests][]" value="25" <%= 'checked' if @user.interests.include?("25") %> >
+            <label for="user-interests-25"><%= user_convert_interests("25") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-26" name="user[interests][]" value="26" <%= 'checked' if @user.interests.include?("26") %> >
+            <label for="user-interests-26"><%= user_convert_interests("26") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-27" name="user[interests][]" value="27" <%= 'checked' if @user.interests.include?("27") %> >
+            <label for="user-interests-27"><%= user_convert_interests("27") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-28" name="user[interests][]" value="28" <%= 'checked' if @user.interests.include?("28") %> >
+            <label for="user-interests-28"><%= user_convert_interests("28") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-29" name="user[interests][]" value="29" <%= 'checked' if @user.interests.include?("29") %> >
+            <label for="user-interests-29"><%= user_convert_interests("29") %></label><br>
+          </div>
+          <div class="user-interests-checkbox">
+            <input type="checkbox" id="user-interests-30" name="user[interests][]" value="30" <%= 'checked' if @user.interests.include?("30") %> >
+            <label for="user-interests-30"><%= user_convert_interests("30") %></label><br>
+          </div>
+        </div>
+        <input class="btn btn-primary" type="submit" value="Update Interests" style="clear:both;display:block;">
+      </form>
+    <% elsif @user.interests.any? %>
+      <% @user.interests.each do |interest| %>
+        <%= user_convert_interests(interest) %><%= ", " unless @user.interests.index(interest) == @user.interests.length - 1 %>
       <% end %>
-    </div>
+    <% else %>
+      <h5>No Interests to display</h5>
+    <% end %>
   </div>
+
+  <!-- User Reviews -->
+  <div class="user-reviews">
+    <br><h4>Reviews</h4>
+    <% if @user.reviews.any? %>
+      <ul>
+        <% @user.reviews.each do |review| %>
+        <li id="review-<%= review.id %>"><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_url(review.reviewer) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+        <h5>No Reviews to display<%= ", exchange over 100 messages with another user to get reviews" if @user == current_user %></h5>
+    <% end %>
+  </div>
+</div>
 
 <script type="text/javascript">
   if (window.location.href.indexOf("#review-") != -1) {
