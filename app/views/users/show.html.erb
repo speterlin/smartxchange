@@ -323,9 +323,11 @@
         <input class="btn btn-primary" type="submit" value="Update Interests" style="clear:both;display:block;">
       </form>
     <% elsif @user.interests.any? %>
-      <% @user.interests.each do |interest| %>
-        <%= user_convert_interests(interest) %><%= ", " unless @user.interests.index(interest) == @user.interests.length - 1 %>
-      <% end %>
+      <ul>
+        <% @user.interests.each do |interest| %>
+         <li><%= user_convert_interests(interest) %></li>
+        <% end %>
+      </ul>
     <% else %>
       <h5>No Interests to display</h5>
     <% end %>
