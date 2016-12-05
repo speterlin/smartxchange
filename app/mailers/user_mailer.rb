@@ -167,19 +167,19 @@ class UserMailer < ApplicationMailer
   end
 
   def notifications_campaign
-    "?utm_source=notifications_email&utm_medium=email&utm_campaign=november_notifications"
+    "?utm_source=notifications_email&utm_medium=email&utm_campaign=december_notifications"
   end
 
   def matches_campaign
-    "?utm_source=matches_email&utm_medium=email&utm_campaign=november_matches"
+    "?utm_source=matches_email&utm_medium=email&utm_campaign=december_matches"
   end
 
   def conversations_campaign
-    "?utm_source=conversation_email&utm_medium=email&utm_campaign=november_conversations"
+    "?utm_source=conversation_email&utm_medium=email&utm_campaign=december_conversations"
   end
 
   def reviews_campaign
-    "?utm_source=review_email&utm_medium=email&utm_campaign=november_reviews"
+    "?utm_source=review_email&utm_medium=email&utm_campaign=december_reviews"
   end
 
   def prevent_delivery_to_unsubscribed
