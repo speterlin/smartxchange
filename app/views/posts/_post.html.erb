@@ -8,13 +8,6 @@
     </div>
     <!-- refactor this later, get rid of p tag, maybe float this div left, change padding -->
     <div class="post-text"><%= auto_link(post.content, html: { target: '_blank' }) %></div>
-    <div class="post-image">
-      <% if /http/.match(post.content) %>
-        <% if photo_from_content(post.content) %>
-          <%= image_tag(photo_from_content(post.content))  %>
-        <% end %>
-      <% end %>
-    </div>
     </p>
     <time datetime="<%= post.created_at %>">
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>

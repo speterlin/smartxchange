@@ -17,14 +17,4 @@ module ApplicationHelper
     ['a','e','i','o','u'].include?(string[0].downcase) ? 'an' : 'a'
   end
 
-  def photo_from_content(content)
-    http_url = /http*[^\s]+/.match(content)[0]
-    if !Nokogiri::HTML(open(http_url)).css("meta[property='og:image']").blank?
-      photo_url = Nokogiri::HTML(open(http_url)).css("meta[property='og:image']").first.attributes["content"]
-      return URI.parse(photo_url)
-    else
-      return nil
-    end
-  end
-
 end
