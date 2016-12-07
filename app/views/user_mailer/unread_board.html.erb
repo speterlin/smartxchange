@@ -4,7 +4,7 @@
   <body>
     <h4>Dear <%= @user.name %>,</h4>
     <p>
-      <%= "The " %> <%= link_to @user.language, @board_url, class:'mail-btn' %> <%= " board has unread posts" %>
+      <%= "The " %> <%= link_to @user.language, @board_url, class:'mail-btn' %> <%= " board has unread posts." %>
     </p>
   </body>
   <%= render 'layouts/footer_mail' %>
