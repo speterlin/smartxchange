@@ -1,5 +1,7 @@
 # Preview all emails at http://localhost:3000/rails/mailers/user_mailer
 class UserMailerPreview < ActionMailer::Preview
+  include BoardsHelper
+
   def welcome_new
     UserMailer.welcome_new(User.first)
   end
@@ -54,6 +56,7 @@ class UserMailerPreview < ActionMailer::Preview
 
   def unread_board
     # maybe refactor and include boards helper so user's language board is shown
-    UserMailer.unread_board(User.first, Board.first)
+    board = Board.find(boards_match_id(User.first.language))
+    UserMailer.unread_board(User.first, board)
   end
 end

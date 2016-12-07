@@ -1,3 +1,4 @@
+# need to require in order to include boards_helper
 require "#{Rails.root}/app/helpers/boards_helper"
 include BoardsHelper
 
