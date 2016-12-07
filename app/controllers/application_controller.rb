@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  include BoardsHelper
+  
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -30,7 +32,7 @@ class ApplicationController < ActionController::Base
   def normal_sign_in
     random_match = current_user.sort_method[0..24].sample
     flash[:notice] = "Welcome back #{current_user.name}! Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a>?"
-    redirect_to(session[:return_to] || users_path)
+    redirect_to(session[:return_to] || board_path(get_user_board(current_user)))
     session[:return_to] = nil
   end
 
@@ -77,6 +79,10 @@ class ApplicationController < ActionController::Base
     flash[:success] = "Welcome to smartXchange. Complete your profile and start networking and practicing your language! Make sure to update your nationality so that your country's flag will be displayed to others when they talk with you"
     UserMailer.welcome_new(user).deliver_later
     redirect_to user_path(user)
+  end
+
+  def get_user_board(user)
+    Board.find(boards_match_id(user.language))
   end
 
 end

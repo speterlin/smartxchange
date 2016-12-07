@@ -7,7 +7,9 @@ class UsersController < ApplicationController
 
   def new
     @user_count = User.all.count - (User.all.count % 10)
-    redirect_to users_path if signed_in?
+    if signed_in?
+      redirect_to board_path(get_user_board(current_user))
+    end
   end
 
   def create
