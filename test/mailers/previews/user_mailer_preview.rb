@@ -51,4 +51,9 @@ class UserMailerPreview < ActionMailer::Preview
   def notify_review
     UserMailer.notify_review(Review.last.reviewable, Review.last.reviewer, Review.last)
   end
+
+  def unread_board
+    # maybe refactor and include boards helper so user's language board is shown
+    UserMailer.unread_board(User.first, Board.first)
+  end
 end

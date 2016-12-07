@@ -8,10 +8,11 @@ class UserMailer < ApplicationMailer
   # for using a_or_an method in emails
   include ApplicationHelper
   include ChatRoomsHelper
+  include BoardsHelper
   add_template_helper(ApplicationHelper)
 
   # all places where we're using footer_mail with all links
-  before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update]
+  before_action :set_footer_urls, only: [:welcome_new, :unread_board, :weekly_notifications, :monthly_update]
   before_action :set_header_logo
   # bit of a hack, maybe refactor need @user to be set before sending, welcome new will always be true just there so doesn't enter method
   after_action :prevent_delivery_to_unsubscribed, except: [:welcome_new, :reset_password, :suspicious_activity, :premium_subscribe, :premium_unsubscribe]
@@ -148,6 +149,14 @@ class UserMailer < ApplicationMailer
     mail(to: email_with_name, subject: "#{@other_user.name} has left you a review")
   end
 
+  def unread_board(user, board)
+    @user = user
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + "#post-#{board.posts.first.id}" + boards_campaign
+    email_with_name = %("#{@user.name}" <#{@user.email}>)
+    set_unsubscribe_hash
+    mail(to: email_with_name, subject: "#{@user.language} board has unread posts")
+  end
+
   private
 
   def set_footer_urls
@@ -176,6 +185,10 @@ class UserMailer < ApplicationMailer
 
   def conversations_campaign
     "?utm_source=conversation_email&utm_medium=email&utm_campaign=december_conversations"
+  end
+
+  def boards_campaign
+    "?utm_source=board_email&utm_medium=email&utm_campaign=december_boards"
   end
 
   def reviews_campaign

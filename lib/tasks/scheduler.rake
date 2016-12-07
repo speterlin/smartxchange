@@ -1,3 +1,6 @@
+require "#{Rails.root}/app/helpers/boards_helper"
+include BoardsHelper
+
 task :send_weekly_notifications => :environment do
   @users = User.all
   @users.each do |user|
@@ -12,5 +15,16 @@ task :send_language_matches => :environment do
   @users = User.all.to_a.shuffle
   20.times do
     UserMailer.language_matches(@users.pop).deliver
+  end
+end
+
+task :send_unread_board => :environment do
+  @users = User.all.to_a.shuffle
+  50.times do
+    user = @users.pop
+    board = Board.find(boards_match_id(user.language))
+    if board_has_unread?(board, user)
+      UserMailer.unread_board(user, board).deliver
+    end
   end
 end

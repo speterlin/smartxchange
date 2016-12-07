@@ -14,6 +14,7 @@
 #  new_message          :boolean          default(TRUE), not null
 #  peer_review          :boolean          default(TRUE), not null
 #  notify_review        :boolean          default(TRUE), not null
+#  unread_board         :boolean          default(TRUE), not null
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

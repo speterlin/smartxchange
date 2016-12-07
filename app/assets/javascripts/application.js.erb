@@ -37,7 +37,6 @@ function getTranslation() {
   var sourceText = escape($('#message-body').val());
   var fromLang = $("select#from-language option:selected").val()
   var toLang = $("select#to-language option:selected").val()
-  // WARNING: Your API key will be visible in the page source.
   // To prevent misuse, restrict your key to designated domains or use a
   // proxy to hide your key.
   var source = "https://www.googleapis.com/language/translate/v2?key=<%= ENV['GOOGLE_API_KEY'] %>&source="+fromLang+"&target="+toLang+"&callback=translateText&q=" + sourceText;

@@ -20,4 +20,18 @@ module BoardsHelper
     current_user.reads.where(readable: board).first.update(updated_at: Time.now)
   end
 
+  def boards_match_id(language)
+    if language == "Spanish"
+      return 1
+    elsif language == "English"
+      return 3
+    elsif language == "Italian"
+      return 4
+    elsif language == "German"
+      return 5
+    elsif language == "French"
+      return 6
+    end
+  end
+
 end
