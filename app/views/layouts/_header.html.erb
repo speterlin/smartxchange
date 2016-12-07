@@ -20,11 +20,6 @@
       <div class="collapse navbar-collapse" id="smartxchange">
         <ul class="nav navbar-nav navbar-right">
           <% if signed_in? %>
-            <% if current_user.active %>
-              <li><a href="<%= user_settings_path(current_user) %>"><%= image_tag('green-dot.png', alt: 'Active') %></a></li>
-            <% else %>
-              <li><a href="<%= user_settings_path(current_user) %>"><%= image_tag('green-dot-0-exposure-0-contrast.png', alt: 'Inactive') %></a></li>
-            <% end %>
             <li class="board-header dropdown">
               <%= link_to "Boards#{@unread_posts}", "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: "#{'color:yellow' if boards_have_unread?(current_user)}"  %>
               <ul class="dropdown-menu" style="background-color: #000;">
