@@ -18,7 +18,7 @@ class Comment < ApplicationRecord
   belongs_to :owner, class_name: 'User'
   belongs_to :commentable, polymorphic: true, touch: true
   # only doing has_one notification here because can't delete vote or message, no index on sourceable since only called here which is very rare
-  has_one :notification, as: :sourceable, dependent: :destroy
+  has_many :notifications, as: :sourceable, dependent: :destroy
 
   default_scope -> { order(created_at: :asc) }
 
