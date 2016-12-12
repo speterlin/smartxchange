@@ -151,7 +151,7 @@ class UserMailer < ApplicationMailer
 
   def unread_board(user, board)
     @user = user
-    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + "#post-#{board.posts.first.id}" + boards_campaign
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + "#post-#{board.posts.first.id}"
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "Check out the latest posts on the #{@user.language} board!")
