@@ -1,6 +1,7 @@
 class SessionsController < ApplicationController
 
   skip_before_action :require_signed_in!, only: [:new, :create, :create_linkedin, :new_linkedin, :existing_linkedin]
+  before_action :indiegogo_campaign, only: [:create_linkedin]
 
   # probably need to refactor class variable at some point
   @@existing = false

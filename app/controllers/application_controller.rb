@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   include BoardsHelper
-  
+
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -83,6 +83,11 @@ class ApplicationController < ActionController::Base
 
   def get_user_board(user)
     Board.find(boards_match_id(user.language))
+  end
+
+  def indiegogo_campaign
+    flash[:error] = "Please contribute on our indiegogo page: <a href=\"https://www.indiegogo.com/at/smartxchange\">Indiegogo Campaign</a> to gain access to the platform."
+    redirect_to new_user_path
   end
 
 end
