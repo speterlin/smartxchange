@@ -32,9 +32,9 @@ end
 
 task :send_unread_jobs => :environment do
   @users = User.all.to_a.shuffle
+  board = Board.find(2)
   50.times do
     user = @users.pop
-    board = Board.find(2)
     if board_has_unread?(board, user)
       UserMailer.unread_jobs(user).deliver
     end
