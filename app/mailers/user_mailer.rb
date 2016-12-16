@@ -41,7 +41,7 @@ class UserMailer < ApplicationMailer
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     add_campaign_to_footer(notifications_campaign)
     set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'smartXchange enters its 4th month!')
+    mail(to: email_with_name, subject: 'smartXchange enters its 5th month!')
   end
 
   def reset_password(user, password)
