@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
   def normal_sign_in
     random_match = current_user.sort_method[0..24].sample
     flash[:notice] = "Welcome back #{current_user.name}! Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a>?"
-    redirect_to(session[:return_to] || board_path(get_user_board(current_user)))
+    redirect_to(session[:return_to] || get_user_board_path(current_user))
     session[:return_to] = nil
   end
 
@@ -81,8 +81,14 @@ class ApplicationController < ActionController::Base
     redirect_to user_path(user)
   end
 
-  def get_user_board(user)
-    Board.find(boards_match_id(user.language))
+  def get_user_board_path(user)
+    board = Board.find(boards_match_id(user.language))
+    if board_has_unread?(board, user)
+      path = board_path(board) + "#post-#{board.posts.first.id}"
+    else
+      path = board_path(board)
+    end
+    path
   end
 
   def indiegogo_campaign
