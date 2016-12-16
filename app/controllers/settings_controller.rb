@@ -104,7 +104,7 @@ class SettingsController < ApplicationController
   end
 
   def email_params
-    params.require(:email).permit(:weekly_notifications, :monthly_update, :language_matches, :notify_match, :new_conversation, :new_message, :peer_review, :notify_review, :unread_board)
+    params.require(:email).permit(:weekly_notifications, :monthly_update, :language_matches, :notify_match, :new_conversation, :new_message, :peer_review, :notify_review, :unread_board, :unread_jobs)
   end
 
 end

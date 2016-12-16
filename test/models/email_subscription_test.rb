@@ -15,6 +15,7 @@
 #  peer_review          :boolean          default(TRUE), not null
 #  notify_review        :boolean          default(TRUE), not null
 #  unread_board         :boolean          default(TRUE), not null
+#  unread_jobs          :boolean          default(TRUE), not null
 #
 
 require 'test_helper'

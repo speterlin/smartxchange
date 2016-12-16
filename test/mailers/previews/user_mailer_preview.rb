@@ -59,4 +59,8 @@ class UserMailerPreview < ActionMailer::Preview
     board = Board.find(boards_match_id(User.first.language))
     UserMailer.unread_board(User.first, board)
   end
+
+  def unread_jobs
+    UserMailer.unread_jobs(User.first)
+  end
 end

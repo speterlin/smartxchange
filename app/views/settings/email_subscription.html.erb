@@ -45,7 +45,12 @@
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[unread_board]" value="false">
     <input type="checkbox" id="unread_board" name="email[unread_board]" value="true" <%= 'checked' if @user.email_subscription.unread_board %> >
-    <label for="unread_board">Unread Board Notification (you will be notified every few days if the board of the language you're practicing has unread posts)</label><br><br>
+    <label for="unread_board">Unread Board Notification (you will be notified every few days if the board of the language you're practicing has unread posts)</label><br>
+  </div>
+  <div class="email-subscription-checkbox">
+    <input type="hidden" name="email[unread_jobs]" value="false">
+    <input type="checkbox" id="unread_jobs" name="email[unread_jobs]" value="true" <%= 'checked' if @user.email_subscription.unread_jobs %> >
+    <label for="unread_jobs">Unread Jobs Notification (you will be notified every few days if the smart jobs board has unread posts)</label><br><br>
   </div>
   <input type="submit" value="Update Subscriptions" class="btn btn-primary settings">
 </form>

@@ -151,10 +151,19 @@ class UserMailer < ApplicationMailer
 
   def unread_board(user, board)
     @user = user
-    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + "#post-#{board.posts.first.id}"
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "Check out the latest posts on the #{@user.language} board!")
+  end
+
+  def unread_jobs(user)
+    @user = user
+    board = Board.find(2)
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    email_with_name = %("#{@user.name}" <#{@user.email}>)
+    set_unsubscribe_hash
+    mail(to: email_with_name, subject: "Check out the latest posts on the Smart Jobs board!")
   end
 
   private

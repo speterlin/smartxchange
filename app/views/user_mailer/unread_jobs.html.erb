@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <%= render 'layouts/header_mail' %>
+  <body>
+    <h4>Dear <%= @user.name %>,</h4>
+    <p>
+      <%= "Read the latest updates to the " %> <%= link_to "Smart Jobs", @board_url, class:'mail-btn' %> <%= " board!" %>
+    </p>
+  </body>
+  <%= render 'layouts/footer_mail' %>
+</html>

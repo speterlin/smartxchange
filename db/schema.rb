@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161206230424) do
+ActiveRecord::Schema.define(version: 20161216200054) do
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string   "first_name"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 20161206230424) do
     t.boolean  "peer_review",          default: true, null: false
     t.boolean  "notify_review",        default: true, null: false
     t.boolean  "unread_board",         default: true, null: false
+    t.boolean  "unread_jobs",          default: true, null: false
     t.index ["user_id"], name: "index_email_subscriptions_on_user_id", unique: true
   end
 
