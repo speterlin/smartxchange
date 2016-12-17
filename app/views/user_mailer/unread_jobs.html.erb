@@ -4,7 +4,7 @@
   <body>
     <h4>Dear <%= @user.name %>,</h4>
     <p>
-      <%= "Read the latest updates to the " %> <%= link_to "Smart Jobs", @board_url, class:'mail-btn' %> <%= " board!" %>
+      <%= "The " %> <%= link_to "Smart Jobs", @board_url, class:'mail-btn' %> <%= " board has new posts!" %>
     </p>
   </body>
   <%= render 'layouts/footer_mail' %>

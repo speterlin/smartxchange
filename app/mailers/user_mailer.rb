@@ -163,7 +163,7 @@ class UserMailer < ApplicationMailer
     @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
-    mail(to: email_with_name, subject: "Check out the latest posts on the Smart Jobs board!")
+    mail(to: email_with_name, subject: "View the latest jobs on the Smart Jobs board!")
   end
 
   private
