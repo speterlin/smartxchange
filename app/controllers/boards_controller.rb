@@ -24,6 +24,7 @@ class BoardsController < ApplicationController
       @educational_posts = @posts.select {|post| post.category == 'Educational'}
       @tutoring_posts = @posts.select {|post| post.category == 'Tutoring'}
       @meetup_posts = @posts.select {|post| post.category == 'Meetup'}
+      @professional_posts = @posts.select {|post| post.category == 'Professional'}
       @other_posts = @posts.select {|post| post.category == 'Other'}
     end
 

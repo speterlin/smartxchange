@@ -84,7 +84,8 @@ class ApplicationController < ActionController::Base
   def get_user_board_path(user)
     board = Board.find(boards_match_id(user.language))
     if board_has_unread?(board, user)
-      path = board_path(board) + "#post-#{board.posts.first.id}"
+      # precautionary step in case board is updated and there are no posts (like if I update the description of an empty board), maybe refactor later
+      path = board_path(board) + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
     else
       path = board_path(board)
     end

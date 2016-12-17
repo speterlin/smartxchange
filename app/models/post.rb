@@ -14,7 +14,7 @@
 class Post < ApplicationRecord
   validates_presence_of :owner, :board, :content, :category
   validates :content, length: {minimum: 5, maximum: 255}
-  validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Other"]}
+  validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true

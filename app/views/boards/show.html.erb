@@ -31,6 +31,10 @@
       <h3>Meetups</h3>
       <%= render @meetup_posts if @meetup_posts.any? %>
     </ul>
+    <ul id="professional">
+      <h3>Professional</h3>
+      <%= render @professional_posts if @professional_posts.any? %>
+    </ul>
     <ul id="other">
       <h3>Other</h3>
       <%= render @other_posts if @other_posts.any? %>
@@ -55,6 +59,7 @@
           <option value="Educational">Educational</option>
           <option value="Tutoring">Tutoring</option>
           <option value="Meetup">Meetup</option>
+          <option value="Professional">Professional</option>
           <option value="Other">Other</option>
         <% end %>
       </select>
