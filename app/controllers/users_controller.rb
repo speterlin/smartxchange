@@ -8,6 +8,8 @@ class UsersController < ApplicationController
 
   def new
     @user_count = User.all.count - (User.all.count % 10)
+    @jobs_offered_count = Post.where(category: "Jobs-Offered").count
+    @posts_count = Post.count
     if signed_in?
       redirect_to get_user_board_path(current_user)
     end
@@ -21,6 +23,8 @@ class UsersController < ApplicationController
     else
       flash.now[:error] = @user.errors.full_messages.to_sentence
       @user_count = User.all.count - (User.all.count % 10)
+      @jobs_offered_count = Post.where(category: "Jobs-Offered").count
+      @posts_count = Post.count
       render :new
     end
   end
