@@ -25,7 +25,11 @@
       <% if post.followers.any? %>
         <%= link_to "• "+ pluralize(post.followers.size, 'Follower'), followers_post_path(post), remote: true, class: "post-followers"  %>
       <% end %>
-    </time>
+    </time><br><!-- maybe refactor br, post-location-value, and put map styling board.scss-->
+    <% if post.location? %>
+      <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{post.latitude},#{post.longitude}&markers=#{post.latitude},#{post.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", style: "margin-left: 35px; height: 150px;padding: 10px;", alt: "#{post.location} on the map" %>
+      <div id="post-location-value" style="display: none;"><%= post.location %></div>
+    <% end %>
   </div>
   <% if post.comments.any? %>
     <ul class="post-comments">

@@ -160,7 +160,7 @@ class UserMailer < ApplicationMailer
   def unread_jobs(user)
     @user = user
     board = Board.find(2)
-    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + jobs_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
     email_with_name = %("#{@user.name}" <#{@user.email}>)
     set_unsubscribe_hash
     mail(to: email_with_name, subject: "View the latest jobs on the Smart Jobs board!")
@@ -198,6 +198,10 @@ class UserMailer < ApplicationMailer
 
   def boards_campaign
     "?utm_source=board_email&utm_medium=email&utm_campaign=december_boards"
+  end
+
+  def jobs_campaign
+    "?utm_source=job_email&utm_medium=email&utm_campaign=december_jobs"
   end
 
   def reviews_campaign

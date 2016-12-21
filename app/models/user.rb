@@ -32,6 +32,8 @@
 #active is for instantaneous feature Tati talked about
 
 class User < ApplicationRecord
+  include Locatable
+
   validates_presence_of :email, :name, :age, :language, :language_level, :title, :password_digest, :session_token, :nationality
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
   validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
@@ -226,22 +228,6 @@ class User < ApplicationRecord
 
   def downcase_email
     self.email = self.email.downcase
-  end
-
-  def location_present_and_changed
-    return true if (self.location.present? && self.location_changed?)
-    return false
-  end
-
-  def lat_changed?
-    # for some reason need to return at the end
-    if self.location_changed?
-        if !self.latitude_changed?
-            self.errors.add(:location, "is not valid")
-            return false
-        end
-    end
-    return true
   end
 
   def add_email_subscription

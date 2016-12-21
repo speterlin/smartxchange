@@ -9,6 +9,9 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  category   :string           not null
+#  location   :string
+#  latitude   :float
+#  longitude  :float
 #
 
 require 'test_helper'

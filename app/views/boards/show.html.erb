@@ -64,6 +64,8 @@
         <% end %>
       </select>
     </div>
+    <div id="post-location">
+    </div>
   </form>
 </div>
 <br>
@@ -98,4 +100,11 @@
     var post = window.location.href.split('#')[1]
     $('#'+post+' .post-content').css("background-color", "yellow");
   }
+  $('.post-form.new #post-category').on('change', function() {
+    if ($(this).find(":selected").val() == "Meetup") {
+      $('#post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]'></label>")
+    } else {
+      $('#post-location').text("");
+    }
+  })
 </script>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161216200054) do
+ActiveRecord::Schema.define(version: 20161220022029) do
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string   "first_name"
@@ -192,6 +192,9 @@ ActiveRecord::Schema.define(version: 20161216200054) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "category",   null: false
+    t.string   "location"
+    t.float    "latitude"
+    t.float    "longitude"
     t.index ["owner_id"], name: "index_posts_on_owner_id"
     t.index ["updated_at"], name: "index_posts_on_updated_at"
   end
