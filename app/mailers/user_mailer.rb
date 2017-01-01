@@ -185,27 +185,27 @@ class UserMailer < ApplicationMailer
   end
 
   def notifications_campaign
-    "?utm_source=notifications_email&utm_medium=email&utm_campaign=december_notifications"
+    "?utm_source=notifications_email&utm_medium=email&utm_campaign=january_notifications"
   end
 
   def matches_campaign
-    "?utm_source=matches_email&utm_medium=email&utm_campaign=december_matches"
+    "?utm_source=matches_email&utm_medium=email&utm_campaign=january_matches"
   end
 
   def conversations_campaign
-    "?utm_source=conversation_email&utm_medium=email&utm_campaign=december_conversations"
+    "?utm_source=conversation_email&utm_medium=email&utm_campaign=january_conversations"
   end
 
   def boards_campaign
-    "?utm_source=board_email&utm_medium=email&utm_campaign=december_boards"
+    "?utm_source=board_email&utm_medium=email&utm_campaign=january_boards"
   end
 
   def jobs_campaign
-    "?utm_source=job_email&utm_medium=email&utm_campaign=december_jobs"
+    "?utm_source=job_email&utm_medium=email&utm_campaign=january_jobs"
   end
 
   def reviews_campaign
-    "?utm_source=review_email&utm_medium=email&utm_campaign=december_reviews"
+    "?utm_source=review_email&utm_medium=email&utm_campaign=january_reviews"
   end
 
   def prevent_delivery_to_unsubscribed
