@@ -350,14 +350,12 @@
 
 <!-- User Chatbots -->
 <div class="user-chatbots">
-  <br><h4>Contributed Chatbots</h4>
   <!-- refactor for when there are chatbots -->
   <% if @user.id == 1 %>
+    <br><h4>Contributed Chatbots</h4>
     <ul>
       <li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span style="text-transform:uppercase;"><%= User.find(6).language %> <%= user_convert_language_level(User.find(6).language_level) %></span></i> Chatbot</li>
     </ul>
-  <% else %>
-    <h5>No chatbots to display</h5>
   <% end %>
 </div>
 

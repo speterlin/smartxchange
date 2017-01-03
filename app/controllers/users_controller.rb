@@ -127,10 +127,10 @@ class UsersController < ApplicationController
     @user = User.find(params[:user_id])
     @match = User.find(params[:match_id])
     if @user.matches_token == params[:matches_token] && @user.matches_sent_at > 24.hours.ago
-      flash[:success] = "#{@match.name} notified :)"
+      flash.now[:success] = "#{@match.name} notified :)"
       UserMailer.notify_match(@user, @match).deliver_later
     else
-      flash[:error] = "Either you're token is incorrect or it has expired"
+      flash.now[:error] = "Either you're token is incorrect or it has expired"
     end
   end
 

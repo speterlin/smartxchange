@@ -105,8 +105,7 @@ div.chat-room:hover {
   overflow: auto;
 }
 
-// to prevent zoom in on smart phone screen, using form_for this is why there is an underscore
-#new_message textarea, textarea:focus, select:focus, input {
+#new_message textarea {
   font-size: 16px;
 }
 
