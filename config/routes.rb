@@ -40,6 +40,7 @@ Rails.application.routes.draw do
       get 'activate', on: :collection
       get 'deactivate', on: :collection
       get 'downgrade', on: :collection
+      get 'activate_account/:activation_token', on: :collection, to: 'settings#activate_account', as: 'activate_account'
     end
     resources :reviews, except: [:show]
   end

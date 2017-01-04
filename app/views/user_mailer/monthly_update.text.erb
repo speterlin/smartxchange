@@ -2,7 +2,7 @@ Dear <%= @user.name %>,
 ===============================================
 
   <% if @notifications > 0  %>
-      You have <%= pluralize(@notifications, "new notification") %>. <%= link_to "Log in", @url, class:'mail-btn'  %> to see your unread <%= "notification".pluralize(@notifications) %>!
+      You have <%= pluralize(@notifications, "new notification") %>. <%= link_to "Log in", @url_login, class:'mail-btn'  %> to see your unread <%= "notification".pluralize(@notifications) %>!
   <% end %>
     Happy new year and we hope all the best for you in 2017! We hope you enjoyed the holidays :).
     smartXchange is proud to have entered its sixth month since launching!

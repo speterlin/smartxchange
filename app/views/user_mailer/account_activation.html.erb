@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <%= render 'layouts/header_mail' %>
+  <body>
+    <h4>Welcome to smartXchange, <%= @user.name %>!</h4>
+    <p>
+      To activate your account, please click <%= link_to "here", @activate_account_url, class:'mail-btn' %>
+    </p>
+  </body>
+  <%= render 'layouts/footer_mail_simple' %>
+</html>

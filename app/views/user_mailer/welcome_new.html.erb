@@ -2,13 +2,13 @@
 <html>
   <%= render 'layouts/header_mail' %>
   <body>
-    <h4>Welcome to smartXchange, <%= @user.name %>!</h4>
+    <h4>Welcome <%= @user.name %>!</h4>
     <p>
       You have successfully signed up to smartXchange,
       your username is: <%= @user.email %>.<br>
     </p>
     <p>
-      To login to the site, just follow this <%= link_to "link", @url, class:'mail-btn'  %>.
+      To login to the site, just follow this <%= link_to "link", @url_login, class:'mail-btn'  %>.
     </p>
   </body>
   <%= render 'layouts/footer_mail' %>

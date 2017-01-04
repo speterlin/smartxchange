@@ -1,7 +1,7 @@
 class SettingsController < ApplicationController
 
-  skip_before_action :require_signed_in!, only: [:reset_password, :create_password, :email_subscription, :update_subscription]
-  before_action :correct_user?, except: [:reset_password, :create_password, :email_subscription, :update_subscription]
+  skip_before_action :require_signed_in!, only: [:reset_password, :create_password, :email_subscription, :update_subscription, :activate_account]
+  before_action :correct_user?, except: [:reset_password, :create_password, :email_subscription, :update_subscription, :activate_account]
 
   def show
     @user = User.find(params[:user_id])
@@ -95,6 +95,17 @@ class SettingsController < ApplicationController
     current_user.unsubscribe_to_premium
     UserMailer.premium_unsubscribe(current_user).deliver_later
     redirect_to :back, notice: "Premium subscription cancelled! You now have the Standard package"
+  end
+
+  def activate_account
+    @user = User.find_by(email: params[:email])
+    if @user.activation_token == params[:activation_token]
+      @user.update!(activated: true)
+      sign_in!(@user)
+      welcome_new(@user)
+    else
+      flash.now[:error] = "Activation token does not match or user with this email was not found"
+    end
   end
 
   private

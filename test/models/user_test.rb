@@ -27,6 +27,8 @@
 #  person_of_interest    :boolean          default(FALSE), not null
 #  tutor                 :boolean          default(FALSE), not null
 #  interests             :text
+#  activation_token      :string
+#  activated             :boolean          default(FALSE)
 #
 
 require 'test_helper'

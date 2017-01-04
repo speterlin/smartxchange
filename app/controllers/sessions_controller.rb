@@ -13,6 +13,11 @@ class SessionsController < ApplicationController
 
   def create
     @user = User.find_by_credentials(params[:user])
+    # maybe refactor this is repeated below
+    unless @user.activated?
+      flash[:error] = "User not activated, please check your email and activate account"
+      redirect_to login_path and return
+    end
     if @user.is_a?(User)
       sign_in!(@user)
       normal_sign_in
@@ -80,8 +85,9 @@ class SessionsController < ApplicationController
       redirect_to login_path and return
     elsif !@user && !@@existing # register with linkedin and no linkedin account linked
       @user = User.create_with_omniauth(auth_hash)
-      sign_in!(@user)
-      welcome_new(@user) and return
+      flash[:success] = "Please check your email (registered with Linkedin) for account activation"
+      UserMailer.account_activation(@user).deliver_later
+      redirect_to signup_path and return
     elsif @user && !@@existing # register with linkedin and existing linkedin account
       flash[:error] = "Linkedin account already registered with smartXchange, please login with your Linkedin"
       redirect_to login_path and return
@@ -91,6 +97,10 @@ class SessionsController < ApplicationController
       redirect_to signup_path and return
     end # @user && @@existing, sign in with linkedin and account exists
     @@existing = false
+    unless @user.activated?
+      flash[:error] = "User not activated, please check your email and activate account"
+      redirect_to login_path and return
+    end
     sign_in!(@user)
     normal_sign_in
   end

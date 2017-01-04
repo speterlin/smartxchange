@@ -27,6 +27,8 @@
 #  person_of_interest    :boolean          default(FALSE), not null
 #  tutor                 :boolean          default(FALSE), not null
 #  interests             :text
+#  activation_token      :string
+#  activated             :boolean          default(FALSE)
 #
 
 #active is for instantaneous feature Tati talked about
@@ -72,6 +74,7 @@ class User < ApplicationRecord
 
   geocoded_by :location
 
+  before_create :create_activation_token
   before_save :downcase_email
   after_validation :geocode, if: :location_present_and_changed
   after_validation :lat_changed?
@@ -104,7 +107,8 @@ class User < ApplicationRecord
     user = User.create!(
       email: auth['info']['email'],
       password: auth['uid'],
-      name: auth['info']['name'],
+      # getting rid of name since this has to be unique and can cause problems, maybe refactor 
+      # name: auth['info']['name'],
       title: auth['info']['description'],
       image: auth['extra']['raw_info']['pictureUrls'].values.second[0],
       provider: auth['provider'],
@@ -234,5 +238,8 @@ class User < ApplicationRecord
     EmailSubscription.create!(user_id: self.id)
   end
 
+  def create_activation_token
+    self.activation_token = User.new_token
+  end
 
 end

@@ -63,4 +63,9 @@ class UserMailerPreview < ActionMailer::Preview
   def unread_jobs
     UserMailer.unread_jobs(User.first)
   end
+
+  def account_activation
+    UserMailer.account_activation(User.first)
+  end
+
 end

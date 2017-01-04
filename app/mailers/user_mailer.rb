@@ -11,46 +11,41 @@ class UserMailer < ApplicationMailer
   include BoardsHelper
   add_template_helper(ApplicationHelper)
 
-  # all places where we're using footer_mail with all links
-  before_action :set_footer_urls, only: [:welcome_new, :unread_board, :weekly_notifications, :monthly_update]
+  # all emails where we're using normal footer_mail (rather than footer_mail_simple)
+  before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update, :unread_board, :unread_jobs]
+  # all emails where there is a login link
+  before_action :set_login_url, only: [:welcome_new, :weekly_notifications, :monthly_update, :language_matches]
   before_action :set_header_logo
   # bit of a hack, maybe refactor need @user to be set before sending, welcome new will always be true just there so doesn't enter method
-  after_action :prevent_delivery_to_unsubscribed, except: [:welcome_new, :reset_password, :suspicious_activity, :premium_subscribe, :premium_unsubscribe]
+  after_action :prevent_delivery_to_unsubscribed, except: [:welcome_new, :reset_password, :suspicious_activity, :premium_subscribe, :premium_unsubscribe, :account_activation]
 
   def welcome_new(user)
     @user = user
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'Welcome to smartXchange')
+    set_name_and_title_and_unsubscribe(@user, 'Welcome to smartXchange')
   end
 
   def weekly_notifications(user, notifications)
     # change this to users who want notifications eventually
     @user = user
     @notifications = notifications
-    # built with google url builder
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
+    add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'smartXchange Notifications')
+    set_name_and_title_and_unsubscribe(@user, 'smartXchange Notifications')
   end
 
   def monthly_update(user, notifications)
     @user = user
     @notifications = notifications
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
+    add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'Happy New Year!')
+    set_name_and_title_and_unsubscribe(@user, 'Happy New Year!')
   end
 
   def reset_password(user, password)
     @user = user
     @password = password
     @url_change_password = "http://www.smartxchange.es/users/#{@user.id}/settings/change_password"
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'Password reset, smartXchange')
+    set_name_and_title_and_unsubscribe(@user, 'Password reset, smartXchange')
   end
 
   def language_matches(user)
@@ -65,10 +60,8 @@ class UserMailer < ApplicationMailer
         @match_urls[match.id] = [@url_email_match + match.id.to_s + matches_campaign, "http://www.smartxchange.es/users/#{match.id}" + matches_campaign]
       end
     end
-    @url = "http://www.smartxchange.es/login" + matches_campaign
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'Have you messaged these language practice peers?')
+    add_campaign_to_login(matches_campaign)
+    set_name_and_title_and_unsubscribe(@user, 'Have you messaged these language practice peers?')
   end
 
   def notify_match(interested_user, matched_user)
@@ -78,30 +71,22 @@ class UserMailer < ApplicationMailer
     # not using add_campaign since this is less lines of code, only need to add campaign to the view profile link
     @url_interested_user = "http://www.smartxchange.es/users/#{@interested_user.id}#{matches_campaign}"
     fetch_user_image(@interested_user)
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: "#{@interested_user.name} wants to practice #{@interested_user.language}")
+    set_name_and_title_and_unsubscribe(@user, "#{@interested_user.name} wants to practice #{@interested_user.language}")
   end
 
   def suspicious_activity(user)
     @user = user
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'Suspicious Activity')
+    set_name_and_title_and_unsubscribe(@user, 'Suspicious Activity')
   end
 
   def premium_subscribe(user)
     @user = user
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'Welcome to smartXchange Premium')
+    set_name_and_title_and_unsubscribe(@user, 'Welcome to smartXchange Premium')
   end
 
   def premium_unsubscribe(user)
     @user = user
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: 'Sorry to see you leave')
+    set_name_and_title_and_unsubscribe(@user, 'Sorry to see you leave')
   end
 
   def new_conversation(chat_room)
@@ -110,9 +95,7 @@ class UserMailer < ApplicationMailer
     # not get @chat_room since for now chat_room is always initiated in initiator's language (to practice)
     @chat_room_url = "http://www.smartxchange.es/chat_rooms/#{chat_room.id}" + conversations_campaign
     fetch_user_image(@initiator)
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
+    set_name_and_title_and_unsubscribe(@user, "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
   end
 
   def new_message(message)
@@ -121,9 +104,7 @@ class UserMailer < ApplicationMailer
     @chat_room = message.chat_room
     @chat_room_url = "http://www.smartxchange.es/chat_rooms/#{message.chat_room.id}" + conversations_campaign
     fetch_user_image(@sender)
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
+    set_name_and_title_and_unsubscribe(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
   end
 
   def peer_review(user, other_user, chat_room)
@@ -133,9 +114,7 @@ class UserMailer < ApplicationMailer
     @peer_review_hash = Rails.application.message_verifier(:peer_review).generate(@other_user.id)
     @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}/reviews/new#{reviews_campaign}&chat_room_id=#{@chat_room.id}&id=#{@peer_review_hash}"
     fetch_user_image(@other_user)
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: "Please review #{@other_user.name} in your #{@chat_room.title} conversation together")
+    set_name_and_title_and_unsubscribe(@user, "Please review #{@other_user.name} in your #{@chat_room.title} conversation together")
   end
 
   def notify_review(user, other_user, review)
@@ -144,46 +123,52 @@ class UserMailer < ApplicationMailer
     @review = review
     @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}#{reviews_campaign}#review-#{@review.id}"
     fetch_user_image(@other_user)
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: "#{@other_user.name} has left you a review")
+    set_name_and_title_and_unsubscribe(@user, "#{@other_user.name} has left you a review")
   end
 
   def unread_board(user, board)
     @user = user
     @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: "Check out the latest posts on the #{@user.language} board!")
+    set_name_and_title_and_unsubscribe(@user, "Check out the latest posts on the #{@user.language} board!")
   end
 
   def unread_jobs(user)
     @user = user
     board = Board.find(2)
     @board_url = "http://www.smartxchange.es/boards/#{board.id}" + jobs_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
-    email_with_name = %("#{@user.name}" <#{@user.email}>)
-    set_unsubscribe_hash
-    mail(to: email_with_name, subject: "View the latest jobs on the Smart Jobs board!")
+    set_name_and_title_and_unsubscribe(@user, "View the latest jobs on the Smart Jobs board!")
+  end
+
+  def account_activation(user)
+    @user = user
+    # maybe refactor and get rid of cgi escape, according to hartl tutorial I need this
+    @activate_account_url = "http://www.smartxchange.es/users/#{@user.id}/settings/activate_account/#{@user.activation_token}?email=#{CGI.escape(@user.email)}"
+    set_name_and_title_and_unsubscribe(@user, "Activate your smartXchange account")
   end
 
   private
 
   def set_footer_urls
-    @url  = "http://www.smartxchange.es/login"
     @url_mobile_tutorial = "http://www.smartxchange.es/about#video-mobile"
-    @url_premium = "http://www.smartxchange.es/about#premium"
+  end
+
+  def add_campaign_to_footer(campaign)
+    @url_mobile_tutorial = "http://www.smartxchange.es/about#{campaign}#video-mobile"
+  end
+
+  def set_login_url
+    @url_login = "http://www.smartxchange.es/login"
+  end
+
+  def add_campaign_to_login(campaign)
+    @url_login += "#{campaign}"
   end
 
   def set_header_logo
     attachments.inline['logo.png'] = File.read("#{Rails.root}/app/assets/images/logo.png")
   end
 
-  def add_campaign_to_footer(string)
-    @url += "#{string}"
-    @url_mobile_tutorial = "http://www.smartxchange.es/about#{string}#video-mobile"
-    @url_premium = "http://www.smartxchange.es/about#{string}#premium"
-  end
-
+  # campaigns built with google url builder
   def notifications_campaign
     "?utm_source=notifications_email&utm_medium=email&utm_campaign=january_notifications"
   end
@@ -212,10 +197,6 @@ class UserMailer < ApplicationMailer
     mail.perform_deliveries = false unless @user.email_subscription.send(action_name)
   end
 
-  def set_unsubscribe_hash
-    @unsubscribe_hash = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
-  end
-
   def fetch_user_image(user)
     # in production .url works as url should, but in development .url works as path and vice versa
     if Rails.env.production?
@@ -227,6 +208,12 @@ class UserMailer < ApplicationMailer
     else
       attachments.inline["#{user.name}.jpg"] = File.read("#{Rails.root}/public/#{user.image.small_thumb.url}")
     end
+  end
+
+  def set_name_and_title_and_unsubscribe(user, title)
+    email_with_name = %("#{user.name}" <#{user.email}>)
+    @unsubscribe_hash = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
+    mail(to: email_with_name, subject: title)
   end
 
 end
