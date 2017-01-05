@@ -37,5 +37,9 @@ module SmartXchange
     #for using Faye as middleware and mounting onto /faye path
     # config.middleware.delete Rack::Lock
     # config.middleware.use FayeRails::Middleware, mount: '/faye', :timeout => 25
+
+    # for using delayed_job
+    config.active_job.queue_adapter = :delayed_job
+    
   end
 end

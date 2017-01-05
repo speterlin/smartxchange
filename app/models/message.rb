@@ -34,7 +34,8 @@ class Message < ApplicationRecord
   def notify_recipient?
     if self.chat_room.updated_at < 1.hour.ago
       # needs refactoring, slow process, deliver_later does not work on UserMailer here
-      UserMailer.new_message(self).deliver
+      # UserMailer.new_message(self).deliver
+      UserMailer.delay(run_at: 30.seconds.from_now).new_message(self)
     end
   end
 

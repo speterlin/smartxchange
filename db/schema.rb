@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170103133807) do
+ActiveRecord::Schema.define(version: 20170104221843) do
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string   "first_name"
@@ -68,6 +68,21 @@ ActiveRecord::Schema.define(version: 20170103133807) do
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
     t.index ["created_at"], name: "index_comments_on_created_at"
     t.index ["owner_id"], name: "index_comments_on_owner_id"
+  end
+
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
   create_table "educations", force: :cascade do |t|

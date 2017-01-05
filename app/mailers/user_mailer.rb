@@ -50,7 +50,7 @@ class UserMailer < ApplicationMailer
 
   def language_matches(user)
     @user = user
-    @matches = @user.sort_method[0..5]
+    @matches = @user.sort_method[0..24].shuffle[0..5]
     @matches_token = @user.create_matches_token!
     @url_email_match = "http://www.smartxchange.es/users/#{@user.id}/email_match/#{@matches_token}/"
     if @matches.any?

@@ -65,6 +65,9 @@ gem 'gon', '~> 5.1.2'
 # recaptcha
 gem "recaptcha", require: "recaptcha/rails"
 
+# for background jobs
+gem 'delayed_job_active_record'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 
