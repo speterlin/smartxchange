@@ -16,6 +16,7 @@
 #  notify_review        :boolean          default(TRUE), not null
 #  unread_board         :boolean          default(TRUE), not null
 #  unread_jobs          :boolean          default(TRUE), not null
+#  new_post             :boolean          default(TRUE), not null
 #
 
 class EmailSubscription < ApplicationRecord

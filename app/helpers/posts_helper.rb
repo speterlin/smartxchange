@@ -47,6 +47,8 @@ module PostsHelper
         total_notifications: notified.notifications.count,
         sound: true
       )
+      # delaying 30 seconds in case there are a lot of people getting updated
+      UserMailer.delay(run_at: 30.seconds.from_now).new_post(@notification)
     end
   end
 

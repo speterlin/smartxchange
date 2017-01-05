@@ -33,8 +33,6 @@ class Message < ApplicationRecord
 
   def notify_recipient?
     if self.chat_room.updated_at < 1.hour.ago
-      # needs refactoring, slow process, deliver_later does not work on UserMailer here
-      # UserMailer.new_message(self).deliver
       UserMailer.delay(run_at: 30.seconds.from_now).new_message(self)
     end
   end
@@ -43,8 +41,8 @@ class Message < ApplicationRecord
     # send peer review email after every 100 messages in conversation
     limit = 100
     if (self.chat_room.messages.size % limit == 0 ) && (self.chat_room.messages.size / limit != 0)
-      UserMailer.peer_review(self.chat_room.initiator, self.chat_room.recipient, self.chat_room).deliver
-      UserMailer.peer_review(self.chat_room.recipient, self.chat_room.initiator, self.chat_room).deliver
+      UserMailer.delay(run_at: 30.seconds.from_now).peer_review(self.chat_room.initiator, self.chat_room.recipient, self.chat_room)
+      UserMailer.delay(run_at: 30.seconds.from_now).peer_review(self.chat_room.recipient, self.chat_room.initiator, self.chat_room)
     end
   end
 

@@ -21,7 +21,7 @@ class UserMailer < ApplicationMailer
 
   def welcome_new(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, 'Welcome to smartXchange')
+    set_name_and_title_and_unsubscribe(@user, "Welcome to smartXchange")
   end
 
   def weekly_notifications(user, notifications)
@@ -30,7 +30,7 @@ class UserMailer < ApplicationMailer
     @notifications = notifications
     add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_name_and_title_and_unsubscribe(@user, 'smartXchange Notifications')
+    set_name_and_title_and_unsubscribe(@user, "smartXchange Notifications")
   end
 
   def monthly_update(user, notifications)
@@ -38,14 +38,14 @@ class UserMailer < ApplicationMailer
     @notifications = notifications
     add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_name_and_title_and_unsubscribe(@user, 'Happy New Year!')
+    set_name_and_title_and_unsubscribe(@user, "Happy New Year!")
   end
 
   def reset_password(user, password)
     @user = user
     @password = password
     @url_change_password = "http://www.smartxchange.es/users/#{@user.id}/settings/change_password"
-    set_name_and_title_and_unsubscribe(@user, 'Password reset, smartXchange')
+    set_name_and_title_and_unsubscribe(@user, "Password reset, smartXchange")
   end
 
   def language_matches(user)
@@ -61,7 +61,7 @@ class UserMailer < ApplicationMailer
       end
     end
     add_campaign_to_login(matches_campaign)
-    set_name_and_title_and_unsubscribe(@user, 'Have you messaged these language practice peers?')
+    set_name_and_title_and_unsubscribe(@user, "Have you messaged these language practice peers?")
   end
 
   def notify_match(interested_user, matched_user)
@@ -76,17 +76,17 @@ class UserMailer < ApplicationMailer
 
   def suspicious_activity(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, 'Suspicious Activity')
+    set_name_and_title_and_unsubscribe(@user, "Suspicious Activity")
   end
 
   def premium_subscribe(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, 'Welcome to smartXchange Premium')
+    set_name_and_title_and_unsubscribe(@user, "Welcome to smartXchange Premium")
   end
 
   def premium_unsubscribe(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, 'Sorry to see you leave')
+    set_name_and_title_and_unsubscribe(@user, "Sorry to see you leave")
   end
 
   def new_conversation(chat_room)
@@ -128,6 +128,7 @@ class UserMailer < ApplicationMailer
 
   def unread_board(user, board)
     @user = user
+    # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
     @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
     set_name_and_title_and_unsubscribe(@user, "Check out the latest posts on the #{@user.language} board!")
   end
@@ -144,6 +145,16 @@ class UserMailer < ApplicationMailer
     # maybe refactor and get rid of cgi escape, according to hartl tutorial I need this
     @activate_account_url = "http://www.smartxchange.es/users/#{@user.id}/settings/activate_account/#{@user.activation_token}?email=#{CGI.escape(@user.email)}"
     set_name_and_title_and_unsubscribe(@user, "Activate your smartXchange account")
+  end
+
+  def new_post(notification)
+    @user = notification.notified
+    @notifier = notification.notifier
+    @post = notification.notifiable
+    @board = @post.board
+    @board_url = "http://www.smartxchange.es/boards/#{@board.id}" + posts_campaign
+    fetch_user_image(@notifier)
+    set_name_and_title_and_unsubscribe(@user, "You have a new post notification on the #{@board.title} board!")
   end
 
   private
@@ -179,6 +190,10 @@ class UserMailer < ApplicationMailer
 
   def conversations_campaign
     "?utm_source=conversation_email&utm_medium=email&utm_campaign=january_conversations"
+  end
+
+  def posts_campaign
+    "?utm_source=post_email&utm_medium=email&utm_campaign=january_posts"
   end
 
   def boards_campaign

@@ -68,4 +68,9 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.account_activation(User.first)
   end
 
+  def new_post
+    notification = Notification.where(read: false, notifiable_type: 'Post').last
+    UserMailer.new_post(notification)
+  end
+
 end

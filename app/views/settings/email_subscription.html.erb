@@ -50,9 +50,12 @@
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[unread_jobs]" value="false">
     <input type="checkbox" id="unread_jobs" name="email[unread_jobs]" value="true" <%= 'checked' if @user.email_subscription.unread_jobs %> >
-    <label for="unread_jobs">Unread Jobs Notification (you will be notified every few days if the smart jobs board has unread posts)</label><br><br>
+    <label for="unread_jobs">Unread Jobs Notification (you will be notified every few days if the smart jobs board has unread posts)</label><br>
+  </div>
+  <div class="email-subscription-checkbox">
+    <input type="hidden" name="email[new_post]" value="false">
+    <input type="checkbox" id="new_post" name="email[new_post]" value="true" <%= 'checked' if @user.email_subscription.new_post %> >
+    <label for="new_post">New Post Notification (you will be notified every time someone updates a post you own or are following)</label><br><br>
   </div>
   <input type="submit" value="Update Subscriptions" class="btn btn-primary settings">
 </form>
-<br>
-<%= link_to 'Back', user_settings_path(@user), class: 'btn btn-primary delete' %>
