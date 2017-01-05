@@ -10,7 +10,7 @@
           </div>
         </div>
         <div class="mail-user-text">
-          <p><span class="bold-uppercase"> <%= "#{@notifier.name}" %></span>, <%= "#{@notifier.title}, has updated the "%><i><%= truncate(@post.content, :length => 15) %></i><%= " post you own or are following on the " %><span class="bold-uppercase"><%= "#{@board.title}"%></span><%=" board" %></p>
+          <p><span class="bold-uppercase"> <%= "#{@notifier.name}" %></span>, <%= "#{@notifier.title}, has updated a post you own or are following on the " %><span class="bold-uppercase"><%= "#{@board.title}"%></span><%=" board" %></p>
           <%= link_to "View Board", @board_url, class: 'mail-btn' %>
         </div>
       </div>
