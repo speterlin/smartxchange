@@ -15,7 +15,7 @@ module PostsHelper
 
   def post_create_notifications(vote_or_comment_or_follow_or_post_update_or_comment_update, post)
     # first notification for post owner then for followers
-    post_create_notification(vote_or_comment_or_follow_or_post_update_or_comment_update, post) unless post.owner == vote_or_comment_or_follow_or_post_update_or_comment_update.owner
+    post_create_notification(vote_or_comment_or_follow_or_post_update_or_comment_update, post, post.owner) unless post.owner == vote_or_comment_or_follow_or_post_update_or_comment_update.owner
     if post.followers.any?
       post.followers.each do |follower|
         next if vote_or_comment_or_follow_or_post_update_or_comment_update.owner == follower
@@ -24,10 +24,9 @@ module PostsHelper
     end
   end
 
-  def post_create_notification(vote_or_comment_or_follow_or_post_update_or_comment_update, post, follower = nil)
+  # maybe refactor and get rid of post parameter, but would have to implement some additional logic to deal with notifiable_id
+  def post_create_notification(vote_or_comment_or_follow_or_post_update_or_comment_update, post, notified)
     @notification = nil
-    # maybe refactor, notified only placed here so don't have to declare as an instance variable
-    notified = follower ? follower : post.owner
     if post_notification_check(vote_or_comment_or_follow_or_post_update_or_comment_update, post, notified)
       @notification = Notification.create!(
         notified_id: notified.id,
