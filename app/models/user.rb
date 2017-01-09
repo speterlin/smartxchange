@@ -104,11 +104,12 @@ class User < ApplicationRecord
     # ensures email uniqueness validation through if statement in previous method
     # will set password as uid, hack job need to refactor
     # taking the first public Url image, assuming this is the most recent, not working at moment refactor
+    # to avoid unique name validation problems include this line
+    @name = User.find_by(name: auth['info']['name']) ? "New User" : auth['info']['name']
     user = User.create!(
       email: auth['info']['email'],
       password: auth['uid'],
-      # getting rid of name since this has to be unique and can cause problems, maybe refactor 
-      # name: auth['info']['name'],
+      name: @name,
       title: auth['info']['description'],
       image: auth['extra']['raw_info']['pictureUrls'].values.second[0],
       provider: auth['provider'],
