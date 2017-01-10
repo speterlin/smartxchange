@@ -85,7 +85,7 @@ class SessionsController < ApplicationController
       redirect_to login_path and return
     elsif !@user && !@@existing # register with linkedin and no linkedin account linked
       @user = User.create_with_omniauth(auth_hash)
-      flash[:success] = "Please check your email (registered with Linkedin) for account activation"
+      flash[:success] = "Please check your email (registered with Linkedin) for account activation. If you do not see the email please check your spam and promotion mailboxes."
       UserMailer.account_activation(@user).deliver_later
       redirect_to signup_path and return
     elsif @user && !@@existing # register with linkedin and existing linkedin account

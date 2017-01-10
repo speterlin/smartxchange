@@ -17,7 +17,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(user_params)
     if verify_recaptcha(model: @user) && @user.save
-      flash.now[:success] = "Please check your email for account activation"
+      flash.now[:success] = "Please check your email for account activation. If you do not see the email please check your spam and promotion mailboxes."
       UserMailer.account_activation(@user).deliver_later
       @user = nil
     else
