@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   # before_action :indiegogo_campaign, only: [:create]
 
   def new
-    @user_count = User.all.count - (User.all.count % 10)
+    @user_count = User.all.count - (User.all.count % 100)
     @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     if signed_in?
       redirect_to get_user_board_path(current_user)
@@ -23,7 +23,7 @@ class UsersController < ApplicationController
     else
       flash.now[:error] = @user.errors.full_messages.to_sentence
     end
-    @user_count = User.all.count - (User.all.count % 10)
+    @user_count = User.all.count - (User.all.count % 100)
     @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     render :new
   end
