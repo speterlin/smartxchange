@@ -12,9 +12,12 @@
 <!-- Header Row -->
 <!-- maybe refactor this a little -->
   <div class="row">
-    <h4><a href="<%= all_users_path %>">All: <span style="font-weight: 300;"> <%= User.all.count %> </span></a>,
-      <a href="<%= active_users_path %>">Active: <span style="font-weight: 300;"> <%= User.where(active: true).count %> </span></a>,
-      <a href="<%= tutors_users_path %>">Tutors: <span style="font-weight: 300;"> <%= User.where(tutor: true).count %> </span></a>,
+    <h4>
+      <% if current_user.admin? %>
+        <a href="<%= all_users_path %>">All: <span style="font-weight: 300;"><%= User.all.count %></span></a>,
+        <a href="<%= active_users_path %>">Active: <span style="font-weight: 300;"><%= User.where(active: true).count %></span></a>,
+      <% end %>
+      <a href="<%= tutors_users_path %>">Tutors: <span style="font-weight: 300;"><%= User.where(tutor: true).count %></span></a>,
       <a href="<%= spanish_users_path %>"><%= user_convert_nationality_to_img('Spanish') %> : <span style="font-weight: 300;"> <%= User.where(language: 'Spanish').count %> </span></a>,
       <a href="<%= italian_users_path %>"><%= user_convert_nationality_to_img('Italian') %> : <span style="font-weight: 300;"> <%= User.where(language: 'Italian').count %> </span></a>,
       <a href="<%= german_users_path %>"><%= user_convert_nationality_to_img('German') %> : <span style="font-weight: 300;"> <%= User.where(language: 'German').count %> </span></a>,

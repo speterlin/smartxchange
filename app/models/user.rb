@@ -225,6 +225,11 @@ class User < ApplicationRecord
     self.id == 6
   end
 
+  # maybe add admin column if there are many admins in the future
+  def admin?
+    self.id == 1
+  end
+
   protected
 
   def ensure_session_token

@@ -12,15 +12,15 @@ class SessionsController < ApplicationController
   end
 
   def create
+    # maybe refactor find_by_credentials, need all these is_a?(User) because method can return just an email as well
     @user = User.find_by_credentials(params[:user])
-    # maybe refactor this is repeated below
-    unless @user.activated?
-      flash[:error] = "User not activated, please check your email and activate account"
-      redirect_to login_path and return
-    end
-    if @user.is_a?(User)
+    if @user.is_a?(User) && @user.activated?
       sign_in!(@user)
       normal_sign_in
+    # maybe refactor, this is repeated below
+    elsif @user.is_a?(User) && !@user.activated?
+      flash[:error] = "User not activated, please check your email and activate account"
+      redirect_to login_path and return
     else
       @email = @user
       flash.now[:error] = "Invalid email and/or password"
@@ -98,7 +98,7 @@ class SessionsController < ApplicationController
     end # @user && @@existing, sign in with linkedin and account exists
     @@existing = false
     unless @user.activated?
-      flash[:error] = "User not activated, please check your email and activate account"
+      flash[:error] = "User not activated, please check your email (registered with Linkedin) and activate account"
       redirect_to login_path and return
     end
     sign_in!(@user)
