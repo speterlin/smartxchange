@@ -38,16 +38,21 @@ class UsersController < ApplicationController
         @users = @users.where(tutor: true)
       end
       # maybe refactor, seperating language and language level from rest of search string, stripping white space, and performing search only on the remaining values for generic fields
-      if search.scan(/spanish|italian|english|french|german/).any? && search.scan(/[a-c][1-2]/).any?
-        language = /spanish|italian|english|french|german/.match(search)[0]
-        search.slice!(language)
-        levels = search.scan(/[a-c][1-2]/)
-        # removing levels from search string
-        levels.each {|level| search.slice!(level) }
-        ratings = levels.map {|level| user_convert_language_level_to_rating(level)}
-        search = search.strip
-        # need references to make it work, maybe refactor later and include and (language and language_level match)
-        @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(language) LIKE :language AND language_level IN (:ratings))', search: "%#{search}%", language: language, ratings: ratings).references(:linkedin).paginate(page: params[:page], per_page: 12)
+      if search.scan(/spanish|italian|english|french|german/).any?
+        language_or_nationality = /spanish|italian|english|french|german/.match(search)[0]
+        search.slice!(language_or_nationality)
+        if search.scan(/[a-c][1-2]/).any?
+          levels = search.scan(/[a-c][1-2]/)
+          # removing levels from search string
+          levels.each {|level| search.slice!(level) }
+          ratings = levels.map {|level| user_convert_language_level_to_rating(level)}
+          search = search.strip
+          # need references to make it work, maybe refactor later
+          @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(language) LIKE :language AND language_level IN (:ratings))', search: "%#{search}%", language: language_or_nationality, ratings: ratings).references(:linkedin).paginate(page: params[:page], per_page: 12)
+        else
+          search = search.strip
+          @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(nationality) LIKE :language_or_nationality)', search: "%#{search}%", language_or_nationality: language_or_nationality).references(:linkedin).paginate(page: params[:page], per_page: 12)
+        end
       else
         @users = @users.where('lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search OR lower(nationality) LIKE :search', search: "%#{search}%").references(:linkedin).paginate(page: params[:page], per_page: 12)
       end
