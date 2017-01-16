@@ -30,7 +30,6 @@ class UsersController < ApplicationController
 
   def index
     if params[:search]
-      original_search = params[:search].downcase
       search = params[:search].downcase
       @users = User.includes(:linkedin)
       if search.scan(/tutor|teacher/).any?
@@ -48,7 +47,7 @@ class UsersController < ApplicationController
         ratings = levels.map {|level| user_convert_language_level_to_rating(level)}
         search = search.strip
         # need references to make it work, maybe refactor later and include and (language and language_level match)
-        @users = @users.where('lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search OR (lower(language) LIKE :language AND language_level IN (:ratings))', search: "%#{search.empty? ? original_search : search}%", language: language, ratings: ratings).references(:linkedin).paginate(page: params[:page], per_page: 12)
+        @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(language) LIKE :language AND language_level IN (:ratings))', search: "%#{search}%", language: language, ratings: ratings).references(:linkedin).paginate(page: params[:page], per_page: 12)
       else
         @users = @users.where('lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search OR lower(nationality) LIKE :search', search: "%#{search}%").references(:linkedin).paginate(page: params[:page], per_page: 12)
       end
