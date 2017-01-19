@@ -1,7 +1,6 @@
 == README
 
-Ruby on Rails basic application to allow users to find each other for the purpose of practicing languages.
- Constantly adding new features, open to suggestions.
+Ruby on Rails basic application to allow users to find each other for the purpose of practicing languages. Featured in IE Business School Career Newsletter with over 200 users across the world. Constantly adding new features, open to suggestions.
 
 * Ruby 2.3, Rails 5.0, using Puma server locally, redis in production
 
