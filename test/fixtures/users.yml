@@ -105,7 +105,7 @@ Chat_bot:
   language_level: 5
   title: Play me in trivia about the United Kingdom
   age: 0
-  nationality: English
+  nationality: British
 Tutor:
   id: 7
   email: example6@gmail.com

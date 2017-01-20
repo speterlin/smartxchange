@@ -5,7 +5,7 @@
     <% user = chat_room_interlocutor(chat_room, current_user) %>
       <!-- using user scss here may refactor change to chat css later -->
         <div class="chat-room-image">
-          <%= user_convert_nationality_to_img(user.nationality) %>
+          <%= user_convert_language_or_nationality_to_img(user.nationality) %>
         </div>
         <div class="chat-room-content">
           <p><%= "#{user.name} #{unread}" %> <%= image_tag('green-dot.png', alt: 'Active') if user.active %> - <%= "#{chat_room.title} Conversation"%></p>

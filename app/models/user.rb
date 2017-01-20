@@ -42,6 +42,7 @@ class User < ApplicationRecord
   validates :title, length: {minimum: 5, maximum: 255}
   validates :name, uniqueness: true, length: {minimum: 2, maximum: 255}
   validates :age, numericality: { only_integer: true }
+  validates_inclusion_of :language, in: ["Spanish", "Italian", "German", "French", "English"]
   validates :language_level, numericality: {only_integer: true} #may change this since it's a dropdown
   # to prevent nil values in boolean field, according to stackoverflow
   validates :person_of_interest, :tutor, :inclusion => {:in => [true, false]}
