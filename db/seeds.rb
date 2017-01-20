@@ -7,7 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 #May want to re-seed
-u = User.create!(email: 'speterlin12@gmail.com',password: 'password', name: 'Sebastian Peterlin', language: 'Spanish', language_level: 3, title: "Co-founder of smartXchange, IMBA 2016 Candidate at IE Business School", image: File.open("app/assets/images/Sebastian_Peterlin professional.jpg"), age: 27, nationality: "USA");
+u = User.create!(email: 'speterlin12@gmail.com',password: 'password', name: 'Sebastian Peterlin', language: 'Spanish', language_level: 3, title: "Co-founder of smartXchange, IMBA 2016 Candidate at IE Business School", image: File.open("app/assets/images/Sebastian Peterlin.jpg"), age: 27, nationality: "USA");
 u1 = User.create!(email: 'example1@gmail.com',password: 'password', name: 'Patsy Purdy', language: 'Spanish', language_level: 4, title: "English teacher, Masters in Communications graduate", image: File.open("app/assets/images/Patsy Purdy.jpg"), age: 26, nationality: "Algerian");
 u2 = User.create!(email: 'example2@gmail.com',password: 'password', name: 'Abigale Jacobson', language: 'French', language_level: 5, title: "Dentistry student at Complutense University of Madrid", image: File.open("app/assets/images/Abigale Jacobson.jpg"), age: 24, nationality: "Danish");
 u3 = User.create!(email: 'example3@gmail.com',password: 'password', name: 'Coty Smitham', language: 'German', language_level: 2, title: "PhD in Mathematical Science at Complutense University of Madrid", image: File.open("app/assets/images/Coty Smitham.jpg"), age: 28, nationality: "Canadian");
@@ -26,7 +26,7 @@ b5 = Board.create!(title: 'German', description: 'A board for those looking to l
 b6 = Board.create!(title: 'French', description: 'A board for those looking to learn and practice French. A board where you can post about potential language exchange meetups, tutoring offers, professional tips, your projects (such as Kickstarter projects), links to your work (such as art, design, development), and educational, interesting, or other material. You can upvote or downvote a post (making someone\'s or your own post more popular), comment on a post, and follow a post so that you receive all notifications for that post. You are limited to 5 posts, 10 votes, and 10 comments per 24 hour period :).');
 
 p1 = Package.create!(classification: 'Standard', description: 'Access to the Platform', price: 0)
-p2 = Package.create!(classification: 'Premium', description: 'Access to conversations with persons of interest (Professors, Managers, CEOs, artists, etc), language learning aids (chatbots, tutoring), and tailored services to meet your needs!', price: 4.99)
+p2 = Package.create!(classification: 'Premium', description: 'Access to conversations with persons of interest (Professors, Managers, CEOs, artists, etc), language learning aids (chatbots, smartXchange verified tutors), and tailored services to meet your needs!', price: 4.99)
 # languages = ["Spanish","English","German","French"]
 # language_levels = [1,2,3,4,5,6,7,8,9,10]
 # ages = [23,25,27,29,31,33,35,37]
