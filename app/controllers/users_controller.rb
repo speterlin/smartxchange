@@ -4,6 +4,7 @@ class UsersController < ApplicationController
 
   skip_before_action :require_signed_in!, only: [:new, :create, :email_match]
   before_action :correct_user?, only: [:update, :destroy]
+  before_action :require_admin?, only: [:active, :map]
   # before_action :indiegogo_campaign, only: [:create]
 
   def new
@@ -171,6 +172,13 @@ class UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(:password, :email, :name, :age, :title, :language, :language_level, :image, :nationality, :location, interests: [])
+  end
+
+  def require_admin?
+    unless current_user.admin?
+      flash[:error] = "Must be admin user to access this page"
+      redirect_to root_path
+    end
   end
 
 end
