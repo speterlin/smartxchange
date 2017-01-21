@@ -22,15 +22,16 @@
           center: {lat: 0, lng: 0},
           zoom: 2
         });
-        function addMarker(position) {
+        function addMarker(user) {
           return new google.maps.Marker({
-            position: position,
+            position: user.position,
+            label: user.name,
             map: map
           });
         }
         var markers = [];
         <% @users.each do |user| %>
-          markers = markers.concat(addMarker({lat: <%= user.latitude %>, lng: <%= user.longitude%>}));
+          markers = markers.concat(addMarker({position: {lat: <%= user.latitude %>, lng: <%= user.longitude %>}, name: "<%= user.name %>"}));
         <% end %>
         var markerCluster = new MarkerClusterer(map, markers,
             {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'}
