@@ -1,0 +1,5 @@
+<% my_url = "http://maps.google.com/maps/api/staticmap?&zoom=2&size=600x400&key=#{ENV['GOOGLE_API_KEY']}" %>
+<% @users.each do |user| %>
+<% my_url += "&markers=#{user.latitude}%2C#{user.longitude}" %>
+<% end %>
+<%= image_tag my_url %>

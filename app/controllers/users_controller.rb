@@ -151,6 +151,11 @@ class UsersController < ApplicationController
     render :index
   end
 
+  def map
+    @users = User.where.not(latitude: nil)
+    render :map
+  end
+
   def email_match
     @user = User.find(params[:user_id])
     @match = User.find(params[:match_id])
