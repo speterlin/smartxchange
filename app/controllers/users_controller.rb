@@ -33,7 +33,7 @@ class UsersController < ApplicationController
     if params[:search]
       search = params[:search].downcase
       @users = User.includes(:linkedin)
-      if search.scan(/tutor|teacher/).any?
+      if search.scan(/tutor/).any?
         search.slice!(search.scan(/tutor|teacher/)[0])
         search = search.strip
         @users = @users.where(tutor: true)
