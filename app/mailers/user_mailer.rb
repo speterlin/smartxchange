@@ -19,6 +19,13 @@ class UserMailer < ApplicationMailer
   # bit of a hack, maybe refactor need @user to be set before sending, welcome new will always be true just there so doesn't enter method
   after_action :prevent_delivery_to_unsubscribed, except: [:welcome_new, :reset_password, :suspicious_activity, :premium_subscribe, :premium_unsubscribe, :account_activation]
 
+  def account_activation(user)
+    @user = user
+    # maybe refactor and get rid of cgi escape, according to hartl tutorial I need this
+    @activate_account_url = "http://www.smartxchange.es/users/#{@user.id}/settings/activate_account/#{@user.activation_token}?email=#{CGI.escape(@user.email)}"
+    set_name_and_title_and_unsubscribe(@user, "Activate your smartXchange account")
+  end
+
   def welcome_new(user)
     @user = user
     set_name_and_title_and_unsubscribe(@user, "Welcome to smartXchange")
@@ -38,14 +45,7 @@ class UserMailer < ApplicationMailer
     @notifications = notifications
     add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_name_and_title_and_unsubscribe(@user, "Happy New Year!")
-  end
-
-  def reset_password(user, password)
-    @user = user
-    @password = password
-    @url_change_password = "http://www.smartxchange.es/users/#{@user.id}/settings/change_password"
-    set_name_and_title_and_unsubscribe(@user, "Password reset, smartXchange")
+    set_name_and_title_and_unsubscribe(@user, "smartXchange is hosting its first event ever!")
   end
 
   def language_matches(user)
@@ -74,19 +74,18 @@ class UserMailer < ApplicationMailer
     set_name_and_title_and_unsubscribe(@user, "#{@interested_user.name} wants to practice #{@interested_user.language}")
   end
 
-  def suspicious_activity(user)
+  def unread_board(user, board)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, "Suspicious Activity")
+    # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    set_name_and_title_and_unsubscribe(@user, "Check out the latest posts on the #{@user.language} board!")
   end
 
-  def premium_subscribe(user)
+  def unread_jobs(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, "Welcome to smartXchange Premium")
-  end
-
-  def premium_unsubscribe(user)
-    @user = user
-    set_name_and_title_and_unsubscribe(@user, "Sorry to see you leave")
+    board = Board.find(2)
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + jobs_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    set_name_and_title_and_unsubscribe(@user, "View the latest jobs on the Smart Jobs board!")
   end
 
   def new_conversation(chat_room)
@@ -105,6 +104,16 @@ class UserMailer < ApplicationMailer
     @chat_room_url = "http://www.smartxchange.es/chat_rooms/#{message.chat_room.id}" + conversations_campaign
     fetch_user_image(@sender)
     set_name_and_title_and_unsubscribe(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
+  end
+
+  def new_post(notification)
+    @user = notification.notified
+    @notifier = notification.notifier
+    @post = notification.notifiable
+    @board = @post.board
+    @board_url = "http://www.smartxchange.es/boards/#{@board.id}" + posts_campaign
+    fetch_user_image(@notifier)
+    set_name_and_title_and_unsubscribe(@user, "You have a new post notification on the #{@board.title} board!")
   end
 
   def peer_review(user, other_user, chat_room)
@@ -126,45 +135,36 @@ class UserMailer < ApplicationMailer
     set_name_and_title_and_unsubscribe(@user, "#{@other_user.name} has left you a review")
   end
 
-  def unread_board(user, board)
+  def reset_password(user, password)
     @user = user
-    # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
-    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
-    set_name_and_title_and_unsubscribe(@user, "Check out the latest posts on the #{@user.language} board!")
+    @password = password
+    @url_change_password = "http://www.smartxchange.es/users/#{@user.id}/settings/change_password"
+    set_name_and_title_and_unsubscribe(@user, "Password reset, smartXchange")
   end
 
-  def unread_jobs(user)
+  def suspicious_activity(user)
     @user = user
-    board = Board.find(2)
-    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + jobs_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
-    set_name_and_title_and_unsubscribe(@user, "View the latest jobs on the Smart Jobs board!")
+    set_name_and_title_and_unsubscribe(@user, "Suspicious Activity")
   end
 
-  def account_activation(user)
+  def premium_subscribe(user)
     @user = user
-    # maybe refactor and get rid of cgi escape, according to hartl tutorial I need this
-    @activate_account_url = "http://www.smartxchange.es/users/#{@user.id}/settings/activate_account/#{@user.activation_token}?email=#{CGI.escape(@user.email)}"
-    set_name_and_title_and_unsubscribe(@user, "Activate your smartXchange account")
+    set_name_and_title_and_unsubscribe(@user, "Welcome to smartXchange Premium")
   end
 
-  def new_post(notification)
-    @user = notification.notified
-    @notifier = notification.notifier
-    @post = notification.notifiable
-    @board = @post.board
-    @board_url = "http://www.smartxchange.es/boards/#{@board.id}" + posts_campaign
-    fetch_user_image(@notifier)
-    set_name_and_title_and_unsubscribe(@user, "You have a new post notification on the #{@board.title} board!")
+  def premium_unsubscribe(user)
+    @user = user
+    set_name_and_title_and_unsubscribe(@user, "Sorry to see you leave")
   end
 
   private
 
   def set_footer_urls
-    @url_mobile_tutorial = "http://www.smartxchange.es/about#video-mobile"
+    @url_xchange_option = "http://www.smartxchange.es/users/exchange"
   end
 
   def add_campaign_to_footer(campaign)
-    @url_mobile_tutorial = "http://www.smartxchange.es/about#{campaign}#video-mobile"
+    @url_xchange_option += campaign
   end
 
   def set_login_url
