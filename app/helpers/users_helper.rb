@@ -62,6 +62,26 @@ module UsersHelper
     image_tag("country-flags/#{nationality}-flag-circular.png", alt: "#{nationality}")
   end
 
+  def user_convert_nationality_to_language(nationality)
+    language = nationality
+    language = 'English' if user_convert_language_to_nationalities('English').include?(nationality)
+    language = 'Spanish' if user_convert_language_to_nationalities('Spanish').include?(nationality)
+    language = 'German' if user_convert_language_to_nationalities('German').include?(nationality)
+    language
+  end
+
+  def user_convert_language_to_nationalities(language)
+    if language == 'English'
+      return ['Australian', 'Briitsh', 'Canadian', 'Irish', 'New Zealander', 'South African', 'USA']
+    elsif language == 'Spanish'
+      return ['Argentinian', 'Bolivian', 'Colombian', 'Ecuadorian', 'Guatemalan', 'Honduran', 'Mexican', 'Peruvian', 'Spanish', 'Uruguayan', 'Venezuelan']
+    elsif language == 'German'
+      return ['Austrian', 'German']
+    else
+      return [language]
+    end
+  end
+
   def user_convert_interests(number)
     if number == "1"
       return "Sales / Business Development"

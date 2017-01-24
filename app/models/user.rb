@@ -35,6 +35,7 @@
 
 class User < ApplicationRecord
   include Locatable
+  include UsersHelper
 
   validates_presence_of :email, :name, :age, :language, :language_level, :title, :password_digest, :session_token, :nationality
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
@@ -187,6 +188,12 @@ class User < ApplicationRecord
 
   def sort_method
     User.where(language: self.language).where.not(id: self.id).includes(:linkedin).sort {|u1, u2| u2.sort_value(self) <=> u1.sort_value(self) }
+  end
+
+  def sort_exchange
+    language = user_convert_nationality_to_language(self.nationality)
+    nationalities = user_convert_language_to_nationalities(self.language)
+    User.where("nationality IN (:nationalities)", nationalities: nationalities).where(language: language).where.not(id: self.id).includes(:linkedin).sort {|u1, u2| u2.sort_value(self) <=> u1.sort_value(self) }
   end
 
   def sort_value(base_user)

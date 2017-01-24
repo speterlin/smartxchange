@@ -157,6 +157,11 @@ class UsersController < ApplicationController
     render :map
   end
 
+  def exchange
+    @users = current_user.sort_exchange.paginate(page: params[:page], per_page: 12)
+    render :index
+  end
+
   def email_match
     @user = User.find(params[:user_id])
     @match = User.find(params[:match_id])

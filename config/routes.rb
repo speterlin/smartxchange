@@ -29,6 +29,7 @@ Rails.application.routes.draw do
     get 'german', on: :collection
     get 'english', on: :collection
     get 'map', on: :collection
+    get 'exchange', on: :collection
     get 'email_match/:matches_token/:match_id', to: 'users#email_match'
     get 'settings' => 'settings#show'
     get 'reset_password' => 'settings#reset_password', on: :collection
