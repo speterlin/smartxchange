@@ -8,7 +8,10 @@ module MessagesHelper
     # The more faded it is the worse the level
     filtered = (1 - message.sender.language_level.to_f / 6)
     filtered = number_to_percentage(filtered*100)
-    image_tag("country-flags/#{message.sender.language}-flag-circular.png", :style => "-webkit-filter: grayscale(#{filtered});", alt: "#{message.sender.language}")
+    # maybe refactor later, to acccount for change of English-flag-circular.png to British-flag-circular.png
+    language_or_nationality = message.sender.language
+    language_or_nationality = 'British' if language_or_nationality == 'English'
+    image_tag("country-flags/#{language_or_nationality}-flag-circular.png", :style => "-webkit-filter: grayscale(#{filtered});", alt: "#{message.sender.language}")
   end
 
 end
