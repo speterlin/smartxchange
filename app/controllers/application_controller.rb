@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :current_user, :signed_in?
 
-  before_action :require_signed_in!, :set_timezone
+  before_action :require_signed_in!, :set_time_zone
 
   private
 
@@ -68,10 +68,11 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def set_timezone
+  def set_time_zone
     min = cookies["time_zone"].to_i
-    #  probably refactor later, the time zone offset is - off UTC, but ActiveSupport::TimeZone[] adds it to London time, therefore have to adjust 1 hour
-    min += 60
+    #  probably refactor later, the time zone offset is off UTC, but ActiveSupport::TimeZone[] adds it to London time, therefore have to adjust 1 hour in development, 2 hours in production (don't know reason for difference in production)
+    min += 60 if Rails.env.development?
+    min += 120 if Rails.env.production?
     Time.zone = ActiveSupport::TimeZone[-min.minutes]
   end
 
