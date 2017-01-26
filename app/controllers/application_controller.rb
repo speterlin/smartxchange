@@ -72,7 +72,7 @@ class ApplicationController < ActionController::Base
     min = cookies["time_zone"].to_i
     #  probably refactor later, the time zone offset is off UTC, but ActiveSupport::TimeZone[] adds it to London time, therefore have to adjust 1 hour in development, 2 hours in production (don't know reason for difference in production)
     min += 60 if Rails.env.development?
-    min += 120 if Rails.env.production?
+    # min += 120 if Rails.env.production?
     Time.zone = ActiveSupport::TimeZone[-min.minutes]
   end
 
