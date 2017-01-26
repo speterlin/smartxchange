@@ -11,8 +11,6 @@
 #
 
 class Message < ApplicationRecord
-  include ChatRoomsHelper
-
   validates_presence_of :chat_room, :sender, :body
   validates :body, length: {minimum: 1, maximum: 500}
 
