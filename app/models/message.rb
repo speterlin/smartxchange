@@ -11,6 +11,8 @@
 #
 
 class Message < ApplicationRecord
+  include ChatRoomsHelper
+
   validates_presence_of :chat_room, :sender, :body
   validates :body, length: {minimum: 1, maximum: 500}
 
@@ -32,8 +34,11 @@ class Message < ApplicationRecord
   protected
 
   def notify_recipient?
-    if self.chat_room.updated_at < 1.hour.ago
-      UserMailer.delay(run_at: 30.seconds.from_now).new_message(self)
+    # if the chat_room hasn't been updated in an hour, or if I send a message and it's the first message (of many messages) I've sent in the chat room in over an hour or if it's the first response in a chat_room, notify the recipient.
+    if self.chat_room.updated_at < 1.hour.ago ||
+      self.chat_room.messages.where(sender_id: self.sender.id).size > 1 && self.chat_room.messages.where(sender_id: self.sender.id)[-2].created_at < 1.hour.ago ||
+      self.chat_room.messages.where(sender_id: self.sender.id).size == 1 && self.chat_room.messages.size > 1
+      UserMailer.delay(run_at: 10.seconds.from_now).new_message(self)
     end
   end
 
