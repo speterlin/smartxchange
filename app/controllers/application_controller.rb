@@ -30,8 +30,9 @@ class ApplicationController < ActionController::Base
   end
 
   def normal_sign_in
-    random_match = current_user.sort_method[0..24].sample
-    flash[:notice] = "Welcome back #{current_user.name}! Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a>?"
+    random_match = current_user.sort_exchange[0..24].sample
+    random_match = current_user.sort_method[0..24].sample unless random_match
+    flash[:notice] = "Welcome back #{current_user.name}! Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"
     redirect_to(session[:return_to] || get_user_board_path(current_user))
     session[:return_to] = nil
   end
@@ -76,7 +77,7 @@ class ApplicationController < ActionController::Base
   end
 
   def welcome_new(user)
-    flash[:success] = "Welcome to smartXchange! Complete your profile and start networking and practicing your language! Make sure to update your nationality so that your country's flag will be displayed to others when they talk with you"
+    flash[:success] = "Welcome to smartXchange! Complete your profile and navigate to the People page to start practicing your language! Make sure to update your native country to accurately match with language exchange options"
     UserMailer.welcome_new(user).deliver_later
     redirect_to user_path(user)
   end

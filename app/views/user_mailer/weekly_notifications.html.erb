@@ -6,11 +6,6 @@
     <p>
       You have <%= pluralize(@notifications, "new notification") %>. <%= link_to "Log in", @url_login, class:'mail-btn'  %> to see your unread <%= "notification".pluralize(@notifications) %>!
     </p>
-    <p>
-      smartXchange will be hosting its first event ever! Tomorrow (Friday, January 27), we will host an event from 18.00-20.00 at the European Institute for Entrepreneurship, C. General Arrando 9, Madrid, Spain.
-      If you are in Madrid and would like to meet other people from smartXchange and Madrid, pay €4 and register for the <a href="https://www.eventbrite.es/e/entradas-smartxchange-networking-event-31420940880">smartXchange networking event</a>
-      or pay €5 at the door.
-    </p>
   </body>
   <%= render 'layouts/footer_mail' %>
 </html>
