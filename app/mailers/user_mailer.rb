@@ -63,7 +63,7 @@ class UserMailer < ApplicationMailer
     end
     add_campaign_to_login(campaign)
     @notify_message = match_or_exchange == "match" ? "Are you interested in practicing #{@user.language} with any of the following users?" : "Are you interested in exchanging your native #{user_convert_nationality_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
-    @login_message = match_or_exchange == "match" ? "to find more people practicing #{@user.language}" : "to find more native #{@user.language} speakers practicing #{user_convert_nationality_to_language(@user.nationality)}."
+    @login_message = match_or_exchange == "match" ? "to find more people practicing #{@user.language}." : "to find more native #{@user.language} speakers practicing #{user_convert_nationality_to_language(@user.nationality)}."
     title = match_or_exchange == "match" ? "Have you messaged these language practice peers?" : "Have you messaged these language exchange options?"
     set_name_and_title_and_unsubscribe(@user, title)
   end
