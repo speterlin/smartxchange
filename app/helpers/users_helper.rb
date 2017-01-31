@@ -72,7 +72,7 @@ module UsersHelper
 
   def user_convert_language_to_nationalities(language)
     if language == 'English'
-      return ['Australian', 'Briitsh', 'Canadian', 'Irish', 'New Zealander', 'South African', 'USA']
+      return ['Australian', 'British', 'Canadian', 'Irish', 'New Zealander', 'South African', 'USA']
     elsif language == 'Spanish'
       return ['Argentinian', 'Bolivian', 'Colombian', 'Ecuadorian', 'Guatemalan', 'Honduran', 'Mexican', 'Peruvian', 'Spanish', 'Uruguayan', 'Venezuelan']
     elsif language == 'German'

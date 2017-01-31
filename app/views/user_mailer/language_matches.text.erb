@@ -1,6 +1,6 @@
 Dear <%= @user.name %>,
 ===============================================
-Are you interested in practicing <%= @user.language %> with any of the following users? Notify them within 24 hours.
+<%= @notify_message %> Notify them within 24 hours.
 
 <% if @matches.any? %>
   <ul>
@@ -13,4 +13,4 @@ Are you interested in practicing <%= @user.language %> with any of the following
     <% end %>
   </ul>
 <% end %>
-<%= link_to "Log in", @url_login, class:'mail-btn' %> to see more people practicing <%= @user.language %><br><br>
+<%= link_to "Log in", @url_login, class:'mail-btn' %> <%= @login_message %><br><br>

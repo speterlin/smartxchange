@@ -8,7 +8,7 @@ class UserMailer < ApplicationMailer
   # for using a_or_an method in emails
   include ApplicationHelper
   include ChatRoomsHelper
-  include BoardsHelper
+  include UsersHelper
   add_template_helper(ApplicationHelper)
 
   # all emails where we're using normal footer_mail (rather than footer_mail_simple)
@@ -48,20 +48,24 @@ class UserMailer < ApplicationMailer
     set_name_and_title_and_unsubscribe(@user, "smartXchange is hosting its first event ever!")
   end
 
-  def language_matches(user)
+  def language_matches(user, match_or_exchange)
     @user = user
-    @matches = @user.sort_method[0..24].shuffle[0..5]
+    @matches = match_or_exchange == "match" ? @user.sort_method[0..24].shuffle[0..5] : @user.sort_exchange[0..24].shuffle[0..5]
     @matches_token = @user.create_matches_token!
     @url_email_match = "http://www.smartxchange.es/users/#{@user.id}/email_match/#{@matches_token}/"
+    campaign = match_or_exchange == "match" ? matches_campaign : exchanges_campaign
     if @matches.any?
       @match_urls = Hash.new
       @matches.each do |match|
         fetch_user_image(match)
-        @match_urls[match.id] = [@url_email_match + match.id.to_s + matches_campaign, "http://www.smartxchange.es/users/#{match.id}" + matches_campaign]
+        @match_urls[match.id] = [@url_email_match + match.id.to_s + campaign, "http://www.smartxchange.es/users/#{match.id}" + campaign]
       end
     end
-    add_campaign_to_login(matches_campaign)
-    set_name_and_title_and_unsubscribe(@user, "Have you messaged these language practice peers?")
+    add_campaign_to_login(campaign)
+    @notify_message = match_or_exchange == "match" ? "Are you interested in practicing #{@user.language} with any of the following users?" : "Are you interested in exchanging your native #{user_convert_nationality_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
+    @login_message = match_or_exchange == "match" ? "to find more people practicing #{@user.language}" : "to find more native #{@user.language} speakers practicing #{user_convert_nationality_to_language(@user.nationality)}."
+    title = match_or_exchange == "match" ? "Have you messaged these language practice peers?" : "Have you messaged these language exchange options?"
+    set_name_and_title_and_unsubscribe(@user, title)
   end
 
   def notify_match(interested_user, matched_user)
@@ -186,6 +190,10 @@ class UserMailer < ApplicationMailer
 
   def matches_campaign
     "?utm_source=matches_email&utm_medium=email&utm_campaign=january_matches"
+  end
+
+  def exchanges_campaign
+    "?utm_source=exchanges_email&utm_medium=email&utm_campaign=january_exchanges"
   end
 
   def conversations_campaign

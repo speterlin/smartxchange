@@ -15,7 +15,10 @@ task :send_language_matches => :environment do
   # need to turn activerecord relation into array in order to use pop
   @users = User.all.to_a.shuffle
   20.times do
-    UserMailer.language_matches(@users.pop).deliver
+    UserMailer.language_matches(@users.pop, "match").deliver
+  end
+  20.times do
+    UserMailer.language_matches(@users.pop, "exchange").deliver
   end
 end
 
