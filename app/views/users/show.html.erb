@@ -14,48 +14,40 @@
           <form action="<%= user_path(@user) %>" method="post" enctype="multipart/form-data">
             <input type="hidden" name="_method" value="patch">
             <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-            <label>Name / Nickname<br>
-              <input id="user-name" name="user[name]" type="text" value="<%= @user.name %>"><br>
-            </label><br>
-            <label>Age<br>
-              <input id="user-age" name="user[age]" type="text" value="<%= @user.age %>"><br>
-            </label><br>
-            <label>Profession / Title<br>
-              <!-- Textarea cols (width) is 23 to align with name input width and because of course Jordan -->
-              <textarea id="user-title" name="user[title]" rows="3"><%= @user.title %></textarea><br>
-            </label><br>
-            <label>Language (to practice)<br>
-              <select name="user[language]">
+            <label for="user-name">Name / Nickname</label><br>
+            <input id="user-name" name="user[name]" type="text" value="<%= @user.name %>"><br>
+            <label for="user-age">Age</label><br>
+            <input id="user-age" name="user[age]" type="text" value="<%= @user.age %>"><br>
+            <label for="user-title">Profession / Title</label><br>
+            <textarea id="user-title" name="user[title]" rows="3"><%= @user.title %></textarea><br>
+            <label for="user-language">Language (to practice)</label><br>
+              <select id="user-language" name="user[language]">
                <option value="Spanish" <%= 'selected' if @user.language=='Spanish'%> >Spanish</option>
                <option value="English" <%= 'selected' if @user.language=='English'%> >English</option>
                <option value="German" <%= 'selected' if @user.language=='German'%> >German</option>
                <option value="French" <%= 'selected' if @user.language=='French'%> >French</option>
                <option value="Italian" <%= 'selected' if @user.language=='Italian'%> >Italian</option>
-             </select>
-            </label><br>
-            <label>Language level <br>
-              <select name="user[language_level]">
+             </select><br>
+            <label for="user-language-level">Language level</label><br>
+              <select id="user-language-level" name="user[language_level]">
                  <option value="1" <%= 'selected' if @user.language_level==1 %> >A1 - beginner</option>
                  <option value="2" <%= 'selected' if @user.language_level==2 %> >A2 - elementary</option>
                  <option value="3" <%= 'selected' if @user.language_level==3 %> >B1 - intermediate</option>
                  <option value="4" <%= 'selected' if @user.language_level==4 %> >B2 - upper intermediate</option>
                  <option value="5" <%= 'selected' if @user.language_level==5 %> >C1 - advanced</option>
                  <option value="6" <%= 'selected' if @user.language_level==6 %> >C2 - master</option>
-             </select>
-            </label><br>
-            <label>Native country<br>
-              <select name="user[nationality]">
+               </select><br>
+            <label for="user-nationality">Native country</label><br>
+              <select id="user-nationality" name="user[nationality]">
                 <% user_nationalities.each do |nationality| %>
                   <option value="<%= nationality[0] %>" <%= "selected" if @user.nationality == nationality[0] %> ><%= nationality[1] %></option>
                 <% end %>
-             </select>
-           </label><br>
-           <label>Location (City, Country / Landmark)<br>
-             <input type="text" name="user[location]" value="<%= @user.location %>">
-           </label>
-            <label>Picture<br>
-              <input type="file" name="user[image]" value="<%= @user.image.small_thumb %>">
-            </label><br>
+              </select><br>
+            <label for="user-location">Location (City, Country / Landmark)</label><br>
+            <input id="user-location" type="text" name="user[location]" value="<%= @user.location %>"><br>
+            <label for="user-image">Picture</label><br>
+            <input id="user-image" type="file" name="user[image]" value="<%= @user.image.small_thumb %>"><br>
+
             <input class="btn btn-primary" type="submit" value="Update">
           </form>
           <br><br>
@@ -64,26 +56,15 @@
 
       <% else %>
         <!-- need to refactor this, span part -->
-        <h1> <%= @user.name %></h1>
-        <h4><span style="font-weight:normal">
-              <i> <%= @user.age %></i>
-            </span>
-        </h4>
-        <h4><%= auto_link(@user.title, html: { target: '_blank' }) %></h4>
-        <h4> <b><%= "#{@user.language}, "%></b>
-          <span style="font-weight:normal"><%= user_convert_language_level(@user.language_level) %>
-          </span>
-        </h4>
-        <h4> <%= @user.nationality %> <span style="font-weight:normal">National</span> </h4>
-        <% if @user.person_of_interest?  %>
-          <h4>Person of Interest</h4>
-        <% end %>
-        <% if @user.tutor?  %>
-          <h4>Tutor</h4>
-        <% end %>
-        <h4> <span style="font-weight:normal"><i><%= @user.location %></i> </span> </h4><br>
+        <h1><%= @user.name %></h1>
+        <h4><span style="font-weight:normal"><%= @user.age %></span></h4>
+        <h4><i><%= auto_link(@user.title, html: { target: '_blank' }) %></i></h4>
+        <h4><b><%= "#{@user.language}, "%></b><span style="font-weight:normal"><%= user_convert_language_level(@user.language_level) %></span></h4>
+        <h4><%= @user.nationality %> <span style="font-weight:normal">National</span></h4>
+        <% if @user.person_of_interest? %> <h4>Person of Interest</h4> <% end %>
+        <% if @user.tutor?  %> <h4>Tutor</h4> <% end %>
+        <h4><span style="font-weight:normal"><i><%= @user.location %></i></span></h4><br>
         <!-- may change class to start-chat but have to make sure it doesn't conflict with js code -->
-        <!-- also need to refactor the break -->
         <br>
         <%= form_for @chat_room do |f| %>
           <%= f.hidden_field :recipient_id, :value => @user.id %>
@@ -95,13 +76,12 @@
     <!-- Display linkedin information -->
     <div class="linkedin-content">
       <% if @user.linkedin %>
-         <br> <!-- refactor later just for appearances now -->
+        <br> <!-- maybe refactor later break is just for appearances now -->
         <a href="<%= @user.linkedin.public_url %>" target="_blank"><%= image_tag('linkedin-button.png', alt: 'Linkedin') %></a>
-        <h4> <%= @user.linkedin.industry %></h4>
+        <h4><%= @user.linkedin.industry %></h4>
         <p><span style="font-weight:normal"><%= @user.linkedin.summary %></span></p>
         <% if @user == current_user  %>
-          <%= button_to "Update Linkedin", update_linkedin_session_path, method: :get, class: 'btn btn-primary linkedin' %>
-          <br>
+          <%= button_to "Update Linkedin", update_linkedin_session_path, method: :get, class: 'btn btn-primary linkedin' %><br>
           <%= button_to "Delete Linkedin", delete_linkedin_session_path, method: :delete, data: {confirm: "Are you sure you want to delete the Linkedin information associated with your account? Warning: If you registered with Linkedin you will not be able to sign back in to this account."}, class: 'btn btn-primary delete' %>
         <% end  %>
       <% elsif @user == current_user %>
@@ -112,7 +92,6 @@
 
 <div class="row">
 
-  <!-- User Interests -->
   <div class="user-interests">
     <br><h4>Interests <%= "(Choose 10)" if @user == current_user %></h4>
     <% if @user == current_user %>
@@ -131,12 +110,13 @@
             <% end %>
           </div>
         <% end %>
+
         <input class="btn btn-primary" type="submit" value="Update Interests" style="clear:both;display:block;">
       </form>
     <% elsif @user.interests.any? %>
       <ul>
         <% @user.interests.each do |interest| %>
-         <li><%= user_convert_interests(interest.to_i) %></li>
+          <li><%= user_convert_interests(interest.to_i) %></li>
         <% end %>
       </ul>
     <% else %>
@@ -144,31 +124,28 @@
     <% end %>
   </div>
 
-  <!-- User Reviews -->
   <div class="user-reviews">
     <br><h4>Reviews</h4>
     <% if @user.reviews.any? %>
       <ul>
         <% @user.reviews.each do |review| %>
-        <li id="review-<%= review.id %>"><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_url(review.reviewer) %></li>
+          <li id="review-<%= review.id %>"><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_url(review.reviewer) %></li>
         <% end %>
       </ul>
     <% else %>
         <h5>No Reviews to display<%= ", exchange over 100 messages with another user to get reviews" if @user == current_user %></h5>
     <% end %>
   </div>
+
+  <div class="user-chatbots">
+    <!-- refactor for when there are chatbots -->
+    <% if @user.id == 1 %>
+      <br><h4>Contributed Chatbots</h4>
+      <ul><li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span style="text-transform:uppercase;"><%= User.find(6).language %> <%= user_convert_language_level(User.find(6).language_level) %></span></i> Chatbot</li></ul>
+    <% end %>
+  </div>
 </div>
 
-<!-- User Chatbots -->
-<div class="user-chatbots">
-  <!-- refactor for when there are chatbots -->
-  <% if @user.id == 1 %>
-    <br><h4>Contributed Chatbots</h4>
-    <ul>
-      <li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span style="text-transform:uppercase;"><%= User.find(6).language %> <%= user_convert_language_level(User.find(6).language_level) %></span></i> Chatbot</li>
-    </ul>
-  <% end %>
-</div>
 
 <script type="text/javascript">
   if (window.location.href.indexOf("#review-") != -1) {
