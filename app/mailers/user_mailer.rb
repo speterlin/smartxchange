@@ -50,7 +50,19 @@ class UserMailer < ApplicationMailer
 
   def language_matches(user, match_or_exchange)
     @user = user
-    @matches = match_or_exchange == "match" ? @user.sort_method[0..24].shuffle[0..5] : @user.sort_exchange[0..24].shuffle[0..5]
+    if match_or_exchange == "match"
+      @matches = @user.sort_method[0..24].shuffle[0..5]
+      campaign = matches_campaign
+      @notify_message = "Are you interested in practicing #{@user.language} with any of the following users?"
+      @login_message = "to find more people practicing #{@user.language}."
+      title = "Have you messaged these language practice peers?"
+    elsif match_or_exchange == "exchange"
+      @matches = @user.sort_exchange[0..24].shuffle[0..5]
+      campaign = exchanges_campaign
+      @notify_message = "Are you interested in exchanging your native #{user_convert_nationality_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
+      @login_message = "to find more native #{@user.language} speakers practicing #{user_convert_nationality_to_language(@user.nationality)}."
+      title = "Have you messaged these language exchange options?"
+    end
     @matches_token = @user.create_matches_token!
     @url_email_match = "http://www.smartxchange.es/users/#{@user.id}/email_match/#{@matches_token}/"
     campaign = match_or_exchange == "match" ? matches_campaign : exchanges_campaign
@@ -62,9 +74,6 @@ class UserMailer < ApplicationMailer
       end
     end
     add_campaign_to_login(campaign)
-    @notify_message = match_or_exchange == "match" ? "Are you interested in practicing #{@user.language} with any of the following users?" : "Are you interested in exchanging your native #{user_convert_nationality_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
-    @login_message = match_or_exchange == "match" ? "to find more people practicing #{@user.language}." : "to find more native #{@user.language} speakers practicing #{user_convert_nationality_to_language(@user.nationality)}."
-    title = match_or_exchange == "match" ? "Have you messaged these language practice peers?" : "Have you messaged these language exchange options?"
     set_name_and_title_and_unsubscribe(@user, title)
   end
 
