@@ -52,6 +52,7 @@ class User < ApplicationRecord
   serialize :interests, Array
 
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
+  has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
   has_many :created_notifications, :foreign_key => :notifier_id, class_name: 'Notification', dependent: :destroy
   has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification'
   has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification'

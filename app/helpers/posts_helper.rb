@@ -41,7 +41,6 @@ module PostsHelper
     if !@notification.nil?
       WebNotificationsChannel.broadcast_to(
         notified,
-        posts_notifications: notified.posts_notifications.count,
         boards_notifications: user_boards_notifications_with_title(notified),
         total_notifications: notified.notifications.count,
         sound: true

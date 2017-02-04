@@ -10,9 +10,9 @@
               <span class="icon-bar"></span>
             </button>
         <a class="navbar-brand" href="<%= root_path %>"><%= image_tag('logo.png', alt: 'SmartXchange') %></a>
-        <!-- probably refactor need to reposition correctly -->
+        <!-- probably refactor need to reposition correctly and put css in a file-->
         <% if signed_in? && current_user.premium? %>
-          <span style="color:#fed136" id="premium-header">Premium</span>
+          <span style="color:#fed136;float:left;" id="premium-header">Premium</span>
         <% end %>
       </div>
 
@@ -20,7 +20,7 @@
       <div class="collapse navbar-collapse" id="smartxchange">
         <ul class="nav navbar-nav navbar-right">
           <% if signed_in? %>
-            <li class="board-header dropdown">
+            <li class="boards-header dropdown">
               <%= link_to "Boards#{@unread_posts}", "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: "#{'color:yellow' if boards_have_unread?(current_user)}"  %>
               <ul class="dropdown-menu" style="background-color: #000;">
                 <!-- maybe refactor later, especially yellow class  part -->
