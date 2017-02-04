@@ -2,7 +2,7 @@
     <a href="<%= user_path(user) %>">
         <div class="user-image">
           <!-- kind of hack with paragraph to align image may need to refactor -->
-        <p><%= image_tag(user.image.small_thumb.url, alt: user.name) %></p>
+          <p><%= image_tag(user.image.small_thumb.url, alt: user.name) %></p>
         </div>
         <% if user.linkedin %>
           <%=  image_tag('linkedin-button-small.png', class: 'linkedin-button')  %>
@@ -14,11 +14,9 @@
           <div class="age">
             <i><%= user.age %></i>
           </div>
-          <h4><%= user.language %>,
-            <span style="font-weight:normal">
-            <%= user_convert_language_level(user.language_level) %>
-            </span>
-          </h4>
+          <div class="language">
+            <h4><%= user.language %>, <span style="font-weight:normal"><%= user_convert_language_level(user.language_level) %></span></h4>
+          </div>
           <div class="title">
             <%= truncate(user.title, :length => 65) %>
           </div>
