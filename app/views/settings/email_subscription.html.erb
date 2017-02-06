@@ -5,7 +5,7 @@
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[weekly_notifications]" value="false">
     <input type="checkbox" id="weekly_notifications"name="email[weekly_notifications]" value="true" <%= 'checked' if @user.email_subscription.weekly_notifications %> >
-    <label for="weekly_notifications">Weekly Notifications (only emailed if you have unread notifications)</label><br>
+    <label for="weekly_notifications">Weekly Notifications (once per week we will email you if you have unread notifications)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[monthly_update]" value="false">
@@ -15,12 +15,12 @@
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[language_matches]" value="false">
     <input type="checkbox" id="language_matches" name="email[language_matches]" value="true" <%= 'checked' if @user.email_subscription.language_matches %> >
-    <label for="language_matches">Our Peer Recommendations</label><br>
+    <label for="language_matches">Our Peer Recommendations (once per week we will email you our language practice or language exchange recommendations)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[notify_match]" value="false">
     <input type="checkbox" id="notify_match" name="email[notify_match]" value="true" <%= 'checked' if @user.email_subscription.notify_match %> >
-    <label for="notify_match">Peer Interest (someone we recommend expresses interest in starting a conversation)</label><br>
+    <label for="notify_match">Peer Interest (we will email you if someone we recommend expresses interest in starting a conversation)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[new_conversation]" value="false">
@@ -30,32 +30,32 @@
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[new_message]" value="false">
     <input type="checkbox" id="new_message" name="email[new_message]" value="true" <%= 'checked' if @user.email_subscription.new_message %> >
-    <label for="new_message">New Message Notification (if more than 1 hour of inactivity in conversation)</label><br>
+    <label for="new_message">New Message Notification (we will email you if someone messages you after more than 1 hour of inactivity in a conversation)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[peer_review]" value="false">
     <input type="checkbox" id="peer_review" name="email[peer_review]" value="true" <%= 'checked' if @user.email_subscription.peer_review %> >
-    <label for="peer_review">Peer Review Notification (every 100 messages you will be asked to give the other user a review of the language they are practicing)</label><br>
+    <label for="peer_review">Peer Review Notification (we will ask you to give the other user a review of the language they are practicing after 100 messages with that user)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[notify_review]" value="false">
     <input type="checkbox" id="notify_review" name="email[notify_review]" value="true" <%= 'checked' if @user.email_subscription.notify_review %> >
-    <label for="notify_review">New Review Notification (you will be notified every time someone gives you a review)</label><br>
+    <label for="notify_review">New Review Notification (we will email you every time someone gives you a review)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[unread_board]" value="false">
     <input type="checkbox" id="unread_board" name="email[unread_board]" value="true" <%= 'checked' if @user.email_subscription.unread_board %> >
-    <label for="unread_board">Unread Board Notification (you will be notified every few days if the board of the language you're practicing has unread posts)</label><br>
+    <label for="unread_board">Unread Board Notification (once per week we will email you if the board of the language you're practicing has unread posts)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[unread_jobs]" value="false">
     <input type="checkbox" id="unread_jobs" name="email[unread_jobs]" value="true" <%= 'checked' if @user.email_subscription.unread_jobs %> >
-    <label for="unread_jobs">Unread Jobs Notification (you will be notified every few days if the smart jobs board has unread posts)</label><br>
+    <label for="unread_jobs">Unread Jobs Notification (once per week we will email you if the smart jobs board has unread posts)</label><br>
   </div>
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[new_post]" value="false">
     <input type="checkbox" id="new_post" name="email[new_post]" value="true" <%= 'checked' if @user.email_subscription.new_post %> >
-    <label for="new_post">New Post Notification (you will be notified every time someone updates a post you own or are following)</label><br><br>
+    <label for="new_post">New Post Notification (we will email you every time someone updates a post you own or are following)</label><br><br>
   </div>
   <input type="submit" value="Update Subscriptions" class="btn btn-primary settings">
 </form>

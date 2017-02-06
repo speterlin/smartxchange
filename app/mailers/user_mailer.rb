@@ -49,6 +49,7 @@ class UserMailer < ApplicationMailer
   end
 
   def language_matches(user, match_or_exchange)
+    # refactor this, a bit messy
     @user = user
     if match_or_exchange == "match"
       @matches = @user.sort_method[0..24].shuffle[0..5]
@@ -72,6 +73,8 @@ class UserMailer < ApplicationMailer
         fetch_user_image(match)
         @match_urls[match.id] = [@url_email_match + match.id.to_s + campaign, "http://www.smartxchange.es/users/#{match.id}" + campaign]
       end
+    else
+      mail.perform_deliveries = false
     end
     add_campaign_to_login(campaign)
     set_name_and_title_and_unsubscribe(@user, title)

@@ -231,4 +231,13 @@ module UsersHelper
     end
   end
 
+  def user_weekly_beginning_and_end(num)
+    # num indicates day of the week, counts up to 6, 0 is Tuesday morning, 1 is Wednesday morning ... 6 is Monday morning. This is because ,ethod was written Monday, February 6, 2017 in the afternoon
+    number = User.count / 7
+    multiple = (Time.now.day % 7 + num) % 7
+    beginning_number = multiple * number
+    ending_number = multiple == 6 ? User.count : beginning_number + number
+    User.all[beginning_number...ending_number]
+  end
+
 end

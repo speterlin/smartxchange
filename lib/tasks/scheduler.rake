@@ -1,5 +1,7 @@
-# need to require in order to include boards_helper
+# need to require in order to include users and boards _helper
 require "#{Rails.root}/app/helpers/boards_helper"
+require "#{Rails.root}/app/helpers/users_helper"
+include UsersHelper
 include BoardsHelper
 
 task :send_weekly_notifications => :environment do
@@ -12,20 +14,15 @@ task :send_weekly_notifications => :environment do
 end
 
 task :send_language_matches => :environment do
-  # need to turn activerecord relation into array in order to use pop
-  @users = User.all.to_a.shuffle
-  20.times do
-    UserMailer.language_matches(@users.pop, "match").deliver
-  end
-  20.times do
-    UserMailer.language_matches(@users.pop, "exchange").deliver
+  # Repeats every Tuesday morning
+  user_weekly_beginning_and_end(0).each do |user|
+    UserMailer.language_matches(user, ["match", "exchange"].sample).deliver
   end
 end
 
 task :send_unread_board => :environment do
-  @users = User.all.to_a.shuffle
-  50.times do
-    user = @users.pop
+  # Repeats every Wednesday morning
+  user_weekly_beginning_and_end(1).each do |user|
     board = Board.find(boards_match_id(user.language))
     if board_has_unread?(board, user)
       UserMailer.unread_board(user, board).deliver
@@ -34,10 +31,9 @@ task :send_unread_board => :environment do
 end
 
 task :send_unread_jobs => :environment do
-  @users = User.all.to_a.shuffle
   board = Board.find(2)
-  50.times do
-    user = @users.pop
+  # Repeats every Thursday morning
+  user_weekly_beginning_and_end(2).each do |user|
     if board_has_unread?(board, user)
       UserMailer.unread_jobs(user).deliver
     end
