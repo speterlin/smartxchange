@@ -12,7 +12,7 @@
 
 class Message < ApplicationRecord
   validates_presence_of :chat_room, :sender, :body
-  validates :body, length: {minimum: 1, maximum: 500}
+  validates :body, length: {minimum: 1, maximum: 1000}
 
   belongs_to :sender, class_name: 'User'
   belongs_to :chat_room, touch: true
