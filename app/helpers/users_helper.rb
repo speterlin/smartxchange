@@ -231,10 +231,15 @@ module UsersHelper
     end
   end
 
+  # may refactor, this logic is something that should be in application helper, but don't want to have to include ApplicationHelper in UsersHelper and in scheduler.rake
+  def user_days_from_beginning_of_year
+    (Date.today - Date.parse("1/1/2017")).to_i
+  end
+
+  # num indicates day of the week, counts up to 6, 0 is Sunday, 1 is Monday ... 6 is Saturday. Jan 1,  2017 was a Sunday, this is why 0 = Sunday. Number is offset by 1, i.e. Jan 30 would be 29 days from beginning of year
   def user_weekly_beginning_and_end(num)
-    # num indicates day of the week, counts up to 6, 0 is Tuesday morning, 1 is Wednesday morning ... 6 is Monday morning. This is because ,ethod was written Monday, February 6, 2017 in the afternoon
     number = User.count / 7
-    multiple = (Time.now.day % 7 + num) % 7
+    multiple = (user_days_from_beginning_of_year % 7 + num) % 7
     beginning_number = multiple * number
     ending_number = multiple == 6 ? User.count : beginning_number + number
     User.all[beginning_number...ending_number]
