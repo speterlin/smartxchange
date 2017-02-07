@@ -94,6 +94,8 @@
     <br><h4>Tutor materials</h4>
       <% if @user == current_user %>
         <h5>Upload system in development...</h5>
+      <% elsif current_user.premium? %>
+        <h5>Tutor materials on their way...</h5>
       <% else %>
         <h5>Must be a Premium member to view materials</h5>
       <% end %>
