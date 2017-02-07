@@ -6,10 +6,10 @@ class UserMailer < ApplicationMailer
   # end
 
   # for using a_or_an method in emails
+  add_template_helper(ApplicationHelper)
   include ApplicationHelper
   include ChatRoomsHelper
   include UsersHelper
-  add_template_helper(ApplicationHelper)
 
   # all emails where we're using normal footer_mail (rather than footer_mail_simple)
   before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update, :unread_board, :unread_jobs]
@@ -66,7 +66,6 @@ class UserMailer < ApplicationMailer
     end
     @matches_token = @user.create_matches_token!
     @url_email_match = "http://www.smartxchange.es/users/#{@user.id}/email_match/#{@matches_token}/"
-    campaign = match_or_exchange == "match" ? matches_campaign : exchanges_campaign
     if @matches.any?
       @match_urls = Hash.new
       @matches.each do |match|
@@ -197,35 +196,35 @@ class UserMailer < ApplicationMailer
 
   # campaigns built with google url builder
   def notifications_campaign
-    "?utm_source=notifications_email&utm_medium=email&utm_campaign=january_notifications"
+    "?utm_source=notifications_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_notifications"
   end
 
   def matches_campaign
-    "?utm_source=matches_email&utm_medium=email&utm_campaign=january_matches"
+    "?utm_source=matches_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_matches"
   end
 
   def exchanges_campaign
-    "?utm_source=exchanges_email&utm_medium=email&utm_campaign=january_exchanges"
+    "?utm_source=exchanges_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_exchanges"
   end
 
   def conversations_campaign
-    "?utm_source=conversation_email&utm_medium=email&utm_campaign=january_conversations"
+    "?utm_source=conversation_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_conversations"
   end
 
   def posts_campaign
-    "?utm_source=post_email&utm_medium=email&utm_campaign=january_posts"
+    "?utm_source=post_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_posts"
   end
 
   def boards_campaign
-    "?utm_source=board_email&utm_medium=email&utm_campaign=january_boards"
+    "?utm_source=board_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_boards"
   end
 
   def jobs_campaign
-    "?utm_source=job_email&utm_medium=email&utm_campaign=january_jobs"
+    "?utm_source=job_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_jobs"
   end
 
   def reviews_campaign
-    "?utm_source=review_email&utm_medium=email&utm_campaign=january_reviews"
+    "?utm_source=review_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_reviews"
   end
 
   def prevent_delivery_to_unsubscribed

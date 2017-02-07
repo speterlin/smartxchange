@@ -15,19 +15,29 @@
   background-color: #f8f8f8;
   border-radius: 10px;
 }
-// hack job setting width to 250px so that I can position delete button correctly for everyone
-.profile-image {
-  float: left;
-  overflow: hidden;
-  padding: 5px;
-  width: 250px;
-}
 // need to refactor the black part, overriding something else at the moment
 .user-content {
   overflow: hidden;
   padding-left:15px;
   padding-top: 10px;
   color: black;
+}
+.user-content .name {
+  min-height: 52px;
+}
+.user-content .title {
+  color: #777;
+  padding-top: 3px;
+  font-weight: 500;
+  color: black;
+}
+// for users/show page
+.profile-image {
+  float: left;
+  overflow: hidden;
+  padding: 5px;
+  // hack job setting width to 250px so that I can position delete button correctly for everyone
+  width: 250px;
 }
 .user-content.profile {
   width: 30%;
@@ -45,15 +55,6 @@
 .user-content h4 {
   font-size: 14px;
   margin: 0px
-}
-.user-content .title {
-  color: #777;
-  padding-top: 3px;
-  font-weight: 500;
-  color: black;
-}
-.user-content .name {
-  min-height: 52px;
 }
 //for aligning image horizontally
 .user-image {
@@ -143,7 +144,9 @@
 .search-field {
   width: 60%;
 }
-
+.tutor-materials {
+  padding-left: 10px;
+}
 .user-reviews {
   padding-left: 10px;
 }

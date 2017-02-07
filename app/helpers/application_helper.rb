@@ -17,4 +17,19 @@ module ApplicationHelper
     ['a','e','i','o','u'].include?(string[0].downcase) ? 'an' : 'a'
   end
 
+  def num_to_month(num)
+    return 'january' if num == 1
+    return 'february' if num == 2
+    return 'march' if num == 3
+    return 'april' if num == 4
+    return 'may' if num == 5
+    return 'june' if num == 6
+    return 'july' if num == 7
+    return 'august' if num == 8
+    return 'september' if num == 9
+    return 'october' if num == 10
+    return 'november' if num == 11
+    return 'december' if num == 12
+  end
+
 end

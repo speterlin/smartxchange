@@ -89,6 +89,17 @@
 
 <div class="row">
 
+  <div class="tutor-materials">
+    <% if @user.tutor? %>
+    <br><h4>Tutor materials</h4>
+      <% if @user == current_user %>
+        <h5>Upload system in development...</h5>
+      <% else %>
+        <h5>Must be a Premium member to view materials</h5>
+      <% end %>
+    <% end %>
+  </div>
+
   <div class="user-interests">
     <br><h4>Interests <%= "(Choose 10)" if @user == current_user %></h4>
     <% if @user == current_user %>
