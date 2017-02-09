@@ -94,8 +94,8 @@ class ApplicationController < ActionController::Base
   end
 
   def indiegogo_campaign
-    flash[:error] = "Please contribute to our <a href=\"https://www.indiegogo.com/at/smartxchange\">Indiegogo Campaign</a> and claim your perk to gain access to the platform."
-    redirect_to new_user_path
+    flash[:error] = "Please contribute to our <a href=\"https://www.indiegogo.com/at/smartxchange\">Indiegogo Campaign</a> and claim your perk to become a premium user!"
+    redirect_to root_path
   end
 
 end

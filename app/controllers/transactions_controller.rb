@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
 
   before_action :user_has_premium?, only: [:new, :create]
-  before_action :temporarily_out_of_service
+  before_action :indiegogo_campaign
 
   def new
     if current_user.has_braintree_info?
@@ -73,11 +73,6 @@ class TransactionsController < ApplicationController
       end
     end
     true
-  end
-
-  def temporarily_out_of_service
-    flash[:notice] = "Premium service is temporarily out of service"
-    redirect_to root_path
   end
 
 end
