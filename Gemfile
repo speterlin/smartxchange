@@ -69,7 +69,7 @@ gem "recaptcha", require: "recaptcha/rails"
 gem 'delayed_job_active_record'
 
 # for remote file uploads
-# gem 'remotipart', '~> 1.2'
+gem 'remotipart', '~> 1.2'
 
 # Use Unicorn as the app server
 # gem 'unicorn'
@@ -96,7 +96,7 @@ group :development, :test do
 end
 
 group :production do
-  ruby '2.3.0'
+  ruby '2.3'
   gem 'pg'
   gem 'rails_12factor'
   gem 'redis', '~> 3.0'
