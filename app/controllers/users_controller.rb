@@ -84,6 +84,7 @@ class UsersController < ApplicationController
   def show
     @user = User.find(params[:id])
     @chat_room = ChatRoom.new
+    @materials = @user.materials if @user.materials
   end
 
   def update

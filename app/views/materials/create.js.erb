@@ -1,0 +1,6 @@
+<% if @material.new_record? %>
+  alert('The material could not be uploaded: <%= j @material.errors.full_messages.join(', ').html_safe %>');
+<% else %>
+  $('#material-name').val("")
+  $('#materials').append("<%= j(render(@material)) %>")
+<% end %>

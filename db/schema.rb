@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170105105119) do
+ActiveRecord::Schema.define(version: 20170217055920) do
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string   "first_name"
@@ -151,6 +151,16 @@ ActiveRecord::Schema.define(version: 20170105105119) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_linkedins_on_user_id", unique: true
+  end
+
+  create_table "materials", force: :cascade do |t|
+    t.string   "name",       null: false
+    t.string   "attachment", null: false
+    t.integer  "owner_id",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["attachment", "owner_id"], name: "index_materials_on_attachment_and_owner_id", unique: true
+    t.index ["name", "owner_id"], name: "index_materials_on_name_and_owner_id", unique: true
   end
 
   create_table "messages", force: :cascade do |t|

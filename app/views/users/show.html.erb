@@ -91,13 +91,26 @@
 
   <div class="tutor-materials">
     <% if @user.tutor? %>
-    <br><h4>Tutor materials</h4>
+      <br><h4>Tutor materials</h4>
+        <ul id="materials">
+          <% if @materials.any? %>
+              <%= render @materials %>
+          <% elsif @user != current_user %>
+            <h5>Tutoring materials are on their way...</h5>
+          <% end %>
+        </ul>
+      <!-- upload form -->
       <% if @user == current_user %>
-        <h5>Upload system in development...</h5>
-      <% elsif current_user.premium? %>
-        <h5>Tutor materials on their way...</h5>
-      <% else %>
-        <h5>Must be a Premium member to view materials</h5>
+        <form action="<%= user_materials_path(@user) %>" method="post" data-remote="true" enctype="multipart/form-data">
+          <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+          <input type="hidden" name="material[owner_id]" value="<%= @user.id %>">
+          <label for="material-name"></label>
+          <input id="material-name" type="text" name="material[name]" >
+          <label for="material-attachment"></label>
+          <input id="material-attachment" type="file" name="material[attachment]" style="display: inline;">
+
+          <input class="btn btn-primary" type="submit" value="Upload">
+        </form>
       <% end %>
     <% end %>
   </div>

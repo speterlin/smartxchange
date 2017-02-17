@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       get 'activate_account/:activation_token', on: :collection, to: 'settings#activate_account', as: 'activate_account'
     end
     resources :reviews, except: [:show]
+    resources :materials, only: [:create, :destroy]
   end
 
   resources :chat_rooms, only: [:new, :create, :show, :index, :destroy]

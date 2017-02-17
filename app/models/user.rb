@@ -74,6 +74,7 @@ class User < ApplicationRecord
   has_one :email_subscription, dependent: :destroy
   has_many :reviews, as: :reviewable, dependent: :destroy
   has_many :created_reviews, :foreign_key => :reviewer_id, class_name: 'Review', dependent: :destroy
+  has_many :materials, :foreign_key => :owner_id, class_name: 'Material', dependent: :destroy
 
   geocoded_by :location
 
