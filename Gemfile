@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+ruby "2.3.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.0.0'
 #will need postgres for heroku deployment
@@ -96,7 +97,7 @@ group :development, :test do
 end
 
 group :production do
-  ruby '2.3'
+  ruby "2.3.0"
   gem 'pg'
   gem 'rails_12factor'
   gem 'redis', '~> 3.0'
