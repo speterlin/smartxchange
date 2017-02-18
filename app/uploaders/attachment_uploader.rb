@@ -42,8 +42,12 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
   def extension_white_list
-    %w(pdf doc htm html docx ppt)
+    %w(pdf doc docx htm html ppt pptx)
   end
+
+  # def size_range
+  #   0..5.megabytes
+  # end
 
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
