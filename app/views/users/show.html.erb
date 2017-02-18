@@ -95,8 +95,10 @@
         <ul id="materials">
           <% if @materials.any? %>
               <%= render @materials %>
-          <% elsif @user != current_user %>
+          <% elsif @user != current_user && current_user.premium? %>
             <h5>Tutoring materials are on their way...</h5>
+          <% elsif @user != current_user && !current_user.premium?  %>
+            <%= link_to "Upgrade to Premium", "/about#premium", class: 'btn btn-primary premium' %>
           <% end %>
         </ul>
       <!-- upload form -->
