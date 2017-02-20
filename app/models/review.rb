@@ -20,6 +20,8 @@ class Review < ApplicationRecord
   # most validations are for instances when creating review from command line
   validates :language, uniqueness: { scope: [:reviewer_id, :reviewable_type, :reviewable_id], message: "You have already submitted a review for this user in this language, please check your reviews (in your user settings) and edit this review" }
   validates :chat_room_id, uniqueness: { scope: :reviewer_id, message: "You may only give one review per conversation" }
+  # Too long to have this database validation 
+  validates :chat_room_id, uniqueness: { scope: [:reviewable_type, :reviewable_id], message: "You may only receive one review per conversation" }
   validate :reviewer_not_reviewable
   validate :reviewer_in_chat_room
   validate :reviewable_in_chat_room

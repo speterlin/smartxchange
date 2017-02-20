@@ -48,6 +48,8 @@ class User < ApplicationRecord
   # to prevent nil values in boolean field, according to stackoverflow
   validates :person_of_interest, :tutor, :inclusion => {:in => [true, false]}
   validates :interests, length: {maximum: 10, message: "Only 10 interests allowed"}
+  # Add Linkedin to message since only using Linkedin as partner right now
+  validates :uid, uniqueness: { scope: :provider, allow_nil: true, message: "Linkedin account already registered with another user" }
   mount_uploader :image, AvatarUploader
   serialize :interests, Array
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170217055920) do
+ActiveRecord::Schema.define(version: 20170220184141) do
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string   "first_name"
@@ -290,6 +290,7 @@ ActiveRecord::Schema.define(version: 20170217055920) do
     t.boolean  "activated",             default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
+    t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
     t.index ["session_token"], name: "index_users_on_session_token"
   end
 

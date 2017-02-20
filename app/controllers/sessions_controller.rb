@@ -56,29 +56,36 @@ class SessionsController < ApplicationController
   def delete_linkedin
     current_user.linkedin.destroy
     current_user.update(
-      provider: "",
-      uid: ""
+      provider: nil,
+      uid: nil
     )
     redirect_to user_url(current_user)
   end
 
   def create_linkedin
-    # maybe refactor because of inability to display errors with adding and updating
-    if @@add
+    @user = User.where(:provider => auth_hash['provider'],
+                      :uid => auth_hash['uid'].to_s).first
+    # maybe refactor because of inability to display errors with adding and updating, maybe join these if elsif statements with ones below
+    if !@user && @@add
       current_user.add_with_omniauth(auth_hash)
       flash[:success] = "Linkedin added to profile"
       @@add = false
       redirect_to user_url(current_user) and return
+    elsif @user && @@add # if trying to add Linkedin account associated with another account
+      flash[:error] = "Linkedin account already registered with another account"
+      @@add = false
+      redirect_to user_url(current_user) and return
     end
-    if @@update
+    if !@user && @@update # should never be the case, should only be able to click 'Update with Linkedin' if you have an account
+      flash[:error] = "Must have a Linkedin account registered to update your Linkedin"
+      @@update = false
+      redirect_to user_url(current_user) and return
+    elsif @user && @@update
       current_user.update_with_omniauth(auth_hash)
       flash[:success] = "Linkedin information updated"
       @@update = false
       redirect_to user_url(current_user) and return
     end
-
-    @user = User.where(:provider => auth_hash['provider'],
-                      :uid => auth_hash['uid'].to_s).first
     # need to refactor later, some repeat code, added downcase in case linkedin's api doesn't downcase it already
     if !@user && User.where(:email => auth_hash['info']['email'].downcase).first # register or sign in with Linkedin and email taken without Linkedin integration
       flash[:error] = "User with this email already exists, please log in and add Linkedin to your profile"
