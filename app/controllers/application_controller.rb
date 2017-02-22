@@ -93,8 +93,8 @@ class ApplicationController < ActionController::Base
     path
   end
 
-  def indiegogo_campaign
-    flash[:error] = "Please contribute to our <a href=\"https://www.indiegogo.com/at/smartxchange\">Indiegogo Campaign</a> and claim your perk to become a premium user!"
+  def premium_subscription
+    flash[:error] = "Please send an email to support@smartxchange.es with the title 'Premium Membership - your name' and we will begin the process!"
     redirect_to root_path
   end
 

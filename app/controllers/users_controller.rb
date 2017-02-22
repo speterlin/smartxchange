@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   skip_before_action :require_signed_in!, only: [:new, :create, :email_match]
   before_action :correct_user?, only: [:update, :destroy]
   before_action :require_admin?, only: [:active, :map]
-  # before_action :indiegogo_campaign, only: [:create]
+  # before_action :premium_subscription, only: [:create]
 
   def new
     @user_count = User.all.count - (User.all.count % 100)

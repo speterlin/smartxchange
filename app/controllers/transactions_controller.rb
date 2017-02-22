@@ -1,7 +1,7 @@
 class TransactionsController < ApplicationController
 
   before_action :user_has_premium?, only: [:new, :create]
-  before_action :indiegogo_campaign
+  before_action :premium_subscription
 
   def new
     if current_user.has_braintree_info?
