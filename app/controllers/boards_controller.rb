@@ -3,6 +3,8 @@ class BoardsController < ApplicationController
   include PostsHelper
   include BoardsHelper
 
+  before_action :only_premium_access_to_smart_jobs, only: [:show]
+
   def show
     @board = Board.find(params[:id])
     # refactor sql query, right now orders by sum(value) then updated_at, also not filtering posts based on board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
@@ -36,6 +38,16 @@ class BoardsController < ApplicationController
     # maybe refactor later, only update user if he/she is viewing unread posts, add +1 to current user due to delay in updating associations through touch
     if board_has_unread?(@board, current_user)
       board_mark_read(@board)
+    end
+  end
+
+  private
+
+  def only_premium_access_to_smart_jobs
+    # maybe refactor the "2"
+    if !current_user.premium? && params[:id] == "2"
+      flash[:notice] = "Must be premium user to view Smart Jobs Board"
+      redirect_to users_path and return
     end
   end
 
