@@ -32,7 +32,7 @@
   color: black;
 }
 // for users/show page
-.profile-image {
+#profile-image {
   float: left;
   overflow: hidden;
   padding: 5px;
@@ -108,7 +108,7 @@
 }
 
 // 35% because it seems to be the right point at which the div drops down instead of intruding on text input areas
-.linkedin-content {
+#linkedin-content {
   width: 35%;
   float: left;
   padding-left: 15px;
@@ -140,19 +140,19 @@
   margin-left: 2px;
   margin-top: 5px;
 }
-.tutor-materials {
+#tutor-materials {
   padding-left: 10px;
 }
-.user-reviews {
+#user-reviews {
   padding-left: 10px;
 }
-.user-reviews ul {
+#user-reviews ul {
   padding: 0px;
 }
-.user-chatbots {
+#user-chatbots {
   padding-left: 10px;
 }
-.user-interests {
+#user-interests {
   padding-left: 10px;
 }
 .user-interests-column {
@@ -168,7 +168,7 @@
 //800pxfor tablets
 @media all and (max-width:800px)
 {
-  .user-content.profile, .linkedin-content
+  .user-content.profile, #linkedin-content
   {
     float: none;
     width: 100%;

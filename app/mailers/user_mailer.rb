@@ -93,6 +93,7 @@ class UserMailer < ApplicationMailer
     @user = user
     # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
     @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    add_campaign_to_footer(boards_campaign)
     set_name_and_title_and_unsubscribe(@user, "Check out the latest posts on the #{@user.language} board!")
   end
 
@@ -100,6 +101,7 @@ class UserMailer < ApplicationMailer
     @user = user
     board = Board.find(2)
     @board_url = "http://www.smartxchange.es/boards/#{board.id}" + jobs_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    add_campaign_to_footer(jobs_campaign)
     set_name_and_title_and_unsubscribe(@user, "View the latest jobs on the Smart Jobs board!")
   end
 
@@ -126,7 +128,7 @@ class UserMailer < ApplicationMailer
     @notifier = notification.notifier
     @post = notification.notifiable
     @board = @post.board
-    @board_url = "http://www.smartxchange.es/boards/#{@board.id}" + posts_campaign
+    @board_url = "http://www.smartxchange.es/boards/#{@board.id}" + boards_campaign
     fetch_user_image(@notifier)
     set_name_and_title_and_unsubscribe(@user, "You have a new post notification on the #{@board.title} board!")
   end
@@ -175,11 +177,12 @@ class UserMailer < ApplicationMailer
   private
 
   def set_footer_urls
-    @url_xchange_option = "http://www.smartxchange.es/users/exchange"
+    # set as Luis's profile since this is the only tutor with uploaded material so far
+    @url_tutor_material_downloads = "http://www.smartxchange.es/users/131#tutor-materials"
   end
 
   def add_campaign_to_footer(campaign)
-    @url_xchange_option += campaign
+    @url_tutor_material_downloads = "http://www.smartxchange.es/users/131#{campaign}#tutor-materials"
   end
 
   def set_login_url
@@ -209,10 +212,6 @@ class UserMailer < ApplicationMailer
 
   def conversations_campaign
     "?utm_source=conversation_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_conversations"
-  end
-
-  def posts_campaign
-    "?utm_source=post_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_posts"
   end
 
   def boards_campaign

@@ -1,6 +1,6 @@
 <div class="row">
 
-    <div class="profile-image">
+    <div id="profile-image">
       <%= image_tag(@user.image.thumb.url, alt: @user.name) %>
       <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@user.latitude},#{@user.longitude}&markers=#{@user.latitude},#{@user.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", style: "padding-top: 10px;", alt: "#{@user.name} on the map" if current_user == @user %>
     </div>
@@ -71,7 +71,7 @@
     </div>
 
     <!-- Display linkedin information -->
-    <div class="linkedin-content">
+    <div id="linkedin-content">
       <% if @user.linkedin %>
         <br> <!-- maybe refactor later break is just for appearances now -->
         <a href="<%= @user.linkedin.public_url %>" target="_blank"><%= image_tag('linkedin-button.png', alt: 'Linkedin') %></a>
@@ -89,7 +89,7 @@
 
 <div class="row">
 
-  <div class="tutor-materials">
+  <div id="tutor-materials">
     <% if @user.tutor? %>
       <br><h4>Tutor materials</h4>
         <ul id="materials">
@@ -118,7 +118,7 @@
     <% end %>
   </div>
 
-  <div class="user-interests">
+  <div id="user-interests">
     <br><h4>Interests <%= "(Choose 10)" if @user == current_user %></h4>
     <% if @user == current_user %>
       <form action="<%= user_url(@user) %>" method="post">
@@ -150,7 +150,7 @@
     <% end %>
   </div>
 
-  <div class="user-reviews">
+  <div id="user-reviews">
     <br><h4>Reviews</h4>
     <% if @user.reviews.any? %>
       <ul>
@@ -163,7 +163,7 @@
     <% end %>
   </div>
 
-  <div class="user-chatbots">
+  <div id="user-chatbots">
     <!-- refactor for when there are chatbots -->
     <% if @user.id == 1 %>
       <br><h4>Contributed Chatbots</h4>
