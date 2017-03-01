@@ -179,10 +179,12 @@ class UserMailer < ApplicationMailer
   def set_footer_urls
     # set as Luis's profile since this is the only tutor with uploaded material so far
     @url_tutor_material_downloads = "http://www.smartxchange.es/users/131#tutor-materials"
+    @url_premium_subscription = "http://www.smartxchange.es/about#premium"
   end
 
   def add_campaign_to_footer(campaign)
     @url_tutor_material_downloads = "http://www.smartxchange.es/users/131#{campaign}#tutor-materials"
+    @url_premium_subscription = "http://www.smartxchange.es/about#{campaign}#premium"
   end
 
   def set_login_url
