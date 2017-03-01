@@ -60,8 +60,13 @@
         <% end %>
      </select>
    </label><br><br>
-   <%= recaptcha_tags %> <br>
-    <input type="submit" value="Register" class="btn btn-primary"><br>
+   <%= recaptcha_tags %><br>
+   <!-- <input type="hidden" name="user[terms]" value=0>
+   <input type="checkbox" id="user-terms" name="user[terms]" value=1>
+   <label for="user-terms"><%= link_to "Terms of Service", "terms_of_service.pdf", style: "color: white;" %></label></br></br> -->
+
+   <input type="submit" value="Register" class="btn btn-primary"><br>
+
   </form>
   <!-- hack job need to refactor with padding or margin -->
 

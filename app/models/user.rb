@@ -52,6 +52,7 @@ class User < ApplicationRecord
   validates :uid, uniqueness: { scope: :provider, allow_nil: true, message: "Linkedin account already registered with another user" }
   mount_uploader :image, AvatarUploader
   serialize :interests, Array
+  validates :terms, acceptance: true
 
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
@@ -88,7 +89,7 @@ class User < ApplicationRecord
 
   default_scope -> { order(created_at: :asc) } #may refactor take this out, asc want longest users around first
 
-  attr_reader :password
+  attr_reader :password, :terms
   after_initialize :ensure_session_token
 
   def self.find_by_credentials(user_params)

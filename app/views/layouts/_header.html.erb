@@ -21,7 +21,7 @@
         <% if signed_in? %><!-- maybe refactor -->
           <div id="search">
             <form action="<%= users_path %>" method="get">
-              <input type="text" name="search" class="search-field" placeholder="Search Users">
+              <input type="text" name="search" class="search-field" placeholder="<%= ["Spanish b1", "Spanish b1 b2", "Spanish b1 business development", "German b2", "French a2", "Italian a1", "English c2", "USA Spanish", "USA Spanish b1 b2", "French Spanish", "Spanish tutor", "French engineering"].sample + "..." %>">
               <input type="submit" value="Search" class="btn btn-primary">
             </form>
           </div>
