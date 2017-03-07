@@ -43,7 +43,6 @@ class ApplicationController < ActionController::Base
       session[:return_to] = request.url
       redirect_to login_path
     end
-    # raise 'Auth Error' unless signed_in? #for $http requests
   end
 
   def correct_user?
@@ -83,6 +82,7 @@ class ApplicationController < ActionController::Base
   end
 
   def get_user_board_path(user)
+    # refactor this makes BoardsHelper included in all controllers
     board = Board.find(boards_match_id(user.language))
     if board_has_unread?(board, user)
       # precautionary step in case board is updated and there are no posts (like if I update the description of an empty board), maybe refactor later

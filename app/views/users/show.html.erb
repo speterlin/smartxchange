@@ -22,20 +22,15 @@
             <textarea id="user-title" name="user[title]" rows="3"><%= @user.title %></textarea><br>
             <label for="user-language">Language (to practice)</label><br>
               <select id="user-language" name="user[language]">
-               <option value="Spanish" <%= 'selected' if @user.language=='Spanish'%> >Spanish</option>
-               <option value="English" <%= 'selected' if @user.language=='English'%> >English</option>
-               <option value="German" <%= 'selected' if @user.language=='German'%> >German</option>
-               <option value="French" <%= 'selected' if @user.language=='French'%> >French</option>
-               <option value="Italian" <%= 'selected' if @user.language=='Italian'%> >Italian</option>
+                <% User::LANGUAGES.each do |language| %>
+                  <option value="<%= language %>" <%= 'selected' if @user.language==language %> ><%= language %></option>
+                <% end %>
              </select><br>
             <label for="user-language-level">Language level</label><br>
               <select id="user-language-level" name="user[language_level]">
-                 <option value="1" <%= 'selected' if @user.language_level==1 %> >A1 - beginner</option>
-                 <option value="2" <%= 'selected' if @user.language_level==2 %> >A2 - elementary</option>
-                 <option value="3" <%= 'selected' if @user.language_level==3 %> >B1 - intermediate</option>
-                 <option value="4" <%= 'selected' if @user.language_level==4 %> >B2 - upper intermediate</option>
-                 <option value="5" <%= 'selected' if @user.language_level==5 %> >C1 - advanced</option>
-                 <option value="6" <%= 'selected' if @user.language_level==6 %> >C2 - master</option>
+                <% User::LANGUAGE_LEVELS.each do |language_level| %>
+                  <option value="<%= language_level %>" <%= 'selected' if @user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
+                <% end %>
                </select><br>
             <label for="user-nationality">Native country</label><br>
               <select id="user-nationality" name="user[nationality]">

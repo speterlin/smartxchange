@@ -36,6 +36,8 @@
 class User < ApplicationRecord
   include Locatable
   include UsersHelper
+  LANGUAGES = ["English", "Spanish", "Italian", "German", "French"]
+  LANGUAGE_LEVELS = (1..6).to_a
 
   validates_presence_of :email, :name, :age, :language, :language_level, :title, :password_digest, :session_token, :nationality
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
@@ -43,8 +45,8 @@ class User < ApplicationRecord
   validates :title, length: {minimum: 5, maximum: 255}
   validates :name, uniqueness: true, length: {minimum: 2, maximum: 255}
   validates :age, numericality: { only_integer: true }
-  validates_inclusion_of :language, in: ["Spanish", "Italian", "German", "French", "English"]
-  validates :language_level, numericality: {only_integer: true} #may change this since it's a dropdown
+  validates_inclusion_of :language, in: LANGUAGES
+  validates_inclusion_of :language_level, in: LANGUAGE_LEVELS
   # to prevent nil values in boolean field, according to stackoverflow
   validates :person_of_interest, :tutor, :inclusion => {:in => [true, false]}
   validates :interests, length: {maximum: 10, message: "Only 10 interests allowed"}
