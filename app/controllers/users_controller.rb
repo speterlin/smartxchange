@@ -11,7 +11,7 @@ class UsersController < ApplicationController
     @user_count = User.all.count - (User.all.count % 100)
     @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     if signed_in?
-      redirect_to get_user_board_path(current_user)
+      redirect_to board_path(Board.find_by_title(current_user.language))
     end
   end
 
