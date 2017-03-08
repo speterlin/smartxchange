@@ -92,7 +92,7 @@ class UserMailer < ApplicationMailer
   def unread_board(user, board)
     @user = user
     # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
-    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + boards_campaign
     add_campaign_to_footer(boards_campaign)
     set_name_and_title_and_unsubscribe(@user, "Check out the latest posts on the #{@user.language} board!")
   end
@@ -100,7 +100,7 @@ class UserMailer < ApplicationMailer
   def unread_jobs(user)
     @user = user
     board = Board.find(2)
-    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + jobs_campaign + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
+    @board_url = "http://www.smartxchange.es/boards/#{board.id}" + jobs_campaign
     add_campaign_to_footer(jobs_campaign)
     set_name_and_title_and_unsubscribe(@user, "View the latest jobs on the Smart Jobs board!")
   end

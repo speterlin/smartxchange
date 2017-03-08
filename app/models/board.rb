@@ -18,4 +18,8 @@ class Board < ApplicationRecord
   has_many :reads, as: :readable, dependent: :destroy
   has_many :readers, through: :reads, source: :user
 
+  def to_param
+    title.downcase
+  end
+
 end

@@ -14,7 +14,7 @@ end
 task :send_unread_board => :environment do
   # Cycle repeats every Monday morning
   user_weekly_beginning_and_end(1).each do |user|
-    board = Board.find(boards_match_id(user.language))
+    board = Board.find_by_title(user.language)
     if board_has_unread?(board, user)
       UserMailer.unread_board(user, board).deliver
     end

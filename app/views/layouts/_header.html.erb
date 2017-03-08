@@ -35,7 +35,7 @@
                 <% Board.all.each do |board| %>
                   <% unread_board_posts = user_count_unread_board_notifications(current_user, board) > 0 ? " (#{user_count_unread_board_notifications(current_user, board)})" : "" %>
                   <% if board_has_unread?(board, current_user) %>
-                    <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{unread_board_posts}", board_path(board) + (board.posts.any? ? "#post-#{board.posts.first.id}" : ""), style: "color:yellow" %> </li>
+                    <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{unread_board_posts}", board_path(board), style: "color:yellow" %> </li>
                   <% else %>
                     <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{unread_board_posts}", board_path(board) %> </li>
                   <% end %>

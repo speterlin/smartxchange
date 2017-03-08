@@ -1,6 +1,4 @@
 class ApplicationController < ActionController::Base
-  include BoardsHelper
-
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
@@ -33,7 +31,7 @@ class ApplicationController < ActionController::Base
     random_match = current_user.sort_exchange[0..24].sample
     random_match = current_user.sort_method[0..24].sample unless random_match
     flash[:notice] = "Welcome back #{current_user.name}! Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"
-    redirect_to(session[:return_to] || get_user_board_path(current_user))
+    redirect_to(session[:return_to] || board_path(Board.find_by_title(current_user.language)))
     session[:return_to] = nil
   end
 
@@ -79,18 +77,6 @@ class ApplicationController < ActionController::Base
     flash[:success] = "Welcome to smartXchange! Complete your profile and navigate to the People page to start practicing your language! Make sure to update your native country to accurately match with language exchange options"
     UserMailer.welcome_new(user).deliver_later
     redirect_to user_path(user)
-  end
-
-  def get_user_board_path(user)
-    # refactor this makes BoardsHelper included in all controllers
-    board = Board.find(boards_match_id(user.language))
-    if board_has_unread?(board, user)
-      # precautionary step in case board is updated and there are no posts (like if I update the description of an empty board), maybe refactor later
-      path = board_path(board) + (board.posts.any? ? "#post-#{board.posts.first.id}" : "")
-    else
-      path = board_path(board)
-    end
-    path
   end
 
   def premium_subscription

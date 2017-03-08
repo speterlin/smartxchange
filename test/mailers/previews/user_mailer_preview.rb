@@ -1,6 +1,5 @@
 # Preview all emails at http://localhost:3000/rails/mailers/user_mailer
 class UserMailerPreview < ActionMailer::Preview
-  include BoardsHelper
 
   def account_activation
     UserMailer.account_activation(User.first)
@@ -27,7 +26,7 @@ class UserMailerPreview < ActionMailer::Preview
   end
 
   def unread_board
-    board = Board.find(boards_match_id(User.first.language))
+    board = Board.find_by_title(User.first.language)
     UserMailer.unread_board(User.first, board)
   end
 
