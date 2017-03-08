@@ -48,7 +48,15 @@ Rails.application.routes.draw do
     resources :materials, only: [:create, :destroy]
   end
 
-  resources :chat_rooms, only: [:new, :create, :show, :index, :destroy]
+  # resources :chat_rooms, only: [:new, :create, :show, :index, :destroy]
+  # need to refactor, a bit messy, quick fix, need add correct naming paths
+  resources :conversations, only: [] do
+    get 'new' , on: :collection, to: 'chat_rooms#new'
+    post '', on: :collection, to: 'chat_rooms#create'
+    get '' , on: :member, to: 'chat_rooms#show'
+    get '' , on: :collection, to: 'chat_rooms#index'
+    delete '' , on: :member, to: 'chat_rooms#destroy'
+  end
   resources :messages, only: [:create]
 
   resources :boards, only: [:show]

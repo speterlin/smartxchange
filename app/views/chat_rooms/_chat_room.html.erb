@@ -1,5 +1,5 @@
 <div class="chat-room <%= chat_room.id %>">
-<a href="<%= chat_room_path(chat_room) %>" class="chat-room">
+<a href="<%= "conversations/#{chat_room.id}" %>" class="chat-room">
     <% chat_room_unread_notifications = chat_room_count_unread(chat_room, current_user) %>
     <% unread = chat_room_unread_notifications > 0 ? "(#{chat_room_unread_notifications})" : "" %>
     <% user = chat_room_interlocutor(chat_room, current_user) %>
@@ -13,5 +13,5 @@
 </a>
 <!-- may want to center this at a later time, using br tag for now and  comes in fine as is -->
 <br>
-<%= link_to image_tag('red-x-delete.png', alt:  'Delete'), chat_room_path(chat_room), remote: true, method: 'delete', data: {confirm: "Are you sure you want to delete this Conversation? All associated messages and notifications will be deleted along with it."}, class: 'delete-chat-room'  %>
+<%= link_to image_tag('red-x-delete.png', alt:  'Delete'), "conversations/#{chat_room.id}", remote: true, method: 'delete', data: {confirm: "Are you sure you want to delete this Conversation? All associated messages and notifications will be deleted along with it."}, class: 'delete-chat-room'  %>
 </div>
