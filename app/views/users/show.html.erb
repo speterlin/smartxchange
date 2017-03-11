@@ -1,7 +1,8 @@
 <div class="row">
 
     <div id="profile-image">
-      <%= image_tag(@user.image.thumb.url, alt: @user.name) %>
+      <%= image_tag(@user.image.thumb.url, alt: @user.name) %><br>
+      <%= link_to "Remove Image", remove_image_user_path(@user), data: {confirm: "Are you sure you wish to delete your profile image? Your image will be replaced with the default avatar image"} if @user == current_user && @user.image? %>
       <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@user.latitude},#{@user.longitude}&markers=#{@user.latitude},#{@user.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", style: "padding-top: 10px;", alt: "#{@user.name} on the map" if current_user == @user %>
     </div>
 
@@ -58,7 +59,7 @@
         <h4><span style="font-weight:normal"><i><%= @user.location %></i></span></h4><br>
         <!-- may change class to start-chat but have to make sure it doesn't conflict with js code -->
         <br>
-        
+
         <form action="/conversations" method="post">
           <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
           <input type="hidden" name="chat_room[recipient_id]" value="<%= @user.id%>">
