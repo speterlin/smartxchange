@@ -32,7 +32,6 @@
 #
 
 #active is for instantaneous feature Tati talked about
-
 class User < ApplicationRecord
   include Locatable
   include UsersHelper
@@ -120,7 +119,7 @@ class User < ApplicationRecord
       password: auth['uid'],
       name: @name,
       title: auth['info']['description'],
-      image: auth['extra']['raw_info']['pictureUrls'].values.second[0],
+      remote_image_url: auth['extra']['raw_info']['pictureUrls'].values.second[0],
       provider: auth['provider'],
       uid: auth['uid'],
       location: auth['info']['location']['name']
