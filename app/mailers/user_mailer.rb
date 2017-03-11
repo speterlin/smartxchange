@@ -109,7 +109,7 @@ class UserMailer < ApplicationMailer
     @user = chat_room.recipient
     @initiator = chat_room.initiator
     # not get @chat_room since for now chat_room is always initiated in initiator's language (to practice)
-    @chat_room_url = "http://www.smartxchange.es/chat_rooms/#{chat_room.id}" + conversations_campaign
+    @chat_room_url = "http://www.smartxchange.es/conversations/#{chat_room.id}" + conversations_campaign
     fetch_user_image(@initiator)
     set_name_and_title_and_unsubscribe(@user, "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
   end
@@ -118,7 +118,7 @@ class UserMailer < ApplicationMailer
     @user = chat_room_interlocutor(message.chat_room, message.sender)
     @sender = message.sender
     @chat_room = message.chat_room
-    @chat_room_url = "http://www.smartxchange.es/chat_rooms/#{message.chat_room.id}" + conversations_campaign
+    @chat_room_url = "http://www.smartxchange.es/conversations/#{message.chat_room.id}" + conversations_campaign
     fetch_user_image(@sender)
     set_name_and_title_and_unsubscribe(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
   end
