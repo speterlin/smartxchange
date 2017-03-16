@@ -159,11 +159,6 @@
   width:30%;
   float:left;
 }
-// 33% and 90% seem to work best maybe refactor later
-.g-recaptcha {
-  margin: auto;
-  width: 33%;
-}
 
 //800pxfor tablets
 @media all and (max-width:800px)
@@ -183,8 +178,5 @@
 {
   .reset-password input[type="submit"] {
     margin-top: 10px;
-  }
-  .g-recaptcha {
-    width: 90%;
   }
 }
