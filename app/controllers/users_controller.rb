@@ -89,11 +89,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     if @user.update(user_params)
-      # maybe refactor so array isn't generated everytime
-      random_match = @user.sort_exchange[0..24].sample
-      random_match = @user.sort_method[0..24].sample unless random_match
-      messages = ["Visit the People page and try the new Xchange option!", "Bored? Post something to the Board and see how many votes it can get :)", "Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"]
-      flash[:success] = "Profile updated! " + messages.sample
+      flash[:success] = "Profile updated! " + welcome_messages(@user).sample
       redirect_to user_path(@user)
     else
       flash[:error] = @user.errors.full_messages.to_sentence
@@ -157,6 +153,11 @@ class UsersController < ApplicationController
 
   def german
     @users = User.where(language: 'German').includes(:linkedin).paginate(page: params[:page], per_page: 12)
+    render :index
+  end
+
+  def mandarin_chinese
+    @users = User.where(language: 'Mandarin Chinese').includes(:linkedin).paginate(page: params[:page], per_page: 12)
     render :index
   end
 

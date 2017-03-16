@@ -11,6 +11,7 @@ module MessagesHelper
     # maybe refactor later, to acccount for change of English-flag-circular.png to British-flag-circular.png
     language_or_nationality = message.sender.language
     language_or_nationality = 'British' if language_or_nationality == 'English'
+    language_or_nationality = 'Chinese' if language_or_nationality == 'Mandarin Chinese'
     image_tag("country-flags/#{language_or_nationality}-flag-circular.png", :style => "-webkit-filter: grayscale(#{filtered});", alt: "#{message.sender.language}")
   end
 

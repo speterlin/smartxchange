@@ -35,7 +35,7 @@
 class User < ApplicationRecord
   include Locatable
   include UsersHelper
-  LANGUAGES = ["English", "Spanish", "Italian", "German", "French"]
+  LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese"]
   LANGUAGE_LEVELS = (1..6).to_a
 
   validates_presence_of :email, :name, :age, :language, :language_level, :title, :password_digest, :session_token, :nationality

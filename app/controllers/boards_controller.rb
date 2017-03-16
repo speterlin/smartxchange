@@ -6,7 +6,7 @@ class BoardsController < ApplicationController
   before_action :only_premium_access_to_smart_jobs, only: [:show]
 
   def show
-    @board = Board.find_by_title(params[:id].capitalize)
+    @board = Board.find_by_title(board_capitalize(params[:id]))
     # refactor sql query, right now orders by sum(value) then updated_at, also not filtering posts based on board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
     # coalesce because postgres does not return sum of empty column
     @posts = Post.find_by_sql("

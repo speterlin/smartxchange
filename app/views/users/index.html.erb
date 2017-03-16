@@ -14,6 +14,7 @@
       <a href="<%= german_users_path %>"><%= user_convert_language_or_nationality_to_img('German') %> : <span style="font-weight: 300;"> <%= User.where(language: 'German').count %> </span></a>,
       <a href="<%= french_users_path %>"><%= user_convert_language_or_nationality_to_img('French') %> : <span style="font-weight: 300;"> <%= User.where(language: 'French').count %> </span></a>,
       <a href="<%= english_users_path %>"><%= user_convert_language_or_nationality_to_img('British') %> : <span style="font-weight: 300;"> <%= User.where(language: 'English').count %> </span></a>
+      <a href="<%= mandarin_chinese_users_path %>"><%= user_convert_language_or_nationality_to_img('Chinese') %> : <span style="font-weight: 300;"> <%= User.where(language: 'Mandarin Chinese').count %> </span></a>
     </h4>
   </div>
 
