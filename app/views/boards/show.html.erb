@@ -96,10 +96,10 @@
     // only way to make it work is with setTimeout, prefer scrollIntoView over window.location.href
     setTimeout(function(){document.getElementById('post-<%= @notification.notifiable_id %>').scrollIntoView()},0);
   <% end %>
-  if (<%= @unread_post_id %> && <%= !@notification %>) {
+  <% if !@notification && @unread_post_id %>
     $('#post-<%= @unread_post_id%> .post-content').css("background-color", "yellow");
     setTimeout(function(){document.getElementById('post-<%= @unread_post_id %>').scrollIntoView()},0);
-  }
+  <% end %>
   $('.post-form.new #post-category').on('change', function() {
     if ($(this).find(":selected").val() == "Meetup") {
       $('#post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]'></label>")

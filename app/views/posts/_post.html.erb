@@ -13,7 +13,7 @@
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>
       <span style="display: inline;" id="post-category-display" ><%= "• #{post.category}" %></span>
       <% if post.owner == current_user %>
-        <%= link_to "• Edit", "#", class: "edit-post", :data => { :'post-id' => post.id, :clicked => "false" } %>
+        <%= link_to "• Edit", "#", class: "edit-post", :data => { 'post-id' => post.id, :clicked => "false" } %>
         <%= link_to "• Delete", post_path(post), remote: true, method: :delete, data: {confirm: "Are you sure you want to delete this post? All associated comments, votes, and follows will be destroyed as well."}  %>
       <% else %>
         <% if post.followers.include?(current_user) %>

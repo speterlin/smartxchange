@@ -60,7 +60,7 @@ function addEventEditPost (edit_post) {
       form += "<input type='hidden' name='_method' value='patch'>";
       form += "<input type='hidden' name='authenticity_token' value='"+$('meta[name="csrf-token"]')[0].content+"'>";
       form += "<textarea name='post[content]'>"+post_content+"</textarea>";
-      form += "<input type='hidden' name='post[board_id]' value='"+board_id+"'>"
+      form += "<input type='hidden' name='post[board_id]' value='"+board_id+"'>";
       form += "<input type='submit' class='btn btn-primary send-post'  value='Edit'>";
       form += "<div id='post-category'> Category: <select name='post[category]'>";
       if (board_id == 2) {
