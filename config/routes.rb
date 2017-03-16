@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     get 'french', on: :collection
     get 'german', on: :collection
     get 'english', on: :collection
+    get 'mandarin_chinese', on: :collection
     get 'map', on: :collection
     get 'exchange', on: :collection
     get 'remove_image', on: :member

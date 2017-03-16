@@ -21,4 +21,14 @@ module BoardsHelper
     current_user.reads.where(readable: board).first.update(updated_at: Time.now)
   end
 
+  def board_capitalize(string)
+    # refactor not beautiful code
+    result = ""
+    string.split(" ").each_with_index do |sub_string, idx|
+      result += sub_string.capitalize
+      result += " " if idx != string.split(" ").count - 1
+    end
+    result
+  end
+
 end

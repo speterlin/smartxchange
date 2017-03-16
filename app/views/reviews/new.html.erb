@@ -12,22 +12,17 @@
   <p>
     What language did <%= @other_user.name %> practice?
     <select name="review[language]">
-     <option value="Spanish" <%= 'selected' if @other_user.language=='Spanish'%> >Spanish</option>
-     <option value="English" <%= 'selected' if @other_user.language=='English'%> >English</option>
-     <option value="German" <%= 'selected' if @other_user.language=='German'%> >German</option>
-     <option value="French" <%= 'selected' if @other_user.language=='French'%> >French</option>
-     <option value="Italian" <%= 'selected' if @other_user.language=='Italian'%> >Italian</option>
+      <% User::LANGUAGES.each do |language|  %>
+        <option value="<%= language %>" <%= 'selected' if @review.language==language%> ><%= language %></option>
+      <% end %>
    </select>
   </p>
   <p>
     How would you rate <%= @other_user.name %>'s language level in this language?
     <select name="review[language_level]">
-       <option value="1" <%= 'selected' if @other_user.language_level==1 %> >A1 - beginner</option>
-       <option value="2" <%= 'selected' if @other_user.language_level==2 %> >A2 - elementary</option>
-       <option value="3" <%= 'selected' if @other_user.language_level==3 %> >B1 - intermediate</option>
-       <option value="4" <%= 'selected' if @other_user.language_level==4 %> >B2 - upper intermediate</option>
-       <option value="5" <%= 'selected' if @other_user.language_level==5 %> >C1 - advanced</option>
-       <option value="6" <%= 'selected' if @other_user.language_level==6 %> >C2 - master</option>
+      <% User::LANGUAGE_LEVELS.each do |language_level| %>
+        <option value="<%= language_level %>" <%= 'selected' if @review.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
+      <% end %>
    </select>
   </p>
   <label>Comments (optional - won't be displayed, only for our use):<br>

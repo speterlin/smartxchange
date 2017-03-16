@@ -28,11 +28,17 @@ class ApplicationController < ActionController::Base
   end
 
   def normal_sign_in
-    random_match = current_user.sort_exchange[0..24].sample
-    random_match = current_user.sort_method[0..24].sample unless random_match
-    flash[:notice] = "Welcome back #{current_user.name}! Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"
+    flash[:notice] = welcome_messages(current_user).sample
     redirect_to(session[:return_to] || board_path(Board.find_by_title(current_user.language)))
     session[:return_to] = nil
+  end
+
+  def welcome_messages(user)
+    random_match = user.sort_exchange[0..24].sample
+    random_match = user.sort_method[0..24].sample unless random_match
+    messages = ["Visit the People page and try the new Xchange option!", "Bored? Post something to the Board and see how many votes it can get :)"]
+    messages += ["Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"] if random_match
+    messages
   end
 
   def require_signed_in!
