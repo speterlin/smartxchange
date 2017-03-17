@@ -11,7 +11,7 @@
     </p>
     <time datetime="<%= post.created_at %>">
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>
-      <span style="display: inline;" id="post-category-display" ><%= "• #{post.category}" %></span>
+      <span style="display: inline;" class="post-category" ><%= "• #{post.category}" %></span>
       <% if post.owner == current_user %>
         <%= link_to "• Edit", "#", class: "edit-post", :data => { 'post-id' => post.id, :clicked => "false" } %>
         <%= link_to "• Delete", post_path(post), remote: true, method: :delete, data: {confirm: "Are you sure you want to delete this post? All associated comments, votes, and follows will be destroyed as well."}  %>
@@ -25,10 +25,11 @@
       <% if post.followers.any? %>
         <%= link_to "• "+ pluralize(post.followers.size, 'Follower'), followers_post_path(post), remote: true, class: "post-followers"  %>
       <% end %>
-    </time><br><!-- maybe refactor br, post-location-value, and put map styling board.scss-->
+    </time><br><!-- maybe refactor br, and put map styling board.scss-->
     <% if post.location? %>
-      <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{post.latitude},#{post.longitude}&markers=#{post.latitude},#{post.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", style: "margin-left: 35px; height: 150px;padding: 10px;", alt: "#{post.location} on the map" %>
-      <div id="post-location-value" style="display: none;"><%= post.location %></div>
+      <div class="post-location" data-location="<%= post.location %>">
+        <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{post.latitude},#{post.longitude}&markers=#{post.latitude},#{post.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", style: "margin-left: 35px; height: 150px;padding: 10px;", alt: "#{post.location} on the map" %>
+      </div>
     <% end %>
   </div>
   <% if post.comments.any? %>

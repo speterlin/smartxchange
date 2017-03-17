@@ -52,8 +52,11 @@ function addEventEditPost (edit_post) {
     var post_id = $(this).data('post-id');
     if (!$(this).data('clicked')) {
       var post_content = $('#post-'+post_id+' .post-text').text();
-      var post_category = $('#post-'+post_id+' #post-category-display').text().match(/[A-Z].*/i)[0];
-      var post_location = $('#post-'+post_id+' #post-location-value').text();
+      var post_category = $('#post-'+post_id+' .post-category').text().match(/[A-Z].*/i)[0];
+      // so that post_location is not listed as undefined below
+      var post_location = $('#post-'+post_id+' .post-location').data('location') ? $('#post-'+post_id+' .post-location').data('location') : "";
+      // maybe refactor, need this so duplicates are not rendered on category change while editing
+      if (post_location) { $('#post-'+post_id+' .post-location').remove() };
       $('#post-'+post_id+' .post-text').remove();
       // hack job until I find a better solution, can't render js variable in rendered ruby code, server side vs. client side
       var form = "<div class='post-form edit'><form action='/posts/"+post_id+"' method='post' data-remote='true'>";
@@ -69,7 +72,7 @@ function addEventEditPost (edit_post) {
         form += "<option value='Interest' "+(post_category == 'Interest' ? 'selected' : '')+" >Interest</option><option value='Educational' "+(post_category == 'Educational' ? 'selected' : '')+" >Educational</option><option value='Tutoring' "+(post_category == 'Tutoring' ? 'selected' : '')+" >Tutoring</option><option value='Meetup' "+(post_category == 'Meetup' ? 'selected' : '')+" >Meetup</option><option value='Professional' "+(post_category == 'Professional' ? 'selected' : '')+" >Professional</option><option value='Other' "+(post_category == 'Other' ? 'selected' : '')+" >Other</option>";
       }
       form += "</select><br>";
-      form += "<div id='post-location'>";
+      form += "<div class='post-location' data-location='"+post_location+"' >";
       if (post_category == 'Meetup') {
         form += "<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value='"+post_location+"'></label>";
       }
@@ -78,18 +81,18 @@ function addEventEditPost (edit_post) {
       $('#post-'+post_id+' .post-votes').after(form);
       $(this).data('clicked', true);
       // needs refactoring
-      $('#post-'+post_id+' #post-category').on('change', function() {
+      $('#post-'+post_id+' #post-category select').on('change', function() {
         if ($(this).find(":selected").val() == "Meetup") {
-          // finds filled out post location first
-          var post_location = $('#post-'+post_id+' #post-location').find(":input").val();
+          var post_location = $('#post-'+post_id+' .post-location').data('location');
           if (post_location) {
-            $('#post-'+post_id+' #post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value='"+post_location+"'></label>");
+            $('#post-'+post_id+' .post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value='"+post_location+"'></label>");
           } else {
-            $('#post-'+post_id+' #post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value=''></label>");
+            $('#post-'+post_id+' .post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value=''></label>");
           }
         } else {
-          $('#post-'+post_id+' #post-location').text("");
-          $('#post-'+post_id+' #post-location').append("<input type='hidden' name='post[location]' value=''>");
+          // maybe refactor this, not clearing out entire div, just emptying it
+          $('#post-'+post_id+' .post-location').html("");
+          $('#post-'+post_id+' .post-location').append("<input type='hidden' name='post[location]' value=''>");
         }
       })
     } else {
