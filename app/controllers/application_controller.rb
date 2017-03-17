@@ -40,8 +40,11 @@ class ApplicationController < ActionController::Base
     messages = ["Visit the People page and try the new Xchange option!", "Bored? Post something to the Board and see how many votes it can get :)"]
     messages += ["Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"] if random_match
     # include 3 tutor profiles only works on production environment, maybe refactor
-    tutors_with_material = ["<a href=\"#{user_path(User.find(340))}\">#{User.find(340).name}</a>", "<a href=\"#{user_path(User.find(131))}\">#{User.find(131).name}</a>", "<a href=\"#{user_path(User.find(329))}\">#{User.find(329).name}</a>"] if Rails.env.production?
-    messages += ["Take a look at material uploaded by " + tutors_with_material.sample + "!"] if Rails.env.production?
+    if Rails.env.production?
+      tutors_with_material = [User.find(131), User.find(329), User.find(340)]
+      tutor = tutors_with_material.sample
+      messages += ["Take a look at material uploaded by <a href=\"#{user_path(tutor)}#tutor-materials\">#{tutor.name}</a>!"]
+    end
     messages
   end
 
