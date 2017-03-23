@@ -55,8 +55,6 @@ function addEventEditPost (edit_post) {
       var post_category = $('#post-'+post_id+' .post-category').text().match(/[A-Z].*/i)[0];
       // so that post_location is not listed as undefined below
       var post_location = $('#post-'+post_id+' .post-location').data('location') ? $('#post-'+post_id+' .post-location').data('location') : "";
-      // maybe refactor, need this so duplicates are not rendered on category change while editing
-      if (post_location) { $('#post-'+post_id+' .post-location').remove() };
       $('#post-'+post_id+' .post-text').remove();
       // hack job until I find a better solution, can't render js variable in rendered ruby code, server side vs. client side
       var form = "<div class='post-form edit'><form action='/posts/"+post_id+"' method='post' data-remote='true'>";
@@ -72,7 +70,7 @@ function addEventEditPost (edit_post) {
         form += "<option value='Interest' "+(post_category == 'Interest' ? 'selected' : '')+" >Interest</option><option value='Educational' "+(post_category == 'Educational' ? 'selected' : '')+" >Educational</option><option value='Tutoring' "+(post_category == 'Tutoring' ? 'selected' : '')+" >Tutoring</option><option value='Meetup' "+(post_category == 'Meetup' ? 'selected' : '')+" >Meetup</option><option value='Professional' "+(post_category == 'Professional' ? 'selected' : '')+" >Professional</option><option value='Other' "+(post_category == 'Other' ? 'selected' : '')+" >Other</option>";
       }
       form += "</select><br>";
-      form += "<div class='post-location' data-location='"+post_location+"' >";
+      form += "<div class='post-location edit' data-location='"+post_location+"' >";
       if (post_category == 'Meetup') {
         form += "<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value='"+post_location+"'></label>";
       }
@@ -85,14 +83,14 @@ function addEventEditPost (edit_post) {
         if ($(this).find(":selected").val() == "Meetup") {
           var post_location = $('#post-'+post_id+' .post-location').data('location');
           if (post_location) {
-            $('#post-'+post_id+' .post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value='"+post_location+"'></label>");
+            $('#post-'+post_id+' .post-location.edit').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value='"+post_location+"'></label>");
           } else {
-            $('#post-'+post_id+' .post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value=''></label>");
+            $('#post-'+post_id+' .post-location.edit').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]' value=''></label>");
           }
         } else {
           // maybe refactor this, not clearing out entire div, just emptying it
-          $('#post-'+post_id+' .post-location').html("");
-          $('#post-'+post_id+' .post-location').append("<input type='hidden' name='post[location]' value=''>");
+          $('#post-'+post_id+' .post-location.edit').html("");
+          $('#post-'+post_id+' .post-location.edit').append("<input type='hidden' name='post[location]' value=''>");
         }
       })
     } else {
