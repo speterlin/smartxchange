@@ -1,11 +1,11 @@
 class SessionsController < ApplicationController
 
-  skip_before_action :require_signed_in!, only: [:new, :create, :create_linkedin, :new_linkedin, :existing_linkedin]
+  skip_before_action :require_signed_in!, only: [:new, :create, :add_update_register_login_with_linkedin, :new_linkedin, :login_with_linkedin]
   # before_action :premium_subscription, only: [:new_linkedin]
   # probably need to refactor class variable at some point
-  @@existing = false
-  @@add = false
-  @@update = false
+  @@login_with_linkedin = false
+  @@add_linkedin = false
+  @@update_linkedin = false
 
   def new
     redirect_to users_path if signed_in?
@@ -14,13 +14,14 @@ class SessionsController < ApplicationController
   def create
     # maybe refactor find_by_credentials, need all these is_a?(User) because method can return just an email as well
     @user = User.find_by_credentials(params[:user])
-    if @user.is_a?(User) && @user.activated?
+    if @user.is_a?(User)
+      # maybe refactor, this is repeated below, can't get around calling redirect twice
+      unless @user.activated?
+        flash[:error] = "User not activated, please check your email and activate account"
+        redirect_to login_path and return
+      end
       sign_in!(@user)
       normal_sign_in
-    # maybe refactor, this is repeated below
-    elsif @user.is_a?(User) && !@user.activated?
-      flash[:error] = "User not activated, please check your email and activate account"
-      redirect_to login_path and return
     else
       @email = @user
       flash.now[:error] = "Invalid email and/or password"
@@ -38,18 +39,18 @@ class SessionsController < ApplicationController
     redirect_to '/auth/linkedin'
   end
 
-  def existing_linkedin
-    @@existing = true
+  def login_with_linkedin
+    @@login_with_linkedin = true
     redirect_to '/auth/linkedin'
   end
 
   def add_linkedin
-    @@add = true
+    @@add_linkedin = true
     redirect_to '/auth/linkedin'
   end
 
   def update_linkedin
-    @@update = true
+    @@update_linkedin = true
     redirect_to '/auth/linkedin'
   end
 
@@ -62,54 +63,60 @@ class SessionsController < ApplicationController
     redirect_to user_url(current_user)
   end
 
-  def create_linkedin
+  def add_update_register_login_with_linkedin
     @user = User.where(:provider => auth_hash['provider'],
                       :uid => auth_hash['uid'].to_s).first
     # maybe refactor because of inability to display errors with adding and updating, maybe join these if elsif statements with ones below
-    if !@user && @@add
-      current_user.add_with_omniauth(auth_hash)
-      flash[:success] = "Linkedin added to profile"
-      @@add = false
-      redirect_to user_url(current_user) and return
-    elsif @user && @@add # if trying to add Linkedin account associated with another account
-      flash[:error] = "Linkedin account already registered with another account"
-      @@add = false
+    if @@add_linkedin
+      if @user # if trying to add Linkedin account associated with another account
+        flash[:error] = "Linkedin account already registered with another account"
+      else # adding Linkedin to account, no associated Linkedin
+        current_user.add_with_omniauth(auth_hash)
+        flash[:success] = "Linkedin added to profile"
+      end
+      @@add_linkedin = false
       redirect_to user_url(current_user) and return
     end
-    if !@user && @@update # should never be the case, should only be able to click 'Update with Linkedin' if you have an account
-      flash[:error] = "Must have a Linkedin account registered to update your Linkedin"
-      @@update = false
-      redirect_to user_url(current_user) and return
-    elsif @user && @@update
-      current_user.update_with_omniauth(auth_hash)
-      flash[:success] = "Linkedin information updated"
-      @@update = false
+    if @@update_linkedin
+      if @user
+        current_user.update_with_omniauth(auth_hash)
+        flash[:success] = "Linkedin information updated"
+      else # should never be the case, should only be able to click 'Update with Linkedin' if you have an account
+        flash[:error] = "Must have a Linkedin account registered to update your Linkedin"
+      end
+      @@update_linkedin = false
       redirect_to user_url(current_user) and return
     end
     # need to refactor later, some repeat code, added downcase in case linkedin's api doesn't downcase it already
-    if !@user && User.where(:email => auth_hash['info']['email'].downcase).first # register or sign in with Linkedin and email taken without Linkedin integration
+    if User.where(:email => auth_hash['info']['email'].downcase).first && !@user # register or sign in with Linkedin and email taken without Linkedin integration
       flash[:error] = "User with this email already exists, please log in and add Linkedin to your profile"
       redirect_to login_path and return
-    elsif !@user && !@@existing # register with linkedin and no linkedin account linked
-      @user = User.create_with_omniauth(auth_hash)
-      flash[:success] = "Please check your email (registered with Linkedin) for account activation. If you do not see the email please check your spam and promotion mailboxes."
-      UserMailer.account_activation(@user).deliver_later
-      redirect_to signup_path and return
-    elsif @user && !@@existing # register with linkedin and existing linkedin account
-      flash[:error] = "Linkedin account already registered with smartXchange, please login with your Linkedin"
-      redirect_to login_path and return
-    elsif !@user && @@existing # sign in with Linkedin and no Linkedin account linked
-      @@existing = false
-      flash[:error] = "No Linkedin account registered with smartXchange, please register"
-      redirect_to signup_path and return
-    end # @user && @@existing, sign in with linkedin and account exists
-    @@existing = false
-    unless @user.activated?
-      flash[:error] = "User not activated, please check your email (registered with Linkedin) and activate account"
-      redirect_to login_path and return
     end
-    sign_in!(@user)
-    normal_sign_in
+    if @@login_with_linkedin
+      if @user # login with Linkedin and user found
+        unless @user.activated?
+          flash[:error] = "User not activated, please check your email (registered with Linkedin) and activate account"
+          redirect_to login_path and return
+        end
+        sign_in!(@user)
+        normal_sign_in
+      else # sign in with Linkedin and no Linkedin account linked
+        @@login_with_linkedin = false
+        flash[:error] = "No Linkedin account registered with smartXchange, please register"
+        redirect_to signup_path and return
+      end
+    else # register with Linkedin
+      if @user # register with linkedin and linkedin account already linked
+        flash[:error] = "Linkedin account already registered with smartXchange, please login with your Linkedin"
+        redirect_to login_path and return
+      else # register with linkedin and no linkedin account linked
+        @user = User.create_with_omniauth(auth_hash)
+        flash[:success] = "Please check your email (registered with Linkedin) for account activation. If you do not see the email please check your spam and promotion mailboxes."
+        UserMailer.account_activation(@user).deliver_later
+        redirect_to signup_path and return
+      end
+    end
+    @@login_with_linkedin = false
   end
 
   protected
