@@ -89,10 +89,13 @@ class SessionsController < ApplicationController
     end
     # need to refactor later, some repeat code, added downcase in case linkedin's api doesn't downcase it already
     if User.where(:email => auth_hash['info']['email'].downcase).first && !@user # register or sign in with Linkedin and email taken without Linkedin integration
+      # refactor, precautionary, not very necessary, just reset it in case it's set
+      @@login_with_linkedin = false
       flash[:error] = "User with this email already exists, please log in and add Linkedin to your profile"
       redirect_to login_path and return
     end
     if @@login_with_linkedin
+      @@login_with_linkedin = false
       if @user # login with Linkedin and user found
         unless @user.activated?
           flash[:error] = "User not activated, please check your email (registered with Linkedin) and activate account"
@@ -101,7 +104,6 @@ class SessionsController < ApplicationController
         sign_in!(@user)
         normal_sign_in
       else # sign in with Linkedin and no Linkedin account linked
-        @@login_with_linkedin = false
         flash[:error] = "No Linkedin account registered with smartXchange, please register"
         redirect_to signup_path and return
       end
@@ -116,7 +118,6 @@ class SessionsController < ApplicationController
         redirect_to signup_path and return
       end
     end
-    @@login_with_linkedin = false
   end
 
   protected
