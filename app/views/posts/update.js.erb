@@ -5,4 +5,4 @@ $('#post-<%= @post.id %> .edit-comment').each(function(index, value) {
   addEventEditComment(value, <%= @post.id %>);
 })
 
-<%= render partial: 'layouts/move_post_up', locals: { up_votes: @post.votes.sum(:value), post: @post }  %>
+<%= render partial: 'layouts/move_post_up', locals: { up_votes: @post.votes.sum(:value), post: @post, moved: true }  %>

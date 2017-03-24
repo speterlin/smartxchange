@@ -37,11 +37,11 @@ class ApplicationController < ActionController::Base
   def welcome_messages(user)
     random_match = user.sort_exchange[0..24].sample
     random_match = user.sort_method[0..24].sample unless random_match
-    messages = ["Visit the People page and try the new Xchange option!", "Bored? Post something to the Board and see how many votes it can get :)"]
+    messages = ["Visit the <a href=\"#{users_path}\">People</a> page and try the new Xchange option!", "Bored? Post something to a Board page and see how many votes it can get :)"]
     messages += ["Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"] if random_match
     # include 3 tutor profiles only works on production environment, maybe refactor
     if Rails.env.production?
-      tutors_with_material = [User.find(131), User.find(329), User.find(340)]
+      tutors_with_material = [User.find(1), User.find(131), User.find(329), User.find(340)]
       tutor = tutors_with_material.sample
       messages += ["Take a look at material uploaded by <a href=\"#{user_path(tutor)}#tutor-materials\">#{tutor.name}</a>!"]
     end

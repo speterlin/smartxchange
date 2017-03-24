@@ -6,4 +6,4 @@ if (prev_post.length) {
   $('#posts ul#<%= @post.category.downcase %>').prepend($("<%= j(render(:partial => 'post', :locals => {post: @post})) %>"))
 }
 
-<%= render partial: 'layouts/move_post_down', locals: { up_votes: @up_votes, post: @post }  %>
+<%= render partial: 'layouts/move_post_down', locals: { up_votes: @up_votes, post: @post, moved: false }  %>
