@@ -5,4 +5,5 @@ $('#post-<%= @post.id %> .edit-comment').each(function(index, value) {
   addEventEditComment(value, <%= @post.id %>);
 })
 
+//maybe refactor post doesn't always move after update
 <%= render partial: 'layouts/move_post_up', locals: { up_votes: @post.votes.sum(:value), post: @post, moved: true }  %>
