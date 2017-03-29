@@ -67,6 +67,7 @@ module UsersHelper
     language = 'English' if user_convert_language_to_nationalities('English').include?(nationality)
     language = 'Spanish' if user_convert_language_to_nationalities('Spanish').include?(nationality)
     language = 'German' if user_convert_language_to_nationalities('German').include?(nationality)
+    language = 'Mandarin Chinese' if user_convert_language_to_nationalities('Mandarin Chinese').include?(nationality)
     language
   end
 
@@ -77,6 +78,8 @@ module UsersHelper
       return ['Argentinian', 'Bolivian', 'Colombian', 'Ecuadorian', 'Guatemalan', 'Honduran', 'Mexican', 'Peruvian', 'Spanish', 'Uruguayan', 'Venezuelan']
     elsif language == 'German'
       return ['Austrian', 'German']
+    elsif language == 'Mandarin Chinese'
+      return ['Chinese']
     else
       return [language]
     end
