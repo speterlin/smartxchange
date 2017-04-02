@@ -73,6 +73,9 @@ gem 'delayed_job_active_record'
 # for remote file uploads
 gem 'remotipart', '~> 1.2'
 
+# for tracking emails
+gem 'sendgrid-ruby'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 
