@@ -23,12 +23,12 @@ class UserMailer < ApplicationMailer
     @user = user
     # maybe refactor and get rid of cgi escape, according to hartl tutorial I need this
     @activate_account_url = "http://www.smartxchange.es/users/#{@user.id}/settings/activate_account/#{@user.activation_token}?email=#{CGI.escape(@user.email)}"
-    set_name_and_title_and_unsubscribe(@user, "Activate your smartXchange account")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Activate your smartXchange account")
   end
 
   def welcome_new(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, "Welcome to smartXchange")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Welcome to smartXchange")
   end
 
   def weekly_notifications(user, notifications)
@@ -37,7 +37,7 @@ class UserMailer < ApplicationMailer
     @notifications = notifications
     add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_name_and_title_and_unsubscribe(@user, "smartXchange Notifications")
+    set_name_and_title_and_unsubscribe_and_header(@user, "smartXchange Notifications")
   end
 
   def monthly_update(user, notifications)
@@ -45,7 +45,7 @@ class UserMailer < ApplicationMailer
     @notifications = notifications
     add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_name_and_title_and_unsubscribe(@user, "smartXchange introduces Mandarin Chinese!")
+    set_name_and_title_and_unsubscribe_and_header(@user, "smartXchange introduces Mandarin Chinese!")
   end
 
   def language_matches(user, match_or_exchange)
@@ -76,7 +76,7 @@ class UserMailer < ApplicationMailer
       mail.perform_deliveries = false
     end
     add_campaign_to_login(campaign)
-    set_name_and_title_and_unsubscribe(@user, title)
+    set_name_and_title_and_unsubscribe_and_header(@user, title)
   end
 
   def notify_match(interested_user, matched_user)
@@ -86,7 +86,7 @@ class UserMailer < ApplicationMailer
     # not using add_campaign since this is less lines of code, only need to add campaign to the view profile link
     @url_interested_user = "http://www.smartxchange.es/users/#{@interested_user.id}#{matches_campaign}"
     fetch_user_image(@interested_user)
-    set_name_and_title_and_unsubscribe(@user, "#{@interested_user.name} wants to practice #{@interested_user.language}")
+    set_name_and_title_and_unsubscribe_and_header(@user, "#{@interested_user.name} wants to practice #{@interested_user.language}")
   end
 
   def unread_board(user, board)
@@ -94,7 +94,7 @@ class UserMailer < ApplicationMailer
     # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
     @board_url = "http://www.smartxchange.es/boards/#{board.title.downcase}" + boards_campaign
     add_campaign_to_footer(boards_campaign)
-    set_name_and_title_and_unsubscribe(@user, "Check out the latest posts on the #{@user.language} board!")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Check out the latest posts on the #{@user.language} board!")
   end
 
   def unread_jobs(user)
@@ -102,7 +102,7 @@ class UserMailer < ApplicationMailer
     board = Board.find(2)
     @board_url = "http://www.smartxchange.es/boards/#{board.title.downcase}" + jobs_campaign
     add_campaign_to_footer(jobs_campaign)
-    set_name_and_title_and_unsubscribe(@user, "View the latest jobs on the Smart Jobs board!")
+    set_name_and_title_and_unsubscribe_and_header(@user, "View the latest jobs on the Smart Jobs board!")
   end
 
   def new_conversation(chat_room)
@@ -111,7 +111,7 @@ class UserMailer < ApplicationMailer
     # not get @chat_room since for now chat_room is always initiated in initiator's language (to practice)
     @chat_room_url = "http://www.smartxchange.es/conversations/#{chat_room.id}" + conversations_campaign
     fetch_user_image(@initiator)
-    set_name_and_title_and_unsubscribe(@user, "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
+    set_name_and_title_and_unsubscribe_and_header(@user, "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
   end
 
   def new_message(message)
@@ -120,7 +120,7 @@ class UserMailer < ApplicationMailer
     @chat_room = message.chat_room
     @chat_room_url = "http://www.smartxchange.es/conversations/#{message.chat_room.id}" + conversations_campaign
     fetch_user_image(@sender)
-    set_name_and_title_and_unsubscribe(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
+    set_name_and_title_and_unsubscribe_and_header(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
   end
 
   def new_post(notification)
@@ -130,7 +130,7 @@ class UserMailer < ApplicationMailer
     @board = @post.board
     @board_url = "http://www.smartxchange.es/boards/#{@board.title.downcase}" + boards_campaign
     fetch_user_image(@notifier)
-    set_name_and_title_and_unsubscribe(@user, "You have a new post notification on the #{@board.title} board!")
+    set_name_and_title_and_unsubscribe_and_header(@user, "You have a new post notification on the #{@board.title} board!")
   end
 
   def peer_review(user, other_user, chat_room)
@@ -140,7 +140,7 @@ class UserMailer < ApplicationMailer
     @peer_review_hash = Rails.application.message_verifier(:peer_review).generate(@other_user.id)
     @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}/reviews/new#{reviews_campaign}&chat_room_id=#{@chat_room.id}&id=#{@peer_review_hash}"
     fetch_user_image(@other_user)
-    set_name_and_title_and_unsubscribe(@user, "Please review #{@other_user.name} in your #{@chat_room.title} conversation together")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Please review #{@other_user.name} in your #{@chat_room.title} conversation together")
   end
 
   def notify_review(user, other_user, review)
@@ -149,29 +149,29 @@ class UserMailer < ApplicationMailer
     @review = review
     @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}#{reviews_campaign}#review-#{@review.id}"
     fetch_user_image(@other_user)
-    set_name_and_title_and_unsubscribe(@user, "#{@other_user.name} has left you a review")
+    set_name_and_title_and_unsubscribe_and_header(@user, "#{@other_user.name} has left you a review")
   end
 
   def reset_password(user, password)
     @user = user
     @password = password
     @url_change_password = "http://www.smartxchange.es/users/#{@user.id}/settings/change_password"
-    set_name_and_title_and_unsubscribe(@user, "Password reset, smartXchange")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Password reset, smartXchange")
   end
 
   def suspicious_activity(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, "Suspicious Activity")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Suspicious Activity")
   end
 
   def premium_subscribe(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, "Welcome to smartXchange Premium")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Welcome to smartXchange Premium")
   end
 
   def premium_unsubscribe(user)
     @user = user
-    set_name_and_title_and_unsubscribe(@user, "Sorry to see you leave")
+    set_name_and_title_and_unsubscribe_and_header(@user, "Sorry to see you leave")
   end
 
   private
@@ -245,9 +245,11 @@ class UserMailer < ApplicationMailer
     end
   end
 
-  def set_name_and_title_and_unsubscribe(user, title)
+  def set_name_and_title_and_unsubscribe_and_header(user, title)
     email_with_name = %("#{user.name}" <#{user.email}>)
     @unsubscribe_hash = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
+    # binding of collar easy way to get previous method name
+    headers['X-SMTPAPI'] = '{"category": "' + binding.of_caller(0).eval('self').action_name + '"}'
     mail(to: email_with_name, subject: title)
   end
 
