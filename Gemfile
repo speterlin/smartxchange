@@ -104,5 +104,8 @@ group :production do
   ruby "2.3.3"
   gem 'pg'
   gem 'rails_12factor'
+  # for action cable to work
   gem 'redis', '~> 3.0'
+  # for use in user_mailer.rb#set_name_and_title_and_unsubscribe_and_header
+  gem 'binding_of_caller'
 end
