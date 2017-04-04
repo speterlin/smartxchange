@@ -1,4 +1,6 @@
 Dear <%= @user.name %>,
 ===============================================
 
-  You have <%= pluralize(@notifications, "new notification") %>. <%= link_to "Log in", @url_login, class:'mail-btn'  %> to see your unread <%= "notification".pluralize(@notifications) %>!
+  <% if @notifications > 0  %>
+      You have <%= pluralize(@notifications, "new notification") %>. <%= link_to "Log in", @url_login, class:'mail-btn'  %> to see your unread <%= "notification".pluralize(@notifications) %>!
+  <% end %>

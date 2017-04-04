@@ -3,9 +3,9 @@
   <%= render 'layouts/header_mail' %>
   <body>
     <h4>Dear <%= @user.name %>,</h4>
-    <p>
-      You have <%= pluralize(@notifications, "new notification") %>. <%= link_to "Log in", @url_login, class:'mail-btn'  %> to see your unread <%= "notification".pluralize(@notifications) %>!
-    </p>
+    <% if @notifications > 0  %>
+        You have <%= pluralize(@notifications, "new notification") %>. <%= link_to "Log in", @url_login, class:'mail-btn'  %> to see your unread <%= "notification".pluralize(@notifications) %>!
+    <% end %>
   </body>
   <%= render 'layouts/footer_mail' %>
 </html>
