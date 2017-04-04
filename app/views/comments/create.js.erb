@@ -1,8 +1,9 @@
-if ($('#post-<%= @post.id %> .post-comments').length) {
-  $('#post-<%= @post.id %> .post-comments').append("<%= j(render(@comment)) %>")
-} else {
-  $('#post-<%= @post.id %> .post-content').after("<ul class='post-comments'><%= j(render(@comment)) %></ul>")
-}
-$('#post-<%= @post.id %> .comment-form.new textarea').val("");
+$('#post-<%= @post.id %>').remove();
+$('#posts ul#<%= @post.category.downcase %>').append("<%= j(render(:partial => 'posts/post', :locals => {post: @post})) %>")
+addEventEditPost($('#post-<%= @post.id %> .edit-post'));
+$('#post-<%= @post.id %> .edit-comment').each(function(index, value) {
+  addEventEditComment(value, <%= @post.id %>);
+})
 
-addEventEditComment($('#comment-<%= @comment.id %> .edit-comment'), <%= @post.id %>)
+//maybe refactor, same code as posts/update.js.erb but moved is passed in as false instead of true
+<%= render partial: 'layouts/move_post_up', locals: { up_votes: @post.votes.sum(:value), post: @post, moved: false }  %>
