@@ -41,6 +41,8 @@ class CommentsController < ApplicationController
   def destroy
     @comment = Comment.find(params[:id])
     @comment.destroy
+    @post = @comment.commentable
+    post_destroy_follow(@post, current_user)
     respond_to do |format|
       format.js
     end

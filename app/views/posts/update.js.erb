@@ -1,3 +1,4 @@
+//maybe refactor post doesn't always move after update, same code as comments/create&destroy.js.erb
 $('#post-<%= @post.id %>').remove();
 $('#posts ul#<%= @post.category.downcase %>').append("<%= j(render(:partial => 'post', :locals => {post: @post})) %>")
 addEventEditPost($('#post-<%= @post.id %> .edit-post'));
@@ -5,5 +6,4 @@ $('#post-<%= @post.id %> .edit-comment').each(function(index, value) {
   addEventEditComment(value, <%= @post.id %>);
 })
 
-//maybe refactor post doesn't always move after update
 <%= render partial: 'layouts/move_post_up', locals: { up_votes: @post.votes.sum(:value), post: @post, moved: true }  %>

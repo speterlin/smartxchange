@@ -1,3 +1,4 @@
+//maybe refactor, same code as posts/update.js.erb but moved is passed in as false instead of true
 $('#post-<%= @post.id %>').remove();
 $('#posts ul#<%= @post.category.downcase %>').append("<%= j(render(:partial => 'posts/post', :locals => {post: @post})) %>")
 addEventEditPost($('#post-<%= @post.id %> .edit-post'));
@@ -5,5 +6,4 @@ $('#post-<%= @post.id %> .edit-comment').each(function(index, value) {
   addEventEditComment(value, <%= @post.id %>);
 })
 
-//maybe refactor, same code as posts/update.js.erb but moved is passed in as false instead of true
 <%= render partial: 'layouts/move_post_up', locals: { up_votes: @post.votes.sum(:value), post: @post, moved: false }  %>
