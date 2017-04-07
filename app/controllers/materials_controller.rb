@@ -22,6 +22,6 @@ class MaterialsController < ApplicationController
   private
 
   def material_params
-    params.require(:material).permit(:name, :attachment, :owner_id)
+    params.require(:material).permit(:name, :attachment, :owner_id, :language, :language_level)
   end
 end

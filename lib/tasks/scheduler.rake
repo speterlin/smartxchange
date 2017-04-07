@@ -42,3 +42,12 @@ task :send_weekly_notifications => :environment do
     end
   end
 end
+
+task :send_unread_materials => :environment do
+  # Cycle repeats every Thursday morning
+  user_weekly_beginning_and_end(4).each do |user|
+    if user_has_unread_materials?(user)
+      UserMailer.unread_materials(user).deliver
+    end
+  end
+end

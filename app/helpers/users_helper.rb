@@ -25,6 +25,11 @@ module UsersHelper
     boards_notifications
   end
 
+  def user_has_unread_materials?(user)
+    return true if user.updated_at < Material.last.updated_at
+    false
+  end
+
   def user_convert_language_level(rating)
     if rating == 1
       return "A1 - beginner"

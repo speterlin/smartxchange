@@ -12,7 +12,7 @@ class UserMailer < ApplicationMailer
   include UsersHelper
 
   # all emails where we're using normal footer_mail (rather than footer_mail_simple)
-  before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update, :unread_board, :unread_jobs]
+  before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update, :unread_board, :unread_jobs, :unread_materials]
   # all emails where there is a login link
   before_action :set_login_url, only: [:welcome_new, :weekly_notifications, :monthly_update, :language_matches]
   before_action :set_header_logo
@@ -103,6 +103,14 @@ class UserMailer < ApplicationMailer
     @board_url = "http://www.smartxchange.es/boards/#{board.title.downcase}" + jobs_campaign
     add_campaign_to_footer(jobs_campaign)
     set_name_and_title_and_unsubscribe_and_header(@user, "View the latest jobs on the Smart Jobs board!")
+  end
+
+  def unread_materials(user)
+    @user = user
+    @material = Material.last
+    @material_url = "http://www.smartxchange.es/users/#{@material.owner.id}" + materials_campaign + "#tutor-materials"
+    add_campaign_to_footer(materials_campaign)
+    set_name_and_title_and_unsubscribe_and_header(@user, "#{@material.owner.name} has uploaded new material")
   end
 
   def new_conversation(chat_room)
@@ -226,6 +234,10 @@ class UserMailer < ApplicationMailer
 
   def reviews_campaign
     "?utm_source=review_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_reviews"
+  end
+
+  def materials_campaign
+    "?utm_source=material_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_materials"
   end
 
   def prevent_delivery_to_unsubscribed

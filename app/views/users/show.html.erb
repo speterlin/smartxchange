@@ -107,8 +107,17 @@
           <label for="material-name"></label>
           <input id="material-name" type="text" name="material[name]" >
           <label for="material-attachment"></label>
-          <input id="material-attachment" type="file" name="material[attachment]" style="display: inline;">
-
+          <input id="material-attachment" type="file" name="material[attachment]" style="display: inline; width: 200px;">
+          <select id="material-language" name="material[language]" style="display: inline;">
+            <% User::LANGUAGES.each do |language| %>
+              <option value="<%= language %>" <%= 'selected' if user_convert_nationality_to_language(@user.nationality)==language %> ><%= language %></option>
+            <% end %>
+          </select>
+          <select id="material-language-level" name="material[language_level]">
+            <% User::LANGUAGE_LEVELS.each do |language_level| %>
+              <option value="<%= language_level %>" ><%= user_convert_language_level(language_level) %></option>
+            <% end %>
+           </select>
           <input class="btn btn-primary" type="submit" value="Upload">
           <div style="display: inline;">(Max file size: 5mb)</div>
         </form>

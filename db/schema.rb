@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170220184141) do
+ActiveRecord::Schema.define(version: 20170407083501) do
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string   "first_name"
@@ -113,6 +113,7 @@ ActiveRecord::Schema.define(version: 20170220184141) do
     t.boolean  "unread_board",         default: true, null: false
     t.boolean  "unread_jobs",          default: true, null: false
     t.boolean  "new_post",             default: true, null: false
+    t.boolean  "unread_materials",     default: true, null: false
     t.index ["user_id"], name: "index_email_subscriptions_on_user_id", unique: true
   end
 
@@ -154,11 +155,13 @@ ActiveRecord::Schema.define(version: 20170220184141) do
   end
 
   create_table "materials", force: :cascade do |t|
-    t.string   "name",       null: false
-    t.string   "attachment", null: false
-    t.integer  "owner_id",   null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string   "name",                               null: false
+    t.string   "attachment",                         null: false
+    t.integer  "owner_id",                           null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.string   "language",       default: "Spanish", null: false
+    t.integer  "language_level", default: 3,         null: false
     t.index ["attachment", "owner_id"], name: "index_materials_on_attachment_and_owner_id", unique: true
     t.index ["name", "owner_id"], name: "index_materials_on_name_and_owner_id", unique: true
   end

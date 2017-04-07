@@ -2,16 +2,18 @@
 #
 # Table name: materials
 #
-#  id         :integer          not null, primary key
-#  name       :string           not null
-#  attachment :string           not null
-#  owner_id   :integer          not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id             :integer          not null, primary key
+#  name           :string           not null
+#  attachment     :string           not null
+#  owner_id       :integer          not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  language       :string           default("Spanish"), not null
+#  language_level :integer          default(3), not null
 #
 
 class Material < ApplicationRecord
-  validates :name, :attachment, :owner, presence: true
+  validates :name, :attachment, :owner, :language, :language_level, presence: true
   validates :attachment, file_size: { less_than_or_equal_to: 5.megabytes }
   validates :owner_id, uniqueness: { scope: :name, message: "has already uploaded a document with this name" }
   validate :attachment_is_unique_to_owner

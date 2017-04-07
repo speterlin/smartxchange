@@ -1,5 +1,5 @@
 <li id="material-<%= material.id %>">
-  <h5 style="display: inline; padding-right: 10px;"><span style="font-weight:normal"><%= material.name %></span></h5>
+  <h5 style="display: inline; padding-right: 10px;"><span style="font-weight:normal"><b><%= material.name %></b><i><%= " #{material.language} #{user_convert_language_level(material.language_level)}" %></i></span></h5>
   <%= link_to "Download", material.attachment_url, target: "_blank", class: 'btn btn-primary settings' if current_user.premium? || @user == current_user %>
   <%= link_to "Remove", user_material_path(material, user_id: @user.id), method: :delete, remote: true, class: "btn btn-primary delete", data: {confirm: "Are you sure that you wish to delete #{material.name}?"} if @user == current_user %>
   <%= link_to "Upgrade to Premium", "/about#premium", class: 'btn btn-primary premium' if !current_user.premium? && @user != current_user %>
