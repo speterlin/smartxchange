@@ -29,15 +29,14 @@ class BoardsController < ApplicationController
       @professional_posts = @posts.select {|post| post.category == 'Professional'}
       @other_posts = @posts.select {|post| post.category == 'Other'}
     end
-
     if user_count_unread_board_notifications(current_user, @board) > 0
       @notification = user_first_unread_board_notification(current_user, @board)
       # maybe refactor this and chat_room_mark_read to notification_mark_read, and delete notification
       post_mark_read(@notification)
     end
-    # maybe refactor later, only update user if he/she is viewing unread posts, add +1 to current user due to delay in updating associations through touch
     if board_has_unread?(@board, current_user)
-      @unread_post_id = @board.posts.first.id
+      # if board has unread get most recently updated post and the most recent notification for that post
+      @notification = Notification.where(notifiable: @board.posts.first).last
       board_mark_read(@board)
     end
   end
