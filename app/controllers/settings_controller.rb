@@ -1,7 +1,7 @@
 class SettingsController < ApplicationController
 
   skip_before_action :require_signed_in!, only: [:reset_password, :create_password, :email_subscription, :update_subscription, :activate_account]
-  before_action :correct_user?, except: [:reset_password, :create_password, :update_subscription, :activate_account]
+  before_action :correct_user?, except: [:reset_password, :create_password, :email_subscription, :update_subscription, :activate_account]
 
   def show
     @user = User.find(params[:user_id])

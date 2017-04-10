@@ -24,6 +24,7 @@ class Material < ApplicationRecord
   protected
 
   def attachment_is_unique_to_owner
+    # maybe refactor, causing an error when update from heroku rails console, can't find original_filename
     if self.attachment.file && Material.where(attachment: self.attachment.file.original_filename, owner_id: self.owner_id).where.not(id: self.id).count > 0
        errors.add :owner_id, "has already uploaded an attachment with the name #{self.attachment.file.original_filename}"
     end
