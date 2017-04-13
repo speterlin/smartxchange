@@ -35,6 +35,7 @@
 class User < ApplicationRecord
   include Locatable
   include UsersHelper
+  # need to updated _translate.html.erb any time there is a change in language offerings
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese"]
   LANGUAGE_LEVELS = (1..6).to_a
 
