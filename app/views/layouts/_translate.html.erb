@@ -3,13 +3,12 @@
     From:
     <!-- maybe refactor to inherit User::LANGUAGES -->
     <select id="from-language">
-      <!-- our target customers are english speakers and spanish speakers, hence the following defaults -->
-       <option value="es" <%= 'selected' if current_user.language=='English'%> >Spanish</option>
-       <option value="en" <%= 'selected' if current_user.language!='English'%> >English</option>
-       <option value="de" >German</option>
-       <option value="fr" >French</option>
-       <option value="it" >Italian</option>
-       <option value="zh-CN" >Mandarin Chinese</option>
+        <option value="en" <%= 'selected' if user_convert_nationality_to_language(current_user.nationality) == 'English' %> >English</option>
+        <option value="es" <%= 'selected' if user_convert_nationality_to_language(current_user.nationality) == 'Spanish' %> >Spanish</option>
+        <option value="de" <%= 'selected' if user_convert_nationality_to_language(current_user.nationality) == 'German' %> >German</option>
+        <option value="fr" <%= 'selected' if user_convert_nationality_to_language(current_user.nationality) == 'French' %> >French</option>
+        <option value="it" <%= 'selected' if user_convert_nationality_to_language(current_user.nationality) == 'Italian' %> >Italian</option>
+        <option value="zh-CN" <%= 'selected' if user_convert_nationality_to_language(current_user.nationality) == 'Mandarin Chinese' %> >Mandarin Chinese</option>
      </select>
      To:
      <select id="to-language">
