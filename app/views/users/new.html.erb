@@ -5,14 +5,26 @@
     <h3 class="new section-subheading">Helping the world communicate better</h3>
     <h4 class="new subheading">Join our language learning community with over <%= pluralize(@user_count, 'user') %> and <%= pluralize(@jobs_offered_count, 'job') %> offered!</h4>
     <br>
+    <h3 class="new section-subheading">Practice languages</h3>
+    <h3 class="new section-subheading">Download materials</h3>
+    <h3 class="new section-subheading">Network</h3>
+    <br>
+    <h4 class="new subheading">"I am able to practice with people outside of the classroom whom I can trust"</h4>
+    <h4 class="new subheading">"I am able to practice with people at my level"</h4>
+    <h4 class="new subheading">"smartXchange tutors provide tutoring and materials you can't find anywhere else"</h4>
+    <br>
+    <br>
     <a href="/about" class="page-scroll btn btn-xl">Tell Me More</a>
+
+
+  </div>
     <br>
-    <br>
+    <!-- <br><br><br><br><br><br><br> -->
+  <div class="col-lg-6 text-right">
     <!-- Register with Linkedin -->
     <%= button_to "Register with Linkedin", new_linkedin_session_path, method: 'get', data: {confirm: "smartXchange will have access to your basic Linkedin profile and Linkedin email, are you sure? By registering with Linkedin you are agreeing to our Terms of Service and Privacy and Cookie Policy. Links to these can be found at the bottom of the page."}, class: 'btn btn-primary linkedin' %>
 
     <h4 class="new subheading">OR</h4>
-
     <!-- Sign up form -->
     <form action="/users" method="post" class="new">
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
@@ -34,39 +46,33 @@
       <label>Language (to practice)<br>
         <select name="user[language]">
           <% User::LANGUAGES.each do |language| %>
-            <option value="<%= language %>" <%= 'selected' if @user && @user.language==language %> ><%= language %></option>
+          <option value="<%= language %>" <%= 'selected' if @user && @user.language==language %> ><%= language %></option>
           <% end %>
-       </select>
+        </select>
       </label>
       <label>Language level <br>
         <select name="user[language_level]">
           <% User::LANGUAGE_LEVELS.each do |language_level| %>
-            <option value="<%= language_level %>" <%= 'selected' if @user && @user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
+          <option value="<%= language_level %>" <%= 'selected' if @user && @user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
           <% end %>
-       </select>
+        </select>
       </label><br>
       <label>Native country<br>
         <select name="user[nationality]">
           <% user_nationalities.each do |nationality| %>
-            <!-- default to Spanish if not selected -->
-            <option value="<%= nationality[0] %>" <%= @user ?  @user.nationality == nationality[0] ? "selected" : "" : nationality[0] == "Spanish" ? "selected" : "" %> ><%= nationality[1] %></option>
+          <!-- default to Spanish if not selected -->
+          <option value="<%= nationality[0] %>" <%= @user ?  @user.nationality == nationality[0] ? "selected" : "" : nationality[0] == "Spanish" ? "selected" : "" %> ><%= nationality[1] %></option>
           <% end %>
-       </select>
-     </label><br><br>
-     <%= recaptcha_tags %><br>
-     <input type="hidden" name="user[terms]" value=0>
-     <input type="checkbox" id="user-terms" name="user[terms]" value=1>
-     <label for="user-terms"><%= link_to "Terms of Service", "ToS.pdf", style: "color: white;" %>, <%= link_to "Privacy and Cookie Policy", "Privacy and Cookie Policy.pdf", style: "color: white;" %></label></br></br>
+        </select>
+      </label><br><br>
+      <%= recaptcha_tags %><br>
+      <input type="hidden" name="user[terms]" value=0>
+      <input type="checkbox" id="user-terms" name="user[terms]" value=1>
+      <label for="user-terms"><%= link_to "Terms of Service", "ToS.pdf", style: "color: white;" %>, <%= link_to "Privacy and Cookie Policy", "Privacy and Cookie Policy.pdf", style: "color: white;" %></label></br></br>
 
-     <input type="submit" value="Register" class="btn btn-primary"><br>
+      <input type="submit" value="Register" class="btn btn-primary"><br>
 
     </form>
-  </div>
-  <br><br><br><br><br><br><br><br>
-  <div class="col-lg-6 text-right">
-    <h3 class="new section-subheading">Practice languages</h3>
-    <h3 class="new section-subheading">Download materials</h3>
-    <h3 class="new section-subheading">Network</h3>
   </div>
   <!-- hack job need to refactor with padding or margin, everywhere there are multiple <br>'s on the page -->
   <br>

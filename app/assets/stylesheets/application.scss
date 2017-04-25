@@ -265,6 +265,14 @@ section h3.section-subheading {
     padding:100px 0
   }
 }
+@media (max-width:1200px) {
+  .text-right {
+    text-align: left;
+  }
+  .g-recaptcha div {
+    margin-right: auto;
+  }
+}
 .service-heading {
   margin:15px 0;
   text-transform:none
@@ -843,6 +851,12 @@ footer ul li {
   text-align: right;
   margin-left: 15px;
   font-size: 14px;
+}
+
+@media (min-width: 1200px) {
+  .g-recaptcha div {
+    margin-left: auto;
+  }
 }
 
 
