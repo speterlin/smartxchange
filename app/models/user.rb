@@ -208,6 +208,7 @@ class User < ApplicationRecord
     sort = (self.language_level.to_f + base_user.language_level.to_f) / denominator
     # using latitude in case there was a failed geocode on location, precaution but better this way
     sort *= 1.5 if base_user.latitude && self.latitude && base_user.distance_from(self) < 50
+    sort *= 1.5 if base_user.age > self.age - 10 && base_user.age < self.age + 10
     base_user.interests.each {|interest| sort *= 1.1 if self.interests.include?(interest)}
     sort
   end
