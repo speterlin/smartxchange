@@ -2,7 +2,7 @@
   <h3>Reviews of me</h3>
     <ul>
       <% @reviews.each do |review| %>
-        <li><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_url(review.reviewer) %></li>
+        <li><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %></li>
       <% end %>
     </ul>
 

@@ -60,7 +60,7 @@ class SessionsController < ApplicationController
       provider: nil,
       uid: nil
     )
-    redirect_to user_url(current_user)
+    redirect_to user_path(current_user)
   end
 
   def add_update_register_login_with_linkedin
@@ -75,7 +75,7 @@ class SessionsController < ApplicationController
         flash[:success] = "Linkedin added to profile"
       end
       @@add_linkedin = false
-      redirect_to user_url(current_user) and return
+      redirect_to user_path(current_user) and return
     end
     if @@update_linkedin
       if @user
@@ -85,7 +85,7 @@ class SessionsController < ApplicationController
         flash[:error] = "Must have a Linkedin account registered to update your Linkedin"
       end
       @@update_linkedin = false
-      redirect_to user_url(current_user) and return
+      redirect_to user_path(current_user) and return
     end
     # need to refactor later, some repeat code, added downcase in case linkedin's api doesn't downcase it already
     if User.where(:email => auth_hash['info']['email'].downcase).first && !@user # register or sign in with Linkedin and email taken without Linkedin integration

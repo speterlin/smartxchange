@@ -19,7 +19,7 @@ class TransactionsController < ApplicationController
     if @result.success?
       current_user.subscribe_to_premium
       UserMailer.premium_subscribe(current_user).deliver_later
-      redirect_to root_url, notice: "Congratulations! You have successfully subscribed to smartXchange Premium! Please check your email for instructions on what to do next."
+      redirect_to root_path, notice: "Congratulations! You have successfully subscribed to smartXchange Premium! Please check your email for instructions on what to do next."
     else
       flash.now[:error] = "Something went wrong while processing your subscription. Please try again!"
       gon.client_token = generate_client_token
