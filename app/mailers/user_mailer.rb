@@ -260,6 +260,7 @@ class UserMailer < ApplicationMailer
   def set_name_and_title_and_unsubscribe_and_header(user, title)
     email_with_name = %("#{user.name}" <#{user.email}>)
     @unsubscribe_hash = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
+    @url_email_subscription = "http://smartxchange.herokuapp.com/users/#{@user.id}/settings/email_subscription?id=#{@unsubscribe_hash}"
     # binding of collar easy way to get previous method name
     headers['X-SMTPAPI'] = '{"category": "' + binding.of_caller(0).eval('self').action_name + '"}'
     mail(to: email_with_name, subject: title)
