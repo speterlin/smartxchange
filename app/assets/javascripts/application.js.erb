@@ -55,6 +55,7 @@ function addEventEditPost (edit_post) {
       var post_category = $('#post-'+post_id+' .post-category').text().match(/[A-Z].*/i)[0];
       // so that post_location is not listed as undefined below
       var post_location = $('#post-'+post_id+' .post-location').data('location') ? $('#post-'+post_id+' .post-location').data('location') : "";
+      var post_url = $('#post-'+post_id+' .post-url a').attr('href') ? $('#post-'+post_id+' .post-url a').attr('href') : "";
       $('#post-'+post_id+' .post-text').remove();
       // hack job until I find a better solution, can't render js variable in rendered ruby code, server side vs. client side
       var form = "<div class='post-form edit'><form action='/posts/"+post_id+"' method='post' data-remote='true'>";
@@ -63,6 +64,7 @@ function addEventEditPost (edit_post) {
       form += "<textarea name='post[content]'>"+post_content+"</textarea>";
       form += "<input type='hidden' name='post[board_id]' value='"+board_id+"'>";
       form += "<input type='submit' class='btn btn-primary send-post'  value='Edit'>";
+      form += "<div id='post-url'><label>Url (http://... https://...) <input type='text' name='post[url]' value='"+post_url+"'></label></div>";
       form += "<div id='post-category'> Category: <select name='post[category]'>";
       if (board_id == 2) {
         form+= "<option value='Jobs-Offered' "+(post_category == 'Jobs-Offered' ? 'selected' : '') +" >Jobs Offered</option><option value='Jobs-Wanted' "+(post_category == 'Jobs-Wanted' ? 'selected' : '') +" >Jobs Wanted</option>";

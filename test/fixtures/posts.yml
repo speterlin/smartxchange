@@ -12,6 +12,7 @@
 #  location   :string
 #  latitude   :float
 #  longitude  :float
+#  url        :string
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

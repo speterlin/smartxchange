@@ -12,6 +12,7 @@
 #  location   :string
 #  latitude   :float
 #  longitude  :float
+#  url        :string
 #
 
 class Post < ApplicationRecord
@@ -20,6 +21,9 @@ class Post < ApplicationRecord
   validates_presence_of :owner, :board, :content, :category
   validates :content, length: {minimum: 5, maximum: 500}
   validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}
+  validates_uniqueness_of :url, scope: :board_id
+  # maybe refactor returns 2 match groups
+  validates :url, length: {maximum: 255 }, format: {:with => /(^https?\:\/\/www\.([-a-z0-9]+\.)+[-a-z0-9]+.*)/i}, if: 'url.present?'
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true
@@ -35,8 +39,6 @@ class Post < ApplicationRecord
   after_validation :lat_changed?
 
   default_scope -> { order(updated_at: :desc) }
-
-
 
   def timestamp
     created_at.strftime('%H:%M:%S %d %B %Y')

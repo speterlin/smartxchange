@@ -12,6 +12,7 @@
 #  location   :string
 #  latitude   :float
 #  longitude  :float
+#  url        :string
 #
 
 require 'test_helper'

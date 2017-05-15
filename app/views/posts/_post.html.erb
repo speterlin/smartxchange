@@ -32,6 +32,15 @@
       </div>
     <% end %>
   </div>
+  <% if post.url? %>
+    <div class="post-url">
+      <% og = OpenGraph.new(post.url) %>
+      <!-- refactor right now opengraph_parser not falling back on certain links -->
+      <% og_img = og.images.blank? ? 'no-img.png' : og.images.first %>
+      <!-- refactor styling put in board.scss -->
+      <%= link_to image_tag(og_img, {style: "height: 150px; width: 150px;"}), post.url, target: :_blank %>
+    </div>
+  <% end %>
   <% if post.comments.any? %>
     <ul class="post-comments">
       <%= render :partial => 'comments/comment', :collection => post.comments %>
