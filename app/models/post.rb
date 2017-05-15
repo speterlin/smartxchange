@@ -21,7 +21,7 @@ class Post < ApplicationRecord
   validates_presence_of :owner, :board, :content, :category
   validates :content, length: {minimum: 5, maximum: 500}
   validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}
-  validates_uniqueness_of :url, scope: :board_id
+  validates_uniqueness_of :url, scope: :board_id, unless: 'url.blank?'
   # maybe refactor returns 2 match groups
   validates :url, length: {maximum: 255 }, format: {:with => /(^https?\:\/\/www\.([-a-z0-9]+\.)+[-a-z0-9]+.*)/i}, if: 'url.present?'
 

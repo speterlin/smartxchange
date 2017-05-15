@@ -33,8 +33,7 @@ class BoardsController < ApplicationController
       @notification = user_first_unread_board_notification(current_user, @board)
       # maybe refactor this and chat_room_mark_read to notification_mark_read, and delete notification
       post_mark_read(@notification)
-    end
-    if board_has_unread?(@board, current_user)
+    elsif board_has_unread?(@board, current_user)
       # if board has unread get most recently updated post and the most recent notification for that post
       @notification = Notification.where(notifiable: @board.posts.first).last ? Notification.where(notifiable: @board.posts.first).last : Notification.new(notified_id: current_user.id, notifier_id: current_user.id, notifiable_type: @board.posts.first.class.name, notifiable_id: @board.posts.first.id, sourceable_type: @board.posts.first.class.name, sourceable_id: @board.posts.first.id)
       board_mark_read(@board)
