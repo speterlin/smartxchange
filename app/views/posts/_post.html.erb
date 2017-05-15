@@ -26,21 +26,21 @@
         <%= link_to "• "+ pluralize(post.followers.size, 'Follower'), followers_post_path(post), remote: true, class: "post-followers"  %>
       <% end %>
     </time><br><!-- maybe refactor br, and put map styling board.scss-->
+    <% if post.url? %>
+      <div class="post-url">
+        <% og = OpenGraph.new(post.url) %>
+        <!-- refactor right now opengraph_parser not falling back on certain links -->
+        <% og_img = og.images.blank? ? 'no-img.png' : og.images.first %>
+        <!-- refactor styling put in board.scss -->
+        <%= link_to image_tag(og_img, {style: "height: 150px; width: 150px;"}), post.url, target: :_blank %>
+      </div>
+    <% end %>
     <% if post.location? %>
       <div class="post-location" data-location="<%= post.location %>">
         <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{post.latitude},#{post.longitude}&markers=#{post.latitude},#{post.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", style: "margin-left: 35px; height: 150px;padding: 10px;", alt: "#{post.location} on the map" %>
       </div>
     <% end %>
   </div>
-  <% if post.url? %>
-    <div class="post-url">
-      <% og = OpenGraph.new(post.url) %>
-      <!-- refactor right now opengraph_parser not falling back on certain links -->
-      <% og_img = og.images.blank? ? 'no-img.png' : og.images.first %>
-      <!-- refactor styling put in board.scss -->
-      <%= link_to image_tag(og_img, {style: "height: 150px; width: 150px;"}), post.url, target: :_blank %>
-    </div>
-  <% end %>
   <% if post.comments.any? %>
     <ul class="post-comments">
       <%= render :partial => 'comments/comment', :collection => post.comments %>
