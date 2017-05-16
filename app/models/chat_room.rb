@@ -40,7 +40,7 @@ class ChatRoom < ApplicationRecord
     initiator = User.find(self.initiator_id)
     recipient = User.find(self.recipient_id)
     if (recipient.person_of_interest? || recipient.chat_bot? || recipient.tutor?) && !initiator.premium?
-      errors.add(:recipient_id, "is a Person of Interest, Chatbot, or Tutor, Premium membership required")
+      errors.add(:recipient_id, "is a Person of Interest, Chatbot, or Tutor, <a href=\"/about#premium\">Premium</a> membership required")
     end
   end
 

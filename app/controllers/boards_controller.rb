@@ -45,7 +45,7 @@ class BoardsController < ApplicationController
   def only_premium_access_to_smart_jobs
     # maybe refactor the "2"
     if !current_user.premium? && params[:id] == "smart jobs"
-      flash[:notice] = "Must be a premium user to view the Smart Jobs Board"
+      flash[:notice] = "Must be a <a href=\"#{about_path}#premium\">Premium</a> user to view the Smart Jobs Board"
       redirect_to users_path and return
     end
   end
