@@ -84,7 +84,7 @@ Rails.application.configure do
   # To access assets like images in email layouts
   config.action_mailer.asset_host = ENV['HTTP_HOST']
 
-  # sending from speterlin12 gmail account
+  # sending from sendgrid gmail account
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:              'smtp.sendgrid.net',
