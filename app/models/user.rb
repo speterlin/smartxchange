@@ -233,17 +233,22 @@ class User < ApplicationRecord
     self.braintree_customer_id
   end
 
-  def premium?
-    self.package == Package.second
-  end
 
   def chat_bot?
     self.id == 6
   end
 
+  def premium?
+    self.package == Package.second
+  end
+  
   # maybe add admin column if there are many admins in the future
   def admin?
-    self.id == 1
+    self.id == 1 || self.id == 340
+  end
+
+  def premium_or_admin?
+    self.premium? || self.admin?
   end
 
   protected

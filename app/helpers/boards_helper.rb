@@ -1,7 +1,7 @@
 module BoardsHelper
 
   def board_has_unread?(board, user)
-    return false if board.id == 2 && !user.premium?
+    return false if board.id == 2 && !user.premium_or_admin?
     # hack job here and below method don't want to add another column to users maybe refactor, + 1 since delay in when board is updated and readable is updated upon new post / comment / vote / follow etc
     user.read_boards << board unless user.read_boards.include?(board)
     if board.updated_at > user.reads.where(readable: board).first.updated_at + 1

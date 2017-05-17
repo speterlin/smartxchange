@@ -1,6 +1,6 @@
 class TransactionsController < ApplicationController
 
-  before_action :user_has_premium?, only: [:new, :create]
+  before_action :user_is_premium_or_admin?, only: [:new, :create]
   before_action :premium_subscription
 
   def new
@@ -58,8 +58,8 @@ class TransactionsController < ApplicationController
     Braintree::ClientToken.generate(customer_id: current_user.braintree_customer_id)
   end
 
-  def user_has_premium?
-    redirect_to :back, notice: "User already has Premium Membership" if current_user.premium?
+  def user_is_premium_or_admin?
+    redirect_to :back, notice: "User already has Premium Membership or is an Admin" if current_user.premium_or_admin?
   end
 
   def customer_params

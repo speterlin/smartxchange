@@ -93,9 +93,9 @@
         <ul id="materials">
           <% if @materials.any? %>
               <%= render @materials %>
-          <% elsif @user != current_user && current_user.premium? %>
+          <% elsif @user != current_user && current_user.premium_or_admin? %>
             <h5>Tutoring materials are on their way...</h5>
-          <% elsif @user != current_user && !current_user.premium?  %>
+          <% elsif @user != current_user && !current_user.premium_or_admin?  %>
             <%= link_to "Upgrade to Premium", "/about#premium", class: 'btn btn-primary premium' %>
           <% end %>
         </ul>

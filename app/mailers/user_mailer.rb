@@ -186,12 +186,12 @@ class UserMailer < ApplicationMailer
 
   def set_footer_urls
     # set as Luis's profile since this is the only tutor with uploaded material so far
-    @url_tutor_material_downloads = "http://smartxchange.herokuapp.com/users/131#tutor-materials"
+    @url_tutors = "http://smartxchange.herokuapp.com/users/tutors"
     @url_premium_subscription = "http://smartxchange.herokuapp.com/about#premium"
   end
 
   def add_campaign_to_footer(campaign)
-    @url_tutor_material_downloads = "http://smartxchange.herokuapp.com/users/131#{campaign}#tutor-materials"
+    @url_tutors = "http://smartxchange.herokuapp.com/users/tutors#{campaign}"
     @url_premium_subscription = "http://smartxchange.herokuapp.com/about#{campaign}#premium"
   end
 

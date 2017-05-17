@@ -15,7 +15,7 @@ class ChatRoomsController < ApplicationController
   def show
     @chat_room ||= ChatRoom.find(params[:id])
     # probably refactor, in cases where user has conversations and then switches to standard membership and tries to access those conversations
-    if @chat_room.person_of_interest_or_chat_bot_or_tutor_and_not_premium?
+    if @chat_room.person_of_interest_or_chat_bot_or_tutor_and_not_premium_or_admin?
       flash[:error] = @chat_room.errors.full_messages.to_sentence
       redirect_to :back and return
     end
