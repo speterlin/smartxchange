@@ -22,7 +22,7 @@ class UserMailer < ApplicationMailer
   def account_activation(user)
     @user = user
     # maybe refactor and get rid of cgi escape, according to hartl tutorial I need this
-    @activate_account_url = "http://smartxchange.herokuapp.com/users/#{@user.id}/settings/activate_account/#{@user.activation_token}?email=#{CGI.escape(@user.email)}"
+    @activate_account_url = "http://www.smartxchange.es/users/#{@user.id}/settings/activate_account/#{@user.activation_token}?email=#{CGI.escape(@user.email)}"
     set_name_and_title_and_unsubscribe_and_header(@user, "Activate your smartXchange account")
   end
 
@@ -65,12 +65,12 @@ class UserMailer < ApplicationMailer
       title = "Have you messaged these language exchange options?"
     end
     @matches_token = @user.create_matches_token!
-    @url_email_match = "http://smartxchange.herokuapp.com/users/#{@user.id}/email_match/#{@matches_token}/"
+    @url_email_match = "http://www.smartxchange.es/users/#{@user.id}/email_match/#{@matches_token}/"
     if @matches.any?
       @match_urls = Hash.new
       @matches.each do |match|
         fetch_user_image(match)
-        @match_urls[match.id] = [@url_email_match + match.id.to_s + campaign, "http://smartxchange.herokuapp.com/users/#{match.id}" + campaign]
+        @match_urls[match.id] = [@url_email_match + match.id.to_s + campaign, "http://www.smartxchange.es/users/#{match.id}" + campaign]
       end
     else
       mail.perform_deliveries = false
@@ -84,7 +84,7 @@ class UserMailer < ApplicationMailer
     # set as @user instead of @matched_user so don't have to change unsubscribe logic
     @user = matched_user
     # not using add_campaign since this is less lines of code, only need to add campaign to the view profile link
-    @url_interested_user = "http://smartxchange.herokuapp.com/users/#{@interested_user.id}#{matches_campaign}"
+    @url_interested_user = "http://www.smartxchange.es/users/#{@interested_user.id}#{matches_campaign}"
     fetch_user_image(@interested_user)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@interested_user.name} wants to practice #{@interested_user.language}")
   end
@@ -92,7 +92,7 @@ class UserMailer < ApplicationMailer
   def unread_board(user, board)
     @user = user
     # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
-    @board_url = "http://smartxchange.herokuapp.com/boards/#{board.title.downcase}" + boards_campaign
+    @board_url = "http://www.smartxchange.es/boards/#{board.title.downcase}" + boards_campaign
     add_campaign_to_footer(boards_campaign)
     set_name_and_title_and_unsubscribe_and_header(@user, "Check out the latest posts on the #{@user.language} board!")
   end
@@ -100,7 +100,7 @@ class UserMailer < ApplicationMailer
   def unread_jobs(user)
     @user = user
     board = Board.find(2)
-    @board_url = "http://smartxchange.herokuapp.com/boards/#{board.title.downcase}" + jobs_campaign
+    @board_url = "http://www.smartxchange.es/boards/#{board.title.downcase}" + jobs_campaign
     add_campaign_to_footer(jobs_campaign)
     set_name_and_title_and_unsubscribe_and_header(@user, "View the latest jobs on the Smart Jobs board!")
   end
@@ -108,7 +108,7 @@ class UserMailer < ApplicationMailer
   def unread_materials(user)
     @user = user
     @material = Material.last
-    @material_url = "http://smartxchange.herokuapp.com/users/#{@material.owner.id}" + materials_campaign + "#tutor-materials"
+    @material_url = "http://www.smartxchange.es/users/#{@material.owner.id}" + materials_campaign + "#tutor-materials"
     add_campaign_to_footer(materials_campaign)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@material.owner.name} has uploaded new material")
   end
@@ -117,7 +117,7 @@ class UserMailer < ApplicationMailer
     @user = chat_room.recipient
     @initiator = chat_room.initiator
     # not get @chat_room since for now chat_room is always initiated in initiator's language (to practice)
-    @chat_room_url = "http://smartxchange.herokuapp.com/conversations/#{chat_room.id}" + conversations_campaign
+    @chat_room_url = "http://www.smartxchange.es/conversations/#{chat_room.id}" + conversations_campaign
     fetch_user_image(@initiator)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
   end
@@ -126,7 +126,7 @@ class UserMailer < ApplicationMailer
     @user = chat_room_interlocutor(message.chat_room, message.sender)
     @sender = message.sender
     @chat_room = message.chat_room
-    @chat_room_url = "http://smartxchange.herokuapp.com/conversations/#{message.chat_room.id}" + conversations_campaign
+    @chat_room_url = "http://www.smartxchange.es/conversations/#{message.chat_room.id}" + conversations_campaign
     fetch_user_image(@sender)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
   end
@@ -136,7 +136,7 @@ class UserMailer < ApplicationMailer
     @notifier = notification.notifier
     @post = notification.notifiable
     @board = @post.board
-    @board_url = "http://smartxchange.herokuapp.com/boards/#{@board.title.downcase}" + boards_campaign
+    @board_url = "http://www.smartxchange.es/boards/#{@board.title.downcase}" + boards_campaign
     fetch_user_image(@notifier)
     set_name_and_title_and_unsubscribe_and_header(@user, "You have a new post notification on the #{@board.title} board!")
   end
@@ -146,7 +146,7 @@ class UserMailer < ApplicationMailer
     @other_user = other_user
     @chat_room = chat_room
     @peer_review_hash = Rails.application.message_verifier(:peer_review).generate(@other_user.id)
-    @peer_review_url = "http://smartxchange.herokuapp.com/users/#{@user.id}/reviews/new#{reviews_campaign}&chat_room_id=#{@chat_room.id}&id=#{@peer_review_hash}"
+    @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}/reviews/new#{reviews_campaign}&chat_room_id=#{@chat_room.id}&id=#{@peer_review_hash}"
     fetch_user_image(@other_user)
     set_name_and_title_and_unsubscribe_and_header(@user, "Please review #{@other_user.name} in your #{@chat_room.title} conversation together")
   end
@@ -155,7 +155,7 @@ class UserMailer < ApplicationMailer
     @user = user
     @other_user = other_user
     @review = review
-    @peer_review_url = "http://smartxchange.herokuapp.com/users/#{@user.id}#{reviews_campaign}#review-#{@review.id}"
+    @peer_review_url = "http://www.smartxchange.es/users/#{@user.id}#{reviews_campaign}#review-#{@review.id}"
     fetch_user_image(@other_user)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@other_user.name} has left you a review")
   end
@@ -163,7 +163,7 @@ class UserMailer < ApplicationMailer
   def reset_password(user, password)
     @user = user
     @password = password
-    @url_change_password = "http://smartxchange.herokuapp.com/users/#{@user.id}/settings/change_password"
+    @url_change_password = "http://www.smartxchange.es/users/#{@user.id}/settings/change_password"
     set_name_and_title_and_unsubscribe_and_header(@user, "Password reset, smartXchange")
   end
 
@@ -186,17 +186,17 @@ class UserMailer < ApplicationMailer
 
   def set_footer_urls
     # set as Luis's profile since this is the only tutor with uploaded material so far
-    @url_tutors = "http://smartxchange.herokuapp.com/users/tutors"
-    @url_premium_subscription = "http://smartxchange.herokuapp.com/about#premium"
+    @url_tutors = "http://www.smartxchange.es/users/tutors"
+    @url_premium_subscription = "http://www.smartxchange.es/about#premium"
   end
 
   def add_campaign_to_footer(campaign)
-    @url_tutors = "http://smartxchange.herokuapp.com/users/tutors#{campaign}"
-    @url_premium_subscription = "http://smartxchange.herokuapp.com/about#{campaign}#premium"
+    @url_tutors = "http://www.smartxchange.es/users/tutors#{campaign}"
+    @url_premium_subscription = "http://www.smartxchange.es/about#{campaign}#premium"
   end
 
   def set_login_url
-    @url_login = "http://smartxchange.herokuapp.com/login"
+    @url_login = "http://www.smartxchange.es/login"
   end
 
   def add_campaign_to_login(campaign)
@@ -247,10 +247,10 @@ class UserMailer < ApplicationMailer
   def fetch_user_image(user)
     # in production .url works as url should, but in development .url works as path and vice versa
     if Rails.env.production?
-      # maybe refactor, if no image uploaded, need to fetch the image from default_url method, which for some reason wasn't finding the file - Errno::ENOENT: No such file or directory @ rb_sysopen - http://smartxchange.herokuapp.com/images/fallback/user/small_thumb_default.png  even though the file exists and the link works (also wasn't able to use Rails.root since prepends 'app' to path), but this method works with remote fetch
+      # maybe refactor, if no image uploaded, need to fetch the image from default_url method, which for some reason wasn't finding the file - Errno::ENOENT: No such file or directory @ rb_sysopen - http://www.smartxchange.es/images/fallback/user/small_thumb_default.png  even though the file exists and the link works (also wasn't able to use Rails.root since prepends 'app' to path), but this method works with remote fetch
       # need to use .url path without Rails.root due to images stored on amazon s3 servers
       # .path shows up nil for default_url call
-      image_url = user.image.small_thumb.path ? user.image.small_thumb.url : "http://smartxchange.herokuapp.com#{user.image.small_thumb.url}"
+      image_url = user.image.small_thumb.path ? user.image.small_thumb.url : "http://www.smartxchange.es#{user.image.small_thumb.url}"
       attachments.inline["#{user.name}.jpg"] = open(image_url).read
     else
       attachments.inline["#{user.name}.jpg"] = File.read("#{Rails.root}/public/#{user.image.small_thumb.url}")
@@ -260,7 +260,7 @@ class UserMailer < ApplicationMailer
   def set_name_and_title_and_unsubscribe_and_header(user, title)
     email_with_name = %("#{user.name}" <#{user.email}>)
     @unsubscribe_hash = Rails.application.message_verifier(:unsubscribe).generate(@user.id)
-    @url_email_subscription = "http://smartxchange.herokuapp.com/users/#{@user.id}/settings/email_subscription?id=#{@unsubscribe_hash}"
+    @url_email_subscription = "http://www.smartxchange.es/users/#{@user.id}/settings/email_subscription?id=#{@unsubscribe_hash}"
     # binding of collar easy way to get previous method name
     headers['X-SMTPAPI'] = '{"category": "' + binding.of_caller(0).eval('self').action_name + '"}'
     mail(to: email_with_name, subject: title)
