@@ -1,10 +1,17 @@
 <!-- this class has no styling at the moment may want to maybe refactor later -->
-<h2><a href="<%=user_path(@receiver)%>">
-  <%= user_convert_language_or_nationality_to_img(@receiver.nationality) %>
-  <%= " #{@receiver.name} " %>
-  <%= image_tag('green-dot.png', alt: 'Active') if @receiver.active %>
+<h2>
+  <a class="chat-room-show" href="<%=user_path(@receiver)%>">
+    <div class="user-image">
+      <p><%= image_tag(@receiver.image.small_thumb.url, alt: @receiver.name) %></p>
+    </div>
+    <div class="chat-room-show-content">
+      <p>
+        <%= " #{@receiver.name} " %>
+        <%= image_tag('green-dot.png', alt: 'Active') if @receiver.active %>
+        <%= " - #{@chat_room.title} Conversation"%>
+      </p>
+    </div>
   </a>
-  <%= " - #{@chat_room.title} Conversation"%>
 </h2>
 
 <div id="messages" data-chat-room-id="<%= @chat_room.id %>">

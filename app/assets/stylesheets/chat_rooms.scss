@@ -17,12 +17,27 @@ a.chat-room {
   float: left;
 }
 
-.chat-room-image {
-  float: left;
-  padding-top: 5px;
+a.chat-room-show {
+  display: block;
+  height: 50px;
 }
 
-// div
+// refactor, cheap way to center 50px div in 60px a href tag
+.user-image.chat-room {
+  margin-top: 5px;
+}
+
+// need to refactor padding-left
+.chat-room-show-content p {
+  font-size: inherit;
+  padding-left: 60px;
+}
+
+// .chat-room-image {
+//   float: left;
+//   padding-top: 5px;
+// }
+
 .chat-room-content {
   float: left;
   height: inherit;
