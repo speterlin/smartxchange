@@ -215,7 +215,7 @@ module UsersHelper
     elsif number == 19
       return "Music"
     elsif number == 20
-      return "Dating"
+      return "Art"
     elsif number == 21
       return "Futbol / Soccer"
     elsif number == 22
@@ -223,19 +223,19 @@ module UsersHelper
     elsif number == 23
       return "Rugby"
     elsif number == 24
-      return "Tennis"
+      return "American Football"
     elsif number == 25
       return "Padel"
     elsif number == 26
       return "Table Tennis"
     elsif number == 27
-      return "Olympic Sports"
+      return "Tennis"
     elsif number == 28
-      return "American Football"
+      return "Running"
     elsif number == 29
-      return "Beer Pong"
+      return "Biking"
     elsif number == 30
-      return "Flip Cup"
+      return "Hiking"
     end
   end
 
