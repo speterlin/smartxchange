@@ -2,9 +2,11 @@
 
 Ruby on Rails basic application to allow users to find each other for the purpose of practicing languages. Featured in IE Business School Career Newsletter with over 200 users across the world. Constantly adding new features, open to suggestions.
 
-* Ruby 2.3, Rails 5.0, using Puma server locally, redis in production
+* Ruby 2.3, Rails 5.0, using Puma server locally, Redis in production
 
-* Using Carrierwave, Mini_magick, and Fog for uploading images and AWS for storing images
+* Using Carrierwave, Mini_magick, Fog, File Validator, and Remotipart for uploading images and materials
+
+* Using AWS for storing images and materials
 
 * Heroku for hosting
 
@@ -17,6 +19,10 @@ Ruby on Rails basic application to allow users to find each other for the purpos
 * Geocoder for location
 
 * Recaptcha to protect against spam and abuse
+
+* Delayed Job and Sendgrid for sending and tracking emails
+
+* Opengraph Parser for displaying link images
 
 * Database using Sqlite3 for development and Postgres in production
 

@@ -18,7 +18,7 @@ a.chat-room {
 }
 
 a.chat-room-show {
-  display: block;
+  display: inline;
 }
 
 // refactor, cheap way to center 50px div in 60px a href tag
@@ -26,10 +26,19 @@ a.chat-room-show {
   margin-top: 5px;
 }
 
+.chat-room-show-name {
+  display: inline;
+}
+
+.chat-room-show-language {
+  display: inline;
+}
+
 // need to refactor padding-left
-.chat-room-show-content p {
+.chat-room-show-name p {
   font-size: inherit;
-  padding-left: 60px;
+  display: inline;
+  padding-left: 10px;
 }
 
 // .chat-room-image {
