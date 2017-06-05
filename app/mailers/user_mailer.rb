@@ -45,7 +45,7 @@ class UserMailer < ApplicationMailer
     @notifications = notifications
     add_campaign_to_login(notifications_campaign)
     add_campaign_to_footer(notifications_campaign)
-    set_name_and_title_and_unsubscribe_and_header(@user, "smartXchange enters its 10th month!")
+    set_name_and_title_and_unsubscribe_and_header(@user, "smartXchange enters its 11th month!")
   end
 
   def language_matches(user, match_or_exchange)
