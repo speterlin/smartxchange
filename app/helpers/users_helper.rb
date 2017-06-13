@@ -78,9 +78,9 @@ module UsersHelper
 
   def user_convert_language_to_nationalities(language)
     if language == 'English'
-      return ['Australian', 'British', 'Canadian', 'Irish', 'New Zealander', 'South African', 'USA']
+      return ['Australian', 'British', 'Canadian', 'Irish', 'Jamaican', 'New Zealander', 'South African', 'USA']
     elsif language == 'Spanish'
-      return ['Argentinian', 'Bolivian', 'Colombian', 'Ecuadorian', 'Guatemalan', 'Honduran', 'Mexican', 'Peruvian', 'Spanish', 'Uruguayan', 'Venezuelan']
+      return ['Argentinian', 'Bolivian', 'Chilean', 'Colombian', 'Costarican', 'Ecuadorian', 'El Salvadorian', 'Guatemalan', 'Honduran', 'Mexican', 'Nicaraguan', 'Panamanian', 'Peruvian', 'Spanish', 'Uruguayan', 'Venezuelan']
     elsif language == 'German'
       return ['Austrian', 'German']
     elsif language == 'Mandarin Chinese'
@@ -91,7 +91,7 @@ module UsersHelper
   end
 
   def user_nationalities
-    # maybe refactor and make object
+    # maybe refactor and make object, maybe need to change some ish to ian for language vs. nationality mix up
     [
       ["Algerian", "Algeria"],
       ["Armenian", "Armenia"],
@@ -109,12 +109,16 @@ module UsersHelper
       ["Chilean", "Chile"],
       ["Chinese", "China"],
       ["Colombian", "Colombia"],
+      ["Costarican", "Costa Rica"],
       ["Croatian", "Croatia"],
       ["Cypriot", "Cyprus"],
       ["Czech", "Czech Republic"],
+      ["Czechoslovakian", "Czechoslovakia"],
       ["Danish", "Denmark"],
       ["Dutch", "Netherlands"],
       ["Ecuadorian", "Ecuador"],
+      ["Egyptian", "Egypt"],
+      ["El Salvadorian", "El Salvador"],
       ["Estonian", "Estonia"],
       ["Ethiopian", "Ethiopia"],
       ["Filipino", "Philippines"],
@@ -135,11 +139,13 @@ module UsersHelper
       ["Israeli", "Israel"],
       ["Italian", "Italy"],
       ["Japanese", "Japan"],
+      ["Jamaican", "Jamaica"],
       ["Jordanian", "Jordan"],
       ["Kazakhstani", "Kazakhstan"],
       ["Kenyan", "Kenya"],
       ["Latvian", "Latvia"],
       ["Lebanese", "Lebanon"],
+      ["Libyan", "Libya"],
       ["Lithuanian", "Lithuania"],
       ["Luxembourgish", "Luxembourg"],
       ["Malaysian", "Malaysia"],
@@ -147,8 +153,11 @@ module UsersHelper
       ["Mexican", "Mexico"],
       ["Moroccan", "Morocco"],
       ["New Zealander", "New Zealand"],
+      ["Nicaraguan", "Nicaragua"],
       ["Nigerian", "Nigeria"],
+      ["Norwegian", "Norway"],
       ["Omanian", "Oman"],
+      ["Panamanian", "Panama"],
       ["Paraguayan", "Paraguay"],
       ["Peruvian", "Peru"],
       ["Philippino", "Philippines"],
@@ -156,16 +165,20 @@ module UsersHelper
       ["Portuguese", "Portugal"],
       ["Romanian", "Romania"],
       ["Russian", "Russia"],
+      ["Qatari", "Qatar"],
       ["Saudi Arabian", "Saudi Arabia"],
       ["Singaporean", "Singapore"],
+      ["Serbian", "Serbia"],
       ["Slovakian", "Slovakia"],
       ["Slovenian", "Slovenia"],
       ["South African", "South Africa"],
       ["South Korean", "South Korea"],
       ["Spanish", "Spain"],
       ["Swedish", "Sweden"],
+      ["Syrian", "Syria"],
       ["Thai", "Thailand"],
       ["Turkish", "Turkey"],
+      ["Ukrainian", "Ukraine"],
       ["Emirati", "United Arab Emirates"],
       ["British", "United Kingdom"],
       ["Uruguayan", "Uruguay"],
