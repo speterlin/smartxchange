@@ -2,6 +2,7 @@ class ChatRoomsController < ApplicationController
   include ChatRoomsHelper
 
   before_action :correct_chat_room?, only: [:show, :destroy]
+  before_action :chat_room_limit, only: [:create]
 
   def index
     # includes is for chat room helper methods called when listing a chat room
@@ -54,6 +55,15 @@ class ChatRoomsController < ApplicationController
 
   def chat_room_params
     params.require(:chat_room).permit(:recipient_id)
+  end
+
+  def chat_room_limit
+    @limit = 5
+    if current_user.initiated_chat_rooms.count >= @limit && current_user.initiated_chat_rooms.limit(@limit).last.created_at > 24.hours.ago
+      flash[:error] = "You have exceeded your limit of #{@limit} initiated conversations per 24 hour period in an effort to fight spam"
+      redirect_to :back
+    end
+    true
   end
 
 end

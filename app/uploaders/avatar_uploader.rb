@@ -6,6 +6,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # include CarrierWave::RMagick
   include CarrierWave::MiniMagick
   process resize_to_fit: [400,400]
+  process :fix_exif_rotation
   # Choose what kind of storage to use for this uploader:
 
   #Need to implement once move to s3
@@ -14,7 +15,6 @@ class AvatarUploader < CarrierWave::Uploader::Base
   else
     storage :file
   end
-  # storage :fog
 
   #to be able to work on heroku without using fog
   def cache_dir
@@ -52,8 +52,14 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
-  def extension_white_list
+  def extension_whitelist
     %w(jpg jpeg gif png)
+  end
+
+  def fix_exif_rotation
+    manipulate! do |img|
+      img.tap(&:auto_orient)
+    end
   end
 
   # Override the filename of the uploaded files:

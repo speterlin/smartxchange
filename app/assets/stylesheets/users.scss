@@ -39,6 +39,16 @@
   // hack job setting width to 250px so that I can position delete button correctly for everyone
   width: 250px;
 }
+#profile-image #user {
+  height: 250px;
+  width: 250px;
+  display: table;
+  text-align: center;
+}
+#profile-image #user p {
+  display: table-cell;
+  vertical-align: middle;
+}
 .user-content.profile {
   width: 30%;
   float: left;

@@ -46,14 +46,14 @@
       <label>Language (to practice)<br>
         <select name="user[language]">
           <% User::LANGUAGES.each do |language| %>
-          <option value="<%= language %>" <%= 'selected' if @user && @user.language==language %> ><%= language %></option>
+            <option value="<%= language %>" <%= 'selected' if @user && @user.language==language %> ><%= language %></option>
           <% end %>
         </select>
       </label>
       <label>Language level <br>
         <select name="user[language_level]">
           <% User::LANGUAGE_LEVELS.each do |language_level| %>
-          <option value="<%= language_level %>" <%= 'selected' if @user && @user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
+            <option value="<%= language_level %>" <%= 'selected' if @user && @user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
           <% end %>
         </select>
       </label><br>
