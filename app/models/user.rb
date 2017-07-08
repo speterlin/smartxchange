@@ -44,7 +44,7 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
   validates :title, length: {minimum: 5, maximum: 255}
   validates :name, uniqueness: true, length: {minimum: 2, maximum: 255}
-  validates :age, numericality: { only_integer: true }
+  validates :age, numericality: { only_integer: true, greater_than_or_equal_to: 18 }
   validates_inclusion_of :language, in: LANGUAGES
   validates_inclusion_of :language_level, in: LANGUAGE_LEVELS
   # to prevent nil values in boolean field, according to stackoverflow
