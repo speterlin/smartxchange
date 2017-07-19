@@ -82,7 +82,8 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(params[:id])
+    # @user = User.find(params[:id])
+    @user = User.find_by_name(params[:id].split("%").join(" ").titleize)
     @materials = @user.materials if @user.materials
   end
 

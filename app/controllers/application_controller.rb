@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
   def welcome_messages(user)
     random_match = user.sort_exchange[0..24].sample
     random_match = user.sort_method[0..24].sample unless random_match
-    messages = ["Visit the <a href=\"#{users_path}\">People</a> page and try the new Xchange option!", "Bored? Post something to a Board page and see how many votes it can get :)"]
+    messages = ["Visit the <a href=\"#{users_path}\">People</a> page and try the new Xchange option!", "Bored? Post something to a Board page and see how many votes it can get :)", "Start a free 7 day trial of our <a href=\"#{about_path}#premium\">Premium</a> membership today!"]
     messages += ["Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"] if random_match
     # include 3 tutor profiles only works on production environment, maybe refactor
     if Rails.env.production?

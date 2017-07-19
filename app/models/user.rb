@@ -31,7 +31,7 @@
 #  activated             :boolean          default(FALSE)
 #
 
-#active is for instantaneous feature Tati talked about
+# active is for instantaneous feature Tati talked about
 class User < ApplicationRecord
   include Locatable
   include UsersHelper
@@ -52,6 +52,7 @@ class User < ApplicationRecord
   validates :interests, length: {maximum: 10, message: "Only 10 interests allowed"}
   # Add Linkedin to message since only using Linkedin as partner right now
   validates :uid, uniqueness: { scope: :provider, allow_nil: true, message: "Linkedin account already registered with another user" }
+  validates :image, file_size: { less_than_or_equal_to: 5.megabytes }
   mount_uploader :image, AvatarUploader
   serialize :interests, Array
   validates :terms, acceptance: true
@@ -93,6 +94,10 @@ class User < ApplicationRecord
 
   attr_reader :password, :terms
   after_initialize :ensure_session_token
+
+  def to_param
+    name.downcase
+  end
 
   def self.find_by_credentials(user_params)
     user = User.find_by_email(user_params[:email].downcase)
@@ -137,7 +142,7 @@ class User < ApplicationRecord
 
   def add_with_omniauth(auth)
     # doesn't need error messages because fields can be blank (except Linkedin user_id which should not throw error unless there is no current_user in which case there would be an error earlier on)
-    self.update(
+    self.update!(
       provider: auth['provider'],
       uid: auth['uid'],
       location: auth['info']['location']['name']
@@ -154,7 +159,7 @@ class User < ApplicationRecord
     # doesn't need error messages because fields can be blank
     # keeping provider and uid there because maybe the person has a new linkedin account
     # not updating password if uid changes because user might have sign in without linkedin
-    self.update(
+    self.update!(
       provider: auth['provider'],
       uid: auth['uid'],
       location: auth['info']['location']['name']
