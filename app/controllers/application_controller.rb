@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
   def correct_user?
     # need this for settings maybe refactor
     id = params[:user_id] ? params[:user_id] : params[:id]
-    @user = User.find(id)
+    @user = User.find_by_name(id.split("%").join(" ").titleize)
     unless @user == current_user
       flash[:error] = "Unauthorized access"
       # this and correct_chat_room? are not set to redirect_to :back because they can only be accessed by typing them in the url and therefore no http_referer is set

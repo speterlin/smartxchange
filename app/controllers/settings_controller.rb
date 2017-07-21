@@ -4,7 +4,7 @@ class SettingsController < ApplicationController
   before_action :correct_user?, except: [:reset_password, :create_password, :email_subscription, :update_subscription, :activate_account]
 
   def show
-    @user = User.find(params[:user_id])
+    @user = User.find_by_name(params[:user_id].split("%").join(" ").titleize)
   end
 
   def reset_password
@@ -27,7 +27,7 @@ class SettingsController < ApplicationController
   end
 
   def change_password
-    @user = User.find(params[:user_id])
+    @user = User.find_by_name(params[:user_id].split("%").join(" ").titleize)
   end
 
   def update_password
@@ -61,7 +61,7 @@ class SettingsController < ApplicationController
       flash[:error] = "Must be logged in as correct user or access this link through an email to view this page"
       redirect_to login_path and return
     end
-    @user = User.find(user_id)
+    @user = User.find_by_name(params[:user_id].split("%").join(" ").titleize)
   end
 
   def update_subscription
