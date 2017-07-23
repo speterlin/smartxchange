@@ -86,6 +86,7 @@ class User < ApplicationRecord
 
   before_create :create_activation_token
   before_save :downcase_email
+  before_save :titleize_name
   after_validation :geocode, if: :location_present_and_changed
   after_validation :lat_changed?
   after_create :add_email_subscription
@@ -260,6 +261,7 @@ class User < ApplicationRecord
     self.premium? || self.admin?
   end
 
+
   protected
 
   def ensure_session_token
@@ -268,6 +270,10 @@ class User < ApplicationRecord
 
   def downcase_email
     self.email = self.email.downcase
+  end
+
+  def titleize_name
+    self.name = self.name.downcase.titleize
   end
 
   def add_email_subscription
