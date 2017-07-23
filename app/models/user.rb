@@ -101,7 +101,7 @@ class User < ApplicationRecord
   end
 
   def self.find_by_param(input)
-    find_by_name(input.split("%").join(" ").titleize)
+    find_by_name(input.split("%20").join(" ").titleize)
   end
 
   def self.find_by_credentials(user_params)
@@ -243,7 +243,6 @@ class User < ApplicationRecord
     self.braintree_customer_id
   end
 
-
   def chat_bot?
     self.id == 6
   end
@@ -260,7 +259,6 @@ class User < ApplicationRecord
   def premium_or_admin?
     self.premium? || self.admin?
   end
-
 
   protected
 
