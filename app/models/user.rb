@@ -99,6 +99,10 @@ class User < ApplicationRecord
     name.downcase
   end
 
+  def self.find_by_param(input)
+    find_by_name(input.split("%").join(" ").titleize)
+  end
+
   def self.find_by_credentials(user_params)
     user = User.find_by_email(user_params[:email].downcase)
     if user && user.try(:is_password?, user_params[:password])

@@ -82,13 +82,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    # @user = User.find(params[:id])
-    @user = User.find_by_name(params[:id].split("%").join(" ").titleize)
+    @user = User.find_by_param(params[:id])
     @materials = @user.materials if @user.materials
   end
 
   def update
-    @user = User.find(params[:id])
+    @user = User.find_by_param(params[:id])
     if @user.update(user_params)
       flash[:success] = "Profile updated! " + welcome_messages(@user).sample
       redirect_to user_path(@user)
@@ -99,12 +98,12 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find(params[:id]).destroy
+    User.find_by_param(params[:id]).destroy
     redirect_to '/users/new', notice: "User deleted"
   end
 
   def remove_image
-    @user = User.find(params[:id])
+    @user = User.find_by_param(params[:id])
     @user.update_attributes(:remove_image => true)
     flash[:success] = "Image removed!"
     redirect_to user_path(@user)
@@ -173,7 +172,7 @@ class UsersController < ApplicationController
   end
 
   def email_match
-    @user = User.find(params[:user_id])
+    @user = User.find_by_param(params[:user_id])
     @match = User.find(params[:match_id])
     if @user.matches_token == params[:matches_token] && @user.matches_sent_at > 24.hours.ago
       flash.now[:success] = "#{@match.name} notified :)"

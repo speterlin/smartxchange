@@ -3,7 +3,7 @@ class ReviewsController < ApplicationController
   before_action :correct_user?
 
   def index
-    @user = User.find_by_name(params[:user_id].split("%").join(" ").titleize)
+    @user = User.find_by_param(params[:user_id])
     @reviews = @user.reviews
     @created_reviews = @user.created_reviews
   end
