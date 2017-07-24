@@ -29,6 +29,7 @@
 #  interests             :text
 #  activation_token      :string
 #  activated             :boolean          default(FALSE)
+#  ip_address            :string
 #
 
 # active is for instantaneous feature Tati talked about
@@ -169,7 +170,7 @@ class User < ApplicationRecord
       uid: auth['uid'],
       location: auth['info']['location']['name']
     )
-    self.linkedin.update(
+    self.linkedin.update!(
       public_url: auth['info']['urls'].public_profile,
       industry: auth['extra']['raw_info']['industry'],
       summary: auth['extra']['raw_info']['summary']

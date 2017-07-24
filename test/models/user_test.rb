@@ -29,6 +29,7 @@
 #  interests             :text
 #  activation_token      :string
 #  activated             :boolean          default(FALSE)
+#  ip_address            :string
 #
 
 require 'test_helper'
