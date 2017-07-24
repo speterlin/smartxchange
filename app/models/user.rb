@@ -43,7 +43,7 @@ class User < ApplicationRecord
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
   validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
   validates :title, length: {minimum: 5, maximum: 255}
-  validates :name, uniqueness: true, length: {minimum: 2, maximum: 255}
+  validates :name, uniqueness: true, length: {minimum: 2, maximum: 255}, format: {:with => /\A[^.]*\Z/i, message: "No period allowed"}
   validates :age, numericality: { only_integer: true, greater_than_or_equal_to: 18 }
   validates_inclusion_of :language, in: LANGUAGES
   validates_inclusion_of :language_level, in: LANGUAGE_LEVELS
