@@ -30,7 +30,6 @@ class ApplicationController < ActionController::Base
   def normal_sign_in
     flash[:notice] = welcome_messages(current_user).sample
     ip_address = request.remote_ip
-    p ip_address if ip_address
     current_user.update!(ip_address: ip_address) if ip_address
     redirect_to(session[:return_to] || board_path(Board.find_by_title(current_user.language)))
     session[:return_to] = nil
