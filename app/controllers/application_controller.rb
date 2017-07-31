@@ -94,7 +94,7 @@ class ApplicationController < ActionController::Base
   end
 
   def premium_subscription
-    flash[:error] = "Please send an email to support@smartxchange.es with the title 'Premium Membership - your name' and we will begin the process!"
+    flash[:error] = "Please send an email to speterlin12@gmail.com with the title 'Premium Membership - your name' and we will begin the process!"
     redirect_to root_path
   end
 
