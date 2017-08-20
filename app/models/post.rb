@@ -41,7 +41,7 @@ class Post < ApplicationRecord
   default_scope -> { order(updated_at: :desc) }
 
   def timestamp
-    created_at.strftime('%H:%M:%S %d %B %Y')
+    updated_at.strftime('%H:%M:%S %d %B %Y')
   end
 
 end

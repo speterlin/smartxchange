@@ -9,7 +9,7 @@
     <!-- refactor this later, get rid of p tag, maybe float this div left, change padding -->
     <div class="post-text"><%= auto_link(post.content, html: { target: '_blank' }) %></div>
     </p>
-    <time datetime="<%= post.created_at %>">
+    <time datetime="<%= post.updated_at %>">
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>
       <span style="display: inline;" class="post-category" ><%= "• #{post.category}" %></span>
       <% if post.owner == current_user %>
