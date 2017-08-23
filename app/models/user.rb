@@ -126,7 +126,8 @@ class User < ApplicationRecord
     # taking the first public Url image, assuming this is the most recent, not working at moment refactor
     # to avoid unique name validation problems include this line
     @name = User.find_by(name: auth['info']['name']) ? "New User" : auth['info']['name']
-    user = User.create!(
+    # No !'s here, add_, and update_ with_omniauth because want the user to be saved even if there are validation errors
+    user = User.create(
       email: auth['info']['email'],
       password: auth['uid'],
       name: @name,
@@ -137,44 +138,47 @@ class User < ApplicationRecord
       location: auth['info']['location']['name']
     )
     # may implement positions, specialties and more once these start working
-    Linkedin.create!(
+    Linkedin.create(
       user_id: user.id,
       public_url: auth['info']['urls'].public_profile,
       industry: auth['extra']['raw_info']['industry'],
       summary: auth['extra']['raw_info']['summary']
     )
-    user
+    # maybe refactor here, add_with_omniauth, and update_with_omniauth, quick fix for when adding with Linkedin and location not valid, still want other values to persist
+    user.save_valid_attributes
   end
 
   def add_with_omniauth(auth)
     # doesn't need error messages because fields can be blank (except Linkedin user_id which should not throw error unless there is no current_user in which case there would be an error earlier on)
-    self.update!(
+    self.update(
       provider: auth['provider'],
       uid: auth['uid'],
       location: auth['info']['location']['name']
     )
-    Linkedin.create!(
+    Linkedin.create(
       user_id: self.id,
       public_url: auth['info']['urls'].public_profile,
       industry: auth['extra']['raw_info']['industry'],
       summary: auth['extra']['raw_info']['summary']
     )
+    self.save_valid_attributes
   end
 
   def update_with_omniauth(auth)
     # doesn't need error messages because fields can be blank
     # keeping provider and uid there because maybe the person has a new linkedin account
     # not updating password if uid changes because user might have sign in without linkedin
-    self.update!(
+    self.update(
       provider: auth['provider'],
       uid: auth['uid'],
       location: auth['info']['location']['name']
     )
-    self.linkedin.update!(
+    self.linkedin.update(
       public_url: auth['info']['urls'].public_profile,
       industry: auth['extra']['raw_info']['industry'],
       summary: auth['extra']['raw_info']['summary']
     )
+    self.save_valid_attributes
   end
 
   def password=(password)
@@ -281,6 +285,11 @@ class User < ApplicationRecord
 
   def create_activation_token
     self.activation_token = User.new_token
+  end
+
+  def save_valid_attributes
+    restore_attributes(errors.keys) unless valid?
+    save
   end
 
 end
