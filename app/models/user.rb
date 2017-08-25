@@ -32,7 +32,6 @@
 #  ip_address            :string
 #
 
-# active is for instantaneous feature Tati talked about
 class User < ApplicationRecord
   include Locatable
   include UsersHelper
@@ -40,7 +39,8 @@ class User < ApplicationRecord
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese"]
   LANGUAGE_LEVELS = (1..6).to_a
 
-  validates_presence_of :email, :name, :age, :language, :language_level, :title, :password_digest, :session_token, :nationality
+  # maybe refactor and take out :session_token so only fields that user can input
+  validates_presence_of :email, :name, :age, :language, :language_level, :password_digest, :session_token, :title, :nationality
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
   validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
   validates :title, length: {minimum: 5, maximum: 255}
@@ -61,9 +61,10 @@ class User < ApplicationRecord
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
   has_many :created_notifications, :foreign_key => :notifier_id, class_name: 'Notification', dependent: :destroy
+  # No dependent: :destroy here since covered in above
   has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification'
   has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification'
-  # keeping this for the dependent destroy aspect
+  # keeping this for the dependent: :destroy aspect
   has_many :initiated_chat_rooms, :foreign_key => :initiator_id, class_name: 'ChatRoom', dependent: :destroy
   has_many :received_chat_rooms, :foreign_key => :recipient_id, class_name: 'ChatRoom', dependent: :destroy
   has_many :sent_messages, :foreign_key => :sender_id, class_name: 'Message', dependent: :destroy
@@ -92,7 +93,7 @@ class User < ApplicationRecord
   after_validation :lat_changed?
   after_create :add_email_subscription
 
-  default_scope -> { order(created_at: :asc) } #may refactor take this out, asc want longest users around first
+  default_scope -> { order(created_at: :asc) } #may refactor take this out, asc want oldest users around first
 
   attr_reader :password, :terms
   after_initialize :ensure_session_token
