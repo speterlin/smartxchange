@@ -24,11 +24,14 @@
 .DS_Store
 */.DS_Store
 
-#Ingnore byebug history
+# Ignore byebug history
 .byebug_history
 
-#Ignore deleted files
+# Ignore deleted files
 /deleted
 
-#Ignore application.yml with secret variables
+# Ignore application.yml with secret variables
 /config/application.yml
+
+# Ignore all image assets since it's a public repo now
+/app/assets/images/*
