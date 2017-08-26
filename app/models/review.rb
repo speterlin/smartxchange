@@ -15,18 +15,17 @@
 #
 
 class Review < ApplicationRecord
+  # reviewable is only a User at the moment
   validates_presence_of :reviewer, :reviewable, :chat_room, :language_level, :language
-  # too long to have this database validation, only here
-  # most validations are for instances when creating review from command line
+  # too long to have this database validation
   validates :language, uniqueness: { scope: [:reviewer_id, :reviewable_type, :reviewable_id], message: "You have already submitted a review for this user in this language, please check your reviews (in your user settings) and edit this review" }
   validates :chat_room_id, uniqueness: { scope: :reviewer_id, message: "You may only give one review per conversation" }
-  # Too long to have this database validation 
+  # Too long to have this database validation
   validates :chat_room_id, uniqueness: { scope: [:reviewable_type, :reviewable_id], message: "You may only receive one review per conversation" }
   validate :reviewer_not_reviewable
   validate :reviewer_in_chat_room
   validate :reviewable_in_chat_room
-  # validating that association chat_room.user_reviews is 2 or less, only on create
-  validate :user_reviews_length, on: :create
+  validate :chat_room_reviews_limit, on: :create
 
   belongs_to :reviewer, class_name: 'User'
   belongs_to :reviewable, polymorphic: true
@@ -42,8 +41,8 @@ class Review < ApplicationRecord
     errors.add(:reviewer, "can not review him / her-self") if self.reviewer == self.reviewable
   end
 
-  def user_reviews_length
-    # chat_room association realized after save and therefore need >= 2
+  def chat_room_reviews_limit
+    # chat_room association realized after save and therefore need >= 2, maybe refactor and take away association, replace with db count or another
     errors.add(:chat_room_id, "can only have 2 reviews") if self.chat_room.user_reviews.size >= 2
   end
 
