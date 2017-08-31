@@ -18,7 +18,7 @@
 class Post < ApplicationRecord
   include Locatable
 
-  validates_presence_of :owner, :board, :content, :category
+  validates_presence_of :content, :owner, :board, :category
   validates :content, length: {minimum: 5, maximum: 500}
   validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}
   validates_uniqueness_of :url, scope: :board_id, unless: 'url.blank?'
