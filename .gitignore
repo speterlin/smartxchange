@@ -35,3 +35,11 @@
 
 # Ignore all image assets since it's a public repo now
 /app/assets/images/*
+
+# Ignore files relating to downloading of data
+dump.csv
+export.rb
+latest.dump
+public/data.csv
+users.csv
+users.xlsx
