@@ -30,6 +30,7 @@
 #  activation_token      :string
 #  activated             :boolean          default(FALSE)
 #  ip_address            :string
+#  birthdate             :date
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

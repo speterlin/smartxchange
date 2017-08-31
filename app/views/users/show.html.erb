@@ -22,8 +22,8 @@
             <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
             <label for="user-name">Name / Nickname</label><br>
             <input id="user-name" name="user[name]" type="text" value="<%= @user.name %>"><br>
-            <label for="user-age">Age</label><br>
-            <input id="user-age" name="user[age]" type="text" value="<%= @user.age %>"><br>
+            <label for="user-birthdate">Birthdate</label><br>
+            <input id="user-birthdate" name="user[birthdate]" type="date" value="<%= @user.birthdate %>"><br>
             <label for="user-title">Profession / Title</label><br>
             <textarea id="user-title" name="user[title]" rows="3"><%= @user.title %></textarea><br>
             <label for="user-language">Language (to practice)</label><br>

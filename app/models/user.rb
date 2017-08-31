@@ -30,6 +30,7 @@
 #  activation_token      :string
 #  activated             :boolean          default(FALSE)
 #  ip_address            :string
+#  birthdate             :date
 #
 
 class User < ApplicationRecord
@@ -41,6 +42,7 @@ class User < ApplicationRecord
 
   # maybe refactor and take out :session_token so only fields that user can input
   validates_presence_of :email, :name, :age, :language, :language_level, :password_digest, :session_token, :title, :nationality
+  validates_presence_of :birthdate, on: :create
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
   validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
   validates :title, length: {minimum: 5, maximum: 255}
@@ -86,9 +88,11 @@ class User < ApplicationRecord
 
   geocoded_by :location
 
-  before_create :create_activation_token
+  # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name :before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
   before_save :downcase_email
-  before_save :titleize_name
+  before_validation :titleize_name
+  before_validation :calculate_age, if: 'birthdate.present?'
+  before_create :create_activation_token
   after_validation :geocode, if: :location_present_and_changed
   after_validation :lat_changed?
   after_create :add_email_subscription
@@ -278,6 +282,10 @@ class User < ApplicationRecord
 
   def titleize_name
     self.name = self.name.downcase.titleize
+  end
+
+  def calculate_age
+    self.age = ((Date.today - self.birthdate)/365).to_i
   end
 
   def add_email_subscription
