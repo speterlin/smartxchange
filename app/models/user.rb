@@ -89,7 +89,7 @@ class User < ApplicationRecord
   geocoded_by :location
 
   # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name :before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
-  before_save :downcase_email
+  before_validation :downcase_email
   before_validation :titleize_name
   before_validation :calculate_age, if: 'birthdate.present?'
   before_create :create_activation_token
