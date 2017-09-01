@@ -15,7 +15,7 @@ class UserMailer < ApplicationMailer
   before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update, :unread_board, :unread_jobs, :unread_materials]
   # all emails where there is a login link
   before_action :set_login_url, only: [:welcome_new, :weekly_notifications, :monthly_update, :language_matches]
-  before_action :set_header_logo
+  # before_action :set_header_logo
   # bit of a hack, maybe refactor need @user to be set before sending, welcome new will always be true just there so doesn't enter method
   after_action :prevent_delivery_to_unsubscribed, except: [:welcome_new, :reset_password, :suspicious_activity, :premium_subscribe, :premium_unsubscribe, :account_activation]
 
