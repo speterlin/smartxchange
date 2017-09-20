@@ -7,6 +7,7 @@ class TransactionsController < ApplicationController
     if current_user.has_braintree_info?
       gon.client_token = generate_client_token
     else
+      @customer = {}
       render :new_customer
     end
   end
@@ -31,23 +32,25 @@ class TransactionsController < ApplicationController
   end
 
   def create_customer
-    unless customer_params_present?
-      flash[:error] = "Please fill out all fields"
-      redirect_to :back and return
-    end
-    result = Braintree::Customer.create(
-      first_name: customer_params[:first_name],
-      last_name: customer_params[:last_name],
-      company: customer_params[:company],
-      email: current_user.email,
-      phone: customer_params[:phone]
-    )
-    if result.success?
-      current_user.update(braintree_customer_id: result.customer.id)
-      redirect_to new_transaction_path
-    else
-      flash.now[:error] = result.errors
+    @customer = generate_customer_object_and_validate
+    unless @customer[:errors].empty?
+      flash.now[:error] = @customer[:errors].to_sentence
       render :new_customer
+    else
+      result = Braintree::Customer.create(
+        first_name: customer_params[:first_name],
+        last_name: customer_params[:last_name],
+        company: customer_params[:company],
+        email: current_user.email,
+        phone: customer_params[:phone]
+      )
+      if result.success?
+        current_user.update(braintree_customer_id: result.customer.id)
+        redirect_to new_transaction_path
+      else
+        flash.now[:error] = result.errors
+        render :new_customer
+      end
     end
   end
 
@@ -66,13 +69,21 @@ class TransactionsController < ApplicationController
     params.require(:customer).permit(:first_name, :last_name, :company, :phone)
   end
 
-  def customer_params_present?
+  def generate_customer_object_and_validate
+    customer = {}
+    customer[:errors] = []
     customer_params.each  do |name, value|
       if value.length == 0
-        return false
+        customer[:errors] << "Please fill in #{name} field"
+      else
+        if name == "first_name" || name == "last_name" || name == "company"
+          /^[a-zA-Z]+$/i =~ value ? customer[name.to_sym] = value : customer[:errors] << "Only letter characters allowed in #{name} field"
+        elsif name == "phone"
+          /^\(?[0-9]+\)?([0-9]|\-)+$/i =~ value ? customer[name.to_sym] = value : customer[:errors] << "Please enter correct phone number format (..) ... in #{name} field"
+        end
       end
     end
-    true
+    customer
   end
 
 end

@@ -48,6 +48,8 @@ class PostsController < ApplicationController
     @post = Post.includes(:votes).find(params[:id])
     vote = Vote.new(value: 1, owner_id: current_user.id)
     @post.votes << vote
+    # quick fix, needs to be refactored here and in #downvote, #follow and #unfollow, this way post shows updated_at upon updating, could also use Time.now
+    @post.updated_at = vote.updated_at
     @up_votes = @post.votes.sum(:value)
     post_create_follow(@post, current_user)
     post_create_notifications(vote, @post)
@@ -60,6 +62,7 @@ class PostsController < ApplicationController
     @post = Post.includes(:votes).find(params[:id])
     vote = Vote.new(value: -1, owner_id: current_user.id)
     @post.votes << vote
+    @post.updated_at = vote.updated_at
     @up_votes = @post.votes.sum(:value)
     post_destroy_follow(@post, current_user)
     post_create_notifications(vote, @post)
@@ -71,6 +74,7 @@ class PostsController < ApplicationController
   def follow
     @post = Post.find(params[:id])
     follow = post_create_follow(@post, current_user)
+    @post.updated_at = follow.updated_at
     post_create_notifications(follow, @post)
     respond_to do |format|
       format.js
@@ -80,6 +84,8 @@ class PostsController < ApplicationController
   def unfollow
     @post = Post.find(params[:id])
     follow = post_destroy_follow(@post, current_user)
+    # hack here, since follow is destroyed, can't use follow.updated_at, since board is updated we will use that
+    @post.updated_at = @post.board.updated_at
     post_create_notifications(follow, @post)
     respond_to do |format|
       format.js

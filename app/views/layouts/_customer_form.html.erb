@@ -2,19 +2,19 @@
   <h3>Please enter your personal information</h3>
   <div class="field">
     <label for="customer_first_name">First Name</label><br>
-    <%= text_field_tag "customer[first_name]", "" %>
+    <%= text_field_tag "customer[first_name]", "#{customer[:first_name]}" %>
   </div>
   <div class="field">
     <label for="customer_last_name">Last Name</label><br>
-    <%= text_field_tag "customer[last_name]", "" %>
+    <%= text_field_tag "customer[last_name]", "#{customer[:last_name]}" %>
   </div>
   <div class="field">
-    <label for="customer_company">Company</label><br>
-    <%= text_field_tag "customer[company]", "" %>
+    <label for="customer_company">Company, School, or Neither</label><br>
+    <%= text_field_tag "customer[company]", "#{customer[:company]}" %>
   </div>
   <div class="field">
-    <label for="customer_phone">Phone</label><br>
-    <%= text_field_tag "customer[phone]", "" %>
+    <label for="customer_phone">Phone (with Country Code)</label><br>
+    <%= text_field_tag "customer[phone]", "#{customer[:phone]}" %>
   </div><br>
   <%=submit_tag "Submit User Detials", class: "btn btn-xl premium" %>
 <% end %>

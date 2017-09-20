@@ -92,7 +92,7 @@ class User < ApplicationRecord
   before_validation :downcase_email
   before_validation :titleize_name
   before_validation :calculate_age, if: 'birthdate.present?'
-  before_create :create_activation_token
+  before_create :generate_activation_token
   after_validation :geocode, if: :location_present_and_changed
   after_validation :lat_changed?
   after_create :add_email_subscription
@@ -292,7 +292,7 @@ class User < ApplicationRecord
     EmailSubscription.create!(user_id: self.id)
   end
 
-  def create_activation_token
+  def generate_activation_token
     self.activation_token = User.new_token
   end
 
