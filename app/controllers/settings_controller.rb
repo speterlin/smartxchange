@@ -53,10 +53,10 @@ class SettingsController < ApplicationController
   end
 
   def email_subscription
-    if params[:id]
-      user_id = Rails.application.message_verifier(:unsubscribe).verify(params[:id])
-    elsif signed_in? && correct_user?
+    if signed_in? && correct_user? #this first to prevent unlikely scenario of person being logged into one account and opening 'Manage Subscriptions' from email associated with another account
       user_id = params[:user_id]
+    elsif params[:id]
+      user_id = Rails.application.message_verifier(:unsubscribe).verify(params[:id])
     else
       flash[:error] = "Must be logged in as correct user or access this link through an email to view this page"
       redirect_to login_path and return
