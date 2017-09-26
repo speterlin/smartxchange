@@ -38,6 +38,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
 
   setup do
+    @user = User.first
   end
 
   test "Users set by fixtures" do
@@ -45,11 +46,18 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "test chat_bot? method" do
-    assert_equal(false, User.first.chat_bot?)
+    assert_equal(false, @user.chat_bot?)
   end
 
   test "test sort_method" do
-    assert_equal(3, User.first.sort_method[0..2].count)
+    assert_equal(3, @user.sort_method[0..2].count)
+  end
+
+  test "test name validation" do
+    assert_raise ActiveRecord::RecordInvalid do
+      @user.update!(name: "Bad.Hombre")
+      # assert @user.errors.on(:name).any?
+    end
   end
 
 end

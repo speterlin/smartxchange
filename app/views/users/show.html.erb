@@ -81,11 +81,11 @@
         <h4><%= @user.linkedin.industry %></h4>
         <p><span style="font-weight:normal"><%= @user.linkedin.summary %></span></p>
         <% if @user == current_user  %>
-          <%= button_to "Update Linkedin", update_linkedin_session_path, method: :get, class: 'btn btn-primary linkedin' %><br>
-          <%= button_to "Delete Linkedin", delete_linkedin_session_path, method: :delete, data: {confirm: "Are you sure you want to delete the Linkedin information associated with your account? Warning: If you registered with Linkedin you will not be able to sign back in to this account."}, class: 'btn btn-primary delete' %>
+          <%= button_to "Update Linkedin", "/auth/linkedin", method: :get, class: "btn btn-primary linkedin" %><br>
+          <%= button_to "Delete Linkedin", delete_linkedin_user_path, method: :get, data: {confirm: "Are you sure you want to delete the Linkedin information associated with your account? Warning: If you registered with Linkedin you will not be able to sign back in to this account."}, class: "btn btn-primary delete" %>
         <% end  %>
       <% elsif @user == current_user %>
-        <%= button_to "Add Linkedin", add_linkedin_session_path, method: :get, data: {confirm: "smartXchange will have access to your basic Linkedin profile and Linkedin email, are you sure?"}, class: 'btn btn-primary linkedin' %>
+        <%= button_to "Add Linkedin", "/auth/linkedin", method: :get, data: {confirm: "smartXchange will have access to your basic Linkedin profile and Linkedin email, are you sure?"}, class: "btn btn-primary linkedin" %>
       <% end %>
     </div>
 </div>

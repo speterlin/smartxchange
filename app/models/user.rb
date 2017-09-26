@@ -128,19 +128,20 @@ class User < ApplicationRecord
   def self.create_with_omniauth(auth)
     # ensures email uniqueness validation through if statement in previous method
     # will set password as uid, hack job need to refactor
-    # taking the first public Url image, assuming this is the most recent, not working at moment refactor
-    # to avoid unique name validation problems include this line
-    @name = User.find_by(name: auth['info']['name']) ? "New User" : auth['info']['name']
+    # if user doesn't have a Linkedin image, name defaults to 'New User' if there is a uniqueness error
+    image = auth['extra']['raw_info']['pictureUrls'].values.second ? auth['extra']['raw_info']['pictureUrls'].values.second[0] : nil
     # No !'s here, add_, and update_ with_omniauth because want the user to be saved even if there are validation errors
+    # Default birthdate to 25 years ago
     user = User.create(
       email: auth['info']['email'],
       password: auth['uid'],
-      name: @name,
+      name: auth['info']['name'],
       title: auth['info']['description'],
-      remote_image_url: auth['extra']['raw_info']['pictureUrls'].values.second[0],
+      remote_image_url: image,
       provider: auth['provider'],
       uid: auth['uid'],
-      location: auth['info']['location']['name']
+      location: auth['info']['location']['name'],
+      birthdate: 25.years.ago
     )
     # may implement positions, specialties and more once these start working
     Linkedin.create(
@@ -151,6 +152,7 @@ class User < ApplicationRecord
     )
     # maybe refactor here, add_with_omniauth, and update_with_omniauth, quick fix for when adding with Linkedin and location not valid, still want other values to persist
     user.save_valid_attributes
+    user
   end
 
   def add_with_omniauth(auth)
@@ -184,6 +186,14 @@ class User < ApplicationRecord
       summary: auth['extra']['raw_info']['summary']
     )
     self.save_valid_attributes
+  end
+
+  def delete_omniauth
+    self.linkedin.destroy
+    self.update(
+      provider: nil,
+      uid: nil
+    )
   end
 
   def password=(password)
@@ -270,6 +280,12 @@ class User < ApplicationRecord
     self.premium? || self.admin?
   end
 
+  # have to make unprotected so works when creating a user in User.create_with_omniauth
+  def save_valid_attributes
+    restore_attributes(errors.keys) unless valid?
+    save
+  end
+
   protected
 
   def ensure_session_token
@@ -294,11 +310,6 @@ class User < ApplicationRecord
 
   def generate_activation_token
     self.activation_token = User.new_token
-  end
-
-  def save_valid_attributes
-    restore_attributes(errors.keys) unless valid?
-    save
   end
 
 end

@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
   end
 
   def welcome_new(user)
-    flash[:success] = "Welcome to smartXchange! Complete your profile and navigate to the People page to start practicing your language! Make sure to update your native country to accurately match with language exchange options"
+    flash[:success] = "Welcome to smartXchange! Complete your profile and navigate to the People page to start practicing your language! Make sure to update your native country and birthdate to accurately match with language exchange options"
     UserMailer.welcome_new(user).deliver_later
     redirect_to user_path(user)
   end

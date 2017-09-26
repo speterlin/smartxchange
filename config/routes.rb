@@ -3,20 +3,14 @@ Rails.application.routes.draw do
   get 'contact' => 'static_pages#contact'
   get 'login'   => 'sessions#new'
   get 'signup'  => 'users#new'
-  get 'auth/linkedin/callback' => 'sessions#add_update_register_login_with_linkedin'
+  get 'auth/linkedin/callback' => 'sessions#omniauth_callback'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   root to: 'users#new'
 
   # since there is only one session everything is on collection, there are no session/1...session/2 for example
-  resource :session do
-    get 'new_linkedin', on: :collection
-    get 'login_with_linkedin', on: :collection
-    get 'add_linkedin', on: :collection
-    get 'update_linkedin', on: :collection
-    delete 'delete_linkedin', on: :collection
-  end
+  resource :session
 
   resources :users do
     get 'all', on: :collection
@@ -32,6 +26,7 @@ Rails.application.routes.draw do
     get 'map', on: :collection
     get 'exchange', on: :collection
     get 'remove_image', on: :member
+    get 'delete_linkedin', on: :member
     get 'email_match/:matches_token/:match_id', to: 'users#email_match'
     get 'settings' => 'settings#show'
     get 'reset_password' => 'settings#reset_password', on: :collection

@@ -8,10 +8,10 @@
           <p><%= image_tag(user.image.small_thumb.url, alt: user.name) %></p>
         </div>
         <div class="chat-room-content">
-          <p><%= "#{user.name} #{unread}" %> <%= image_tag('green-dot.png', alt: 'Active') if user.active %> - <%= "#{chat_room.title} Conversation"%></p>
+          <p><%= "#{user.name} #{unread}" %> <%= image_tag("green-dot.png", alt: "Active") if user.active %> - <%= "#{chat_room.title} Conversation"%></p>
         </div>
 </a>
 <!-- may want to center this at a later time, using br tag for now and  comes in fine as is -->
 <br>
-<%= link_to image_tag('red-x-delete.png', alt:  'Delete'), "conversations/#{chat_room.id}", remote: true, method: 'delete', data: {confirm: "Are you sure you want to delete this Conversation? All associated messages and notifications will be deleted along with it."}, class: 'delete-chat-room'  %>
+<%= link_to image_tag("red-x-delete.png", alt:  "Delete"), "conversations/#{chat_room.id}", remote: true, method: :delete, data: {confirm: "Are you sure you want to delete this Conversation? All associated messages and notifications will be deleted along with it."}, class: "delete-chat-room"  %>
 </div>

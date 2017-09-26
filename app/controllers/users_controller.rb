@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   include UsersHelper
 
   skip_before_action :require_signed_in!, only: [:new, :create, :email_match]
-  before_action :correct_user?, only: [:update, :destroy, :remove_image]
+  before_action :correct_user?, only: [:update, :destroy, :remove_image, :delete_linkedin]
   before_action :require_admin?, only: [:active, :map]
   # before_action :premium_subscription, only: [:create]
 
@@ -107,6 +107,11 @@ class UsersController < ApplicationController
     @user.update_attributes(:remove_image => true)
     flash[:success] = "Image removed!"
     redirect_to user_path(@user)
+  end
+
+  def delete_linkedin
+    current_user.delete_omniauth
+    redirect_to user_path(current_user)
   end
 
   # maybe refactor these two to be in a frontend framework or move to protected
