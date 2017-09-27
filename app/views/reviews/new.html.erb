@@ -13,7 +13,7 @@
     What language did <%= @other_user.name %> practice?
     <select name="review[language]">
       <% User::LANGUAGES.each do |language|  %>
-        <option value="<%= language %>" <%= 'selected' if @review.language==language%> ><%= language %></option>
+        <option value="<%= language %>" <%= 'selected' if @other_user.language==language%> ><%= language %></option>
       <% end %>
    </select>
   </p>
@@ -21,7 +21,7 @@
     How would you rate <%= @other_user.name %>'s language level in this language?
     <select name="review[language_level]">
       <% User::LANGUAGE_LEVELS.each do |language_level| %>
-        <option value="<%= language_level %>" <%= 'selected' if @review.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
+        <option value="<%= language_level %>" <%= 'selected' if @other_user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
       <% end %>
    </select>
   </p>

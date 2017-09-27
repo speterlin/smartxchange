@@ -1,5 +1,5 @@
 # Be sure to restart your server when you modify this file. Action Cable runs in a loop that does not support auto reloading.
-# For uri encoding, URI:encode is deprecated according to stackoverflow question 6714196
+# For uri encoding, URI:encode is deprecated according to stackoverflow question 6714196, probably refactor CGI out eventually
 require 'cgi'
 class ChatRoomChannel < ApplicationCable::Channel
   include UsersHelper

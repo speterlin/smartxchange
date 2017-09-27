@@ -1,15 +1,12 @@
 Rails.application.routes.draw do
+  # The priority is based upon order of creation: first created -> highest priority.
   get 'about' => 'static_pages#about'
   get 'contact' => 'static_pages#contact'
   get 'login'   => 'sessions#new'
   get 'signup'  => 'users#new'
   get 'auth/linkedin/callback' => 'sessions#omniauth_callback'
-
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
   root to: 'users#new'
 
-  # since there is only one session everything is on collection, there are no session/1...session/2 for example
   resource :session
 
   resources :users do
@@ -27,7 +24,7 @@ Rails.application.routes.draw do
     get 'exchange', on: :collection
     get 'remove_image', on: :member
     get 'delete_linkedin', on: :member
-    get 'email_match/:matches_token/:match_id', to: 'users#email_match'
+    get 'email_match/:matches_token/:match_id', to: 'users#email_match', as: 'email_match'
     get 'settings' => 'settings#show'
     get 'reset_password' => 'settings#reset_password', on: :collection
     post 'create_password' => 'settings#create_password', on: :collection
@@ -45,15 +42,7 @@ Rails.application.routes.draw do
     resources :materials, only: [:create, :destroy]
   end
 
-  # resources :chat_rooms, only: [:new, :create, :show, :index, :destroy]
-  # need to refactor, a bit messy, quick fix, need add correct naming paths
-  resources :conversations, only: [] do
-    get 'new' , on: :collection, to: 'chat_rooms#new'
-    post '', on: :collection, to: 'chat_rooms#create'
-    get '' , on: :member, to: 'chat_rooms#show'
-    get '' , on: :collection, to: 'chat_rooms#index'
-    delete '' , on: :member, to: 'chat_rooms#destroy'
-  end
+  resources :conversations, controller: :chat_rooms, only: [:new, :create, :show, :index, :destroy]
   resources :messages, only: [:create]
 
   resources :boards, only: [:show]
@@ -71,18 +60,6 @@ Rails.application.routes.draw do
   end
 
   mount ActionCable.server => '/cable'
-
-  # You can have the root of your site routed with "root"
-  # root 'welcome#index'
-
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
 
   # Example resource route with options:
   #   resources :products do
