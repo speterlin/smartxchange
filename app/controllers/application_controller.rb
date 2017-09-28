@@ -63,21 +63,11 @@ class ApplicationController < ActionController::Base
     @user = User.find_by_param(id)
     unless @user == current_user
       flash[:error] = "Unauthorized access"
-      # this and correct_chat_room? are not set to redirect_to :back because they can only be accessed by typing them in the url and therefore no http_referer is set
-      redirect_to users_path
+      # this and correct _chat_room?, _post?, _comment? are not set to redirect_to :back because they can only be accessed by typing them in the url and therefore no http_referer is set
+      redirect_to root_path
       return false
     end
     true
-  end
-
-  def correct_chat_room?
-    @chat_room = ChatRoom.find(params[:id])
-
-    # maybe move the end of this method into chat_room.rb
-    unless (@chat_room.initiator == current_user || @chat_room.recipient == current_user)
-      flash[:error] = "Unauthorized access"
-      redirect_to users_path
-    end
   end
 
   def set_time_zone

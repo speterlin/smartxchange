@@ -51,3 +51,11 @@ task :send_unread_materials => :environment do
     end
   end
 end
+
+task :update_posts_image_with_opengraph => :environment do
+  # Do this everyday in the morning (CEST time)
+  Post.where.not(url: nil).each do |post|
+    og = OpenGraph.new(post.url)
+    post.update(remote_image_url: og.images.first) unless og.images.blank?
+  end
+end

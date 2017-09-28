@@ -42,11 +42,15 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
-  version :thumb do
+  version :thumb, if: :is_a_user? do
     process :resize_to_fit => [250, 250]
   end
 
-  version :small_thumb, from_version: :thumb do
+  version :medium_thumb, if: :is_a_post? do
+    process :resize_to_fit => [150, 150]
+  end
+
+  version :small_thumb, from_version: :thumb, if: :is_a_user? do
     process :resize_to_fit => [50,50]
   end
 
@@ -67,5 +71,15 @@ class AvatarUploader < CarrierWave::Uploader::Base
   # def filename
   #   "something.jpg" if original_filename
   # end
+
+  private
+
+  def is_a_user? picture
+    model.is_a?(User)
+  end
+
+  def is_a_post? picture
+    model.is_a?(Post)
+  end
 
 end

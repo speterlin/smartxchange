@@ -67,7 +67,7 @@ class UserMailer < ApplicationMailer
       @match_urls = Hash.new
       @matches.each do |match|
         fetch_user_image(match)
-          @match_urls[match.id] = [user_email_match_url(@user, @matches_token, match.id) + campaign, user_url(match) + campaign]
+        @match_urls[match.id] = [user_email_match_url(@user, @matches_token, match.id) + campaign, user_url(match) + campaign]
       end
     else
       mail.perform_deliveries = false

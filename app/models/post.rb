@@ -13,6 +13,7 @@
 #  latitude   :float
 #  longitude  :float
 #  url        :string
+#  image      :string
 #
 
 class Post < ApplicationRecord
@@ -23,7 +24,9 @@ class Post < ApplicationRecord
   validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}
   validates_uniqueness_of :url, scope: :board_id, unless: 'url.blank?'
   # maybe refactor returns 2 match groups, alternative: (^https?\:\/\/www\.([-a-z0-9]+\.)+[-a-z0-9]+.*), taken from this site: https://forums.asp.net/t/1761988.aspx?Regular+expression+for+Validating+URL+with+or+without+http
-  validates :url, length: {maximum: 255 }, format: {:with => /(^(https?\:\/\/)(www\.)(?:[-a-z0-9]+\.)*[-a-z0-9]+.*)/i}, if: 'url.present?'
+  validates :url, length: {maximum: 255 }, format: {:with => /(^(https?\:\/\/)(www\.)?(?:[-a-z0-9]+\.)*[-a-z0-9]+.*)/i}, if: 'url.present?'
+  validates :image, file_size: { less_than_or_equal_to: 5.megabytes }
+  mount_uploader :image, AvatarUploader
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true
@@ -35,6 +38,7 @@ class Post < ApplicationRecord
 
   geocoded_by :location
 
+  before_validation :upload_image, if: 'url.present?', on: :create
   after_validation :geocode, if: :location_present_and_changed
   after_validation :lat_changed?
 
@@ -42,6 +46,13 @@ class Post < ApplicationRecord
 
   def timestamp
     updated_at.strftime('%H:%M:%S %d %B %Y')
+  end
+
+  protected
+
+  def upload_image
+    og = OpenGraph.new(self.url)
+    self.remote_image_url = og.images.first unless og.images.blank?
   end
 
 end

@@ -57,6 +57,14 @@ class ChatRoomsController < ApplicationController
     params.require(:chat_room).permit(:recipient_id)
   end
 
+  def correct_chat_room?
+    chat_room = ChatRoom.find(params[:id])
+    unless (chat_room.initiator == current_user || chat_room.recipient == current_user)
+      flash[:error] = "Unauthorized access"
+      redirect_to root_path
+    end
+  end
+
   def chat_room_limit
     @limit = 5
     if current_user.initiated_chat_rooms.count >= @limit && current_user.initiated_chat_rooms.limit(@limit).last.created_at > 24.hours.ago
