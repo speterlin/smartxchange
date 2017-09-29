@@ -53,9 +53,11 @@ task :send_unread_materials => :environment do
 end
 
 task :update_posts_image_with_opengraph => :environment do
-  # Do this everyday in the morning (CEST time)
-  Post.where.not(url: nil).each do |post|
-    og = OpenGraph.new(post.url)
-    post.update(remote_image_url: og.images.first) unless og.images.blank?
+  # Maybe refactor, do this once a week every Friday morning, since it causes board to have unread posts
+  if user_days_from_beginning_of_year % 7 == 5
+    Post.where.not(url: nil).each do |post|
+      post.upload_or_update_image
+      post.save
+    end
   end
 end

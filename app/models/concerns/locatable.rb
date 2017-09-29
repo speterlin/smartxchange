@@ -1,7 +1,7 @@
 module Locatable
   extend ActiveSupport::Concern
 
-  def location_present_and_changed
+  def location_present_and_changed?
     return true if (self.location.present? && self.location_changed?)
     # needs to be refactored
     if self.location == "" && self.location_changed?

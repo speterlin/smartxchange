@@ -91,9 +91,9 @@ class User < ApplicationRecord
   # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name :before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
   before_validation :downcase_email
   before_validation :titleize_name
-  before_validation :calculate_age, if: 'birthdate.present?'
+  before_validation :calculate_age, if: 'birthdate.present?' # calculating age everytime user is updated since age should be updated everytime user performs action on platform
   before_create :generate_activation_token
-  after_validation :geocode, if: :location_present_and_changed
+  after_validation :geocode, if: :location_present_and_changed?
   after_validation :lat_changed?
   after_create :add_email_subscription
 
