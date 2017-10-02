@@ -1,25 +1,26 @@
 class SettingsController < ApplicationController
 
-  skip_before_action :require_signed_in!, only: [:reset_password, :create_password, :email_subscription, :update_subscription, :activate_account]
-  before_action :correct_user?, except: [:reset_password, :create_password, :email_subscription, :update_subscription, :activate_account]
+  skip_before_action :require_signed_in, only: [:reset_password, :create_password!, :email_subscription, :update_subscription, :activate_account!]
+  before_action :correct_user?, except: [:reset_password, :create_password!, :email_subscription, :update_subscription, :activate_account!]
 
   def show
     @user = User.find_by_param(params[:user_id])
   end
 
   def reset_password
+    redirect_to root_path if signed_in?
   end
 
-  def create_password
+  def create_password!
     @user = User.find_by(email: user_params[:email].downcase)
     if @user
       # 6 results in a string length of 8, string length is 4/3 * n
-      @new_password = SecureRandom.urlsafe_base64(6)
-      @user.update(password: @new_password)
-      UserMailer.reset_password(@user, @new_password).deliver_later
+      new_password = SecureRandom.urlsafe_base64(6)
+      @user.update!(password: new_password) # bang because this is an important step
+      UserMailer.reset_password(@user, new_password).deliver_later
       flash[:success] = "Email sent with password reset instructions"
-      redirect_to :back
-    # maybe make this a pop up in the future
+      redirect_to :back # maybe refactor this
+    # maybe refactor and make this a pop up in the future
     else
       flash[:error] = "No user found with this email address"
       redirect_to :back
@@ -30,7 +31,7 @@ class SettingsController < ApplicationController
     @user = User.find_by_param(params[:user_id])
   end
 
-  def update_password
+  def update_password!
     # probably need to refactor this, maybe add token
     @user = User.find_by_param(params[:user_id])
     if @user.try(:is_password?, user_params[:current_password])
@@ -54,14 +55,14 @@ class SettingsController < ApplicationController
 
   def email_subscription
     if signed_in? && correct_user? #this first to prevent unlikely scenario of person being logged into one account and opening 'Manage Subscriptions' from email associated with another account
-      user_id = params[:user_id]
+      @user = User.find_by_param(params[:user_id])
     elsif params[:id]
       user_id = Rails.application.message_verifier(:unsubscribe).verify(params[:id])
+      @user = User.find(user_id)
     else
       flash[:error] = "Must be logged in as correct user or access this link through an email to view this page"
       redirect_to login_path and return
     end
-    @user = User.find_by_param(params[:user_id])
   end
 
   def update_subscription
@@ -74,15 +75,15 @@ class SettingsController < ApplicationController
     end
   end
 
-  def activate
+  def activate!
     # could switch this and deactive to @user = User.find(params[:user_id])
-    current_user.appear
+    current_user.appear!
     flash[:success] = "You are now browsing in active mode"
     redirect_to :back
   end
 
-  def deactivate
-    current_user.disappear
+  def deactivate!
+    current_user.disappear!
     redirect_to :back, notice: "You are now browsing in stealth mode"
   end
 
@@ -97,10 +98,10 @@ class SettingsController < ApplicationController
     redirect_to :back, notice: "Premium subscription cancelled! You now have the Standard package"
   end
 
-  def activate_account
+  def activate_account!
     @user = User.find_by(email: params[:email])
     if @user.activation_token == params[:activation_token]
-      @user.update!(activated: true)
+      @user.update!(activated: true) # keep bang here because it's an important step, want it to fail if account is not activated
       sign_in!(@user)
       welcome_new(@user)
     else

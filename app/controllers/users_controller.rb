@@ -2,16 +2,17 @@ require 'will_paginate/array'
 class UsersController < ApplicationController
   include UsersHelper
 
-  skip_before_action :require_signed_in!, only: [:new, :create, :email_match]
-  before_action :correct_user?, only: [:update, :destroy, :remove_image, :delete_linkedin]
+  skip_before_action :require_signed_in, only: [:new, :create, :email_match]
+  before_action :correct_user?, only: [:update, :destroy, :remove_image!, :delete_linkedin!]
   before_action :require_admin?, only: [:active, :map]
   # before_action :premium_subscription, only: [:create]
 
   def new
-    @user_count = User.all.count - (User.all.count % 100)
-    @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     if signed_in?
       redirect_to board_path(Board.find_by_title(current_user.language))
+    else
+      @user_count = User.all.count - (User.all.count % 100)
+      @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     end
   end
 
@@ -99,18 +100,19 @@ class UsersController < ApplicationController
 
   def destroy
     User.find_by_param(params[:id]).destroy
-    redirect_to '/users/new', notice: "User deleted"
+    redirect_to new_user_path, notice: "User deleted"
   end
 
-  def remove_image
+  # maybe refactor and move some code to the model
+  def remove_image!
     @user = User.find_by_param(params[:id])
     @user.update_attributes(:remove_image => true)
     flash[:success] = "Image removed!"
     redirect_to user_path(@user)
   end
 
-  def delete_linkedin
-    current_user.delete_omniauth
+  def delete_linkedin!
+    current_user.delete_omniauth!
     redirect_to user_path(current_user)
   end
 

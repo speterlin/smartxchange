@@ -23,11 +23,9 @@ module ChatRoomsHelper
   end
 
   def chat_room_create_notification(message)
-    # maybe refactor and implement a better method than this instance variable in the future
-    @notification = nil
     recipient = chat_room_interlocutor(message.chat_room, message.sender)
     if chat_room_notification_check(message.chat_room, recipient)
-      @notification = Notification.create!(
+      Notification.create(
         notified_id: recipient.id,
         notifier_id: message.sender.id,
         notifiable_type: 'ChatRoom',
@@ -35,9 +33,6 @@ module ChatRoomsHelper
         sourceable_type: 'Message',
         sourceable_id: message.id
       )
-    end
-    # using message.sender in code below because of potential conflict if chatbot is responding
-    if !@notification.nil?
       WebNotificationsChannel.broadcast_to(
         recipient,
         chat_rooms_notifications: recipient.chat_rooms_notifications.count,
@@ -46,6 +41,7 @@ module ChatRoomsHelper
       )
       # if sending from this chat room mark last notification from sender as read
       chat_room_mark_read(message.chat_room, message.sender)
+      # using message.sender in code below because of potential conflict if chatbot is responding
       WebNotificationsChannel.broadcast_to(
         message.sender,
         chat_rooms_notifications: message.sender.chat_rooms_notifications.count,

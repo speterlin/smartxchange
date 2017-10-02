@@ -19,14 +19,24 @@
 class Post < ApplicationRecord
   include Locatable
 
+  geocoded_by :location
+  mount_uploader :image, AvatarUploader
+
+  # maybe refactor and move this to a standard validation since want to check url before uploading image, but also want to set image before validation, could also make remove_url_and_image an after_validation call
+  before_validation :upload_or_update_image, if: :url_present_and_changed?
+  before_validation :remove_url_and_image, if: :url_not_present_and_changed?
+
   validates_presence_of :content, :owner, :board, :category
   validates :content, length: {minimum: 5, maximum: 500}
   validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}
   validates_uniqueness_of :url, scope: :board_id, unless: 'url.blank?'
-  # maybe refactor returns 2 match groups, alternative: (^https?\:\/\/www\.([-a-z0-9]+\.)+[-a-z0-9]+.*), taken from this site: https://forums.asp.net/t/1761988.aspx?Regular+expression+for+Validating+URL+with+or+without+http
-  validates :url, length: {maximum: 255 }, format: {:with => /(^(https?\:\/\/)(www\.)?(?:[-a-z0-9]+\.)*[-a-z0-9]+.*)/i}, if: :url_present_and_changed?
+  # maybe refactor: ?: to avoid capturing extra groups, taken from this site: https://forums.asp.net/t/1761988.aspx?Regular+expression+for+Validating+URL+with+or+without+http
+  validates :url, length: {maximum: 255 }, format: {:with => /(^(?:https?\:\/\/)(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+.*)/i}, if: :url_present_and_changed?
   validates :image, file_size: { less_than_or_equal_to: 5.megabytes }
-  mount_uploader :image, AvatarUploader
+
+  after_validation :geocode, if: :location_present_and_changed?
+  after_validation :remove_location, if: :location_not_present_and_changed?
+  after_validation :error_unless_latitude_changed, if: :location_present_and_changed?
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true
@@ -35,12 +45,6 @@ class Post < ApplicationRecord
   has_many :notifications, as: :notifiable, dependent: :destroy
   has_many :follows, as: :followable, dependent: :destroy
   has_many :followers, through: :follows
-
-  geocoded_by :location
-
-  before_validation :upload_or_update_image, if: :url_present_and_changed?
-  after_validation :geocode, if: :location_present_and_changed?
-  after_validation :lat_changed?
 
   default_scope -> { order(updated_at: :desc) }
 
@@ -59,6 +63,18 @@ class Post < ApplicationRecord
   def url_present_and_changed?
     return true if (self.url.present? && self.url_changed?)
     false
+  end
+
+  def url_not_present_and_changed?
+    return true if (!self.url.present? && self.url_changed?)
+    false
+  end
+
+  # maybe make a concern like locatable and include methods like remove_image since used here and post
+  def remove_url_and_image
+    self.url = nil
+    # maybe refactor, repeat code here and in upload_or_update_image
+    self.assign_attributes(remove_image: true)
   end
 
 end

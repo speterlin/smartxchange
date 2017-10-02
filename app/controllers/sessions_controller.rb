@@ -1,9 +1,9 @@
 class SessionsController < ApplicationController
 
-  skip_before_action :require_signed_in!, only: [:new, :create, :omniauth_callback, :register_with_linkedin, :login_with_linkedin]
+  skip_before_action :require_signed_in, only: [:new, :create, :omniauth_callback, :register_with_linkedin, :login_with_linkedin]
 
   def new
-    redirect_to users_path if signed_in?
+    redirect_to root_path if signed_in?
   end
 
   def create
@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
         redirect_to login_path and return
       end
       sign_in!(@user)
-      normal_sign_in
+      normal_sign_in!
     else
       @email = @user
       flash.now[:error] = "Invalid email and/or password"
@@ -49,21 +49,21 @@ class SessionsController < ApplicationController
         redirect_to login_path and return
       end
       sign_in!(@user)
-      normal_sign_in
+      normal_sign_in!
     else
       flash[:error] = "No Linkedin account registered with smartXchange, please register"
       redirect_to signup_path and return
     end
   end
 
-  def add_or_update_linkedin
+  def add_or_update_linkedin!
     if @user && @user == current_user #update
-      current_user.update_with_omniauth(auth_hash)
+      current_user.update_with_omniauth!(auth_hash)
       flash[:success] = "Linkedin information updated"
     elsif @user && @user != current_user #adding Linkedin but someone else is associated with this Linkedin
       flash[:error] = "Linkedin account already registered with another account"
     else #add
-      current_user.add_with_omniauth(auth_hash)
+      current_user.add_with_omniauth!(auth_hash)
       flash[:success] = "Linkedin added to profile"
     end
     redirect_to user_path(current_user) and return
@@ -80,7 +80,7 @@ class SessionsController < ApplicationController
     elsif request.referer == login_url
       login_with_linkedin
     elsif request.referer == user_url(current_user)
-      add_or_update_linkedin
+      add_or_update_linkedin!
     end
   end
 

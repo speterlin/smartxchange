@@ -47,7 +47,7 @@ class ChatRoomsControllerTest < ActionDispatch::IntegrationTest
   test "can only access chat room that you are involved in" do
     post "/session", :user => {:email => User.third.email, :password => 'password'}
     get "/chat_rooms/#{ChatRoom.first.id}"
-    assert_redirected_to users_path
+    assert_redirected_to root_path
     assert_equal flash[:error], "Unauthorized access"
   end
 

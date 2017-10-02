@@ -40,6 +40,19 @@ class User < ApplicationRecord
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese"]
   LANGUAGE_LEVELS = (1..6).to_a
 
+  attr_reader :password, :terms
+
+  mount_uploader :image, AvatarUploader
+  geocoded_by :location
+  serialize :interests, Array
+
+  after_initialize :ensure_session_token
+
+  # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
+  before_validation :downcase_email
+  before_validation :titleize_name
+  before_validation :calculate_age, if: 'birthdate.present?' # calculating age everytime user is updated since age should be updated everytime user performs action on platform
+
   # maybe refactor and take out :session_token so only fields that user can input
   validates_presence_of :email, :name, :age, :language, :language_level, :password_digest, :session_token, :title, :nationality
   validates_presence_of :birthdate, on: :create
@@ -56,9 +69,14 @@ class User < ApplicationRecord
   # Add Linkedin to message since only using Linkedin as partner right now
   validates :uid, uniqueness: { scope: :provider, allow_nil: true, message: "Linkedin account already registered with another user" }
   validates :image, file_size: { less_than_or_equal_to: 5.megabytes }
-  mount_uploader :image, AvatarUploader
-  serialize :interests, Array
   validates :terms, acceptance: true
+
+  after_validation :geocode, if: :location_present_and_changed?
+  after_validation :remove_location, if: :location_not_present_and_changed?
+  after_validation :error_unless_latitude_changed, if: :location_present_and_changed?
+
+  before_create :generate_activation_token
+  after_create :add_email_subscription
 
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
@@ -86,21 +104,7 @@ class User < ApplicationRecord
   has_many :created_reviews, :foreign_key => :reviewer_id, class_name: 'Review', dependent: :destroy
   has_many :materials, :foreign_key => :owner_id, class_name: 'Material', dependent: :destroy
 
-  geocoded_by :location
-
-  # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name :before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
-  before_validation :downcase_email
-  before_validation :titleize_name
-  before_validation :calculate_age, if: 'birthdate.present?' # calculating age everytime user is updated since age should be updated everytime user performs action on platform
-  before_create :generate_activation_token
-  after_validation :geocode, if: :location_present_and_changed?
-  after_validation :lat_changed?
-  after_create :add_email_subscription
-
   default_scope -> { order(created_at: :asc) } #may refactor take this out, asc want oldest users around first
-
-  attr_reader :password, :terms
-  after_initialize :ensure_session_token
 
   def to_param
     name.downcase
@@ -130,7 +134,7 @@ class User < ApplicationRecord
     # will set password as uid, hack job need to refactor
     # if user doesn't have a Linkedin image, name defaults to 'New User' if there is a uniqueness error
     image = auth['extra']['raw_info']['pictureUrls'].values.second ? auth['extra']['raw_info']['pictureUrls'].values.second[0] : nil
-    # No !'s here, add_, and update_ with_omniauth because want the user to be saved even if there are validation errors
+    # No !'s here, add_, and update_ with_omniauth because want the user to be saved even if there are validation errors, which is why we have save_valid_attributes!
     # Default birthdate to 25 years ago
     user = User.create(
       email: auth['info']['email'],
@@ -150,12 +154,12 @@ class User < ApplicationRecord
       industry: auth['extra']['raw_info']['industry'],
       summary: auth['extra']['raw_info']['summary']
     )
-    # maybe refactor here, add_with_omniauth, and update_with_omniauth, quick fix for when adding with Linkedin and location not valid, still want other values to persist
-    user.save_valid_attributes
+    # maybe refactor here, add_with_omniauth!, and update_with_omniauth!, quick fix for when adding with Linkedin and location not valid, still want other values to persist
+    user.save_valid_attributes!
     user
   end
 
-  def add_with_omniauth(auth)
+  def add_with_omniauth!(auth)
     # doesn't need error messages because fields can be blank (except Linkedin user_id which should not throw error unless there is no current_user in which case there would be an error earlier on)
     self.update(
       provider: auth['provider'],
@@ -168,10 +172,10 @@ class User < ApplicationRecord
       industry: auth['extra']['raw_info']['industry'],
       summary: auth['extra']['raw_info']['summary']
     )
-    self.save_valid_attributes
+    self.save_valid_attributes!
   end
 
-  def update_with_omniauth(auth)
+  def update_with_omniauth!(auth)
     # doesn't need error messages because fields can be blank
     # keeping provider and uid there because maybe the person has a new linkedin account
     # not updating password if uid changes because user might have sign in without linkedin
@@ -185,10 +189,10 @@ class User < ApplicationRecord
       industry: auth['extra']['raw_info']['industry'],
       summary: auth['extra']['raw_info']['summary']
     )
-    self.save_valid_attributes
+    self.save_valid_attributes!
   end
 
-  def delete_omniauth
+  def delete_omniauth!
     self.linkedin.destroy
     self.update(
       provider: nil,
@@ -207,20 +211,20 @@ class User < ApplicationRecord
 
   def reset_token!
     self.session_token = User.new_token
-    self.save!
+    self.save! # keep exclamation mark here since want it to fail if it doesn't save, this is an important call
     self.session_token
   end
 
-  def appear
+  def appear!
     p "appear called in user"
     self.active = true
-    self.save!
+    self.save
   end
 
-  def disappear
+  def disappear!
     p "disappear called in user"
     self.active = false
-    self.save!
+    self.save
   end
 
   def sort_method
@@ -246,7 +250,7 @@ class User < ApplicationRecord
   def create_matches_token!
     self.matches_token = User.new_token
     self.matches_sent_at = Time.zone.now
-    self.save!
+    self.save! # bang here because don't want #language_matches email to send if matches_token is not saved
     self.matches_token
   end
 
@@ -281,7 +285,7 @@ class User < ApplicationRecord
   end
 
   # have to make unprotected so works when creating a user in User.create_with_omniauth
-  def save_valid_attributes
+  def save_valid_attributes!
     restore_attributes(errors.keys) unless valid?
     save
   end
@@ -305,7 +309,7 @@ class User < ApplicationRecord
   end
 
   def add_email_subscription
-    EmailSubscription.create!(user_id: self.id)
+    EmailSubscription.create!(user_id: self.id) # exclamation mark here, don't want to have a user created without associated email subscription object
   end
 
   def generate_activation_token

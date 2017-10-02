@@ -3,24 +3,22 @@ module Locatable
 
   def location_present_and_changed?
     return true if (self.location.present? && self.location_changed?)
-    # needs to be refactored
-    if self.location == "" && self.location_changed?
-      self.location = nil
-      self.longitude = nil
-      self.latitude = nil
-    end
-    return false
+    false
   end
 
-  def lat_changed?
-    # for some reason need to return at the end
-    if self.location_changed? && self.location != ""
-        if !self.latitude_changed?
-            self.errors.add(:location, "is not valid")
-            return false
-        end
-    end
-    return true
+  def location_not_present_and_changed?
+    return true if (!self.location.present? && self.location_changed?)
+    false
+  end
+
+  def remove_location
+    self.location = nil
+    self.longitude = nil
+    self.latitude = nil
+  end
+
+  def error_unless_latitude_changed
+    self.errors.add(:location, "is not valid") unless self.latitude_changed?
   end
 
 end

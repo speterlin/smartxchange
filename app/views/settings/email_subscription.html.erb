@@ -53,14 +53,14 @@
     <label for="unread_jobs">Unread Jobs Notification (once per week we will email you if the smart jobs board has unread posts)</label><br>
   </div>
   <div class="email-subscription-checkbox">
-    <input type="hidden" name="email[unread_materials]" value="false">
-    <input type="checkbox" id="unread_materials" name="email[unread_materials]" value="true" <%= 'checked' if @user.email_subscription.unread_materials %> >
-    <label for="unread_materials">Unread Materials Notification (once per week we will email you if there are new materials uploaded)</label><br>
-  </div>
-  <div class="email-subscription-checkbox">
     <input type="hidden" name="email[new_post]" value="false">
     <input type="checkbox" id="new_post" name="email[new_post]" value="true" <%= 'checked' if @user.email_subscription.new_post %> >
-    <label for="new_post">New Post Notification (we will email you every time someone updates a post you own or are following)</label><br><br>
+    <label for="new_post">New Post Notification (we will email you every time someone updates a post you own or are following)</label><br>
+  </div>
+  <div class="email-subscription-checkbox">
+    <input type="hidden" name="email[unread_materials]" value="false">
+    <input type="checkbox" id="unread_materials" name="email[unread_materials]" value="true" <%= 'checked' if @user.email_subscription.unread_materials %> >
+    <label for="unread_materials">Unread Materials Notification (once per week we will email you if there are new materials uploaded)</label><br><br>
   </div>
   <input type="submit" value="Update Subscriptions" class="btn btn-primary settings">
 </form>

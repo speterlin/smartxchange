@@ -13,13 +13,14 @@
 #
 
 class Material < ApplicationRecord
+  mount_uploader :attachment, AttachmentUploader
+
   validates :name, :attachment, :owner, :language, :language_level, presence: true
   validates :attachment, file_size: { less_than_or_equal_to: 5.megabytes }
   validates :owner_id, uniqueness: { scope: :name, message: "has already uploaded a document with this name" }
   validate :attachment_is_unique_to_owner
 
   belongs_to :owner, class_name: 'User'
-  mount_uploader :attachment, AttachmentUploader
 
   protected
 

@@ -26,9 +26,8 @@ module PostsHelper
 
   # maybe refactor and get rid of post parameter, but would have to implement some additional logic to deal with notifiable_id
   def post_create_notification(vote_or_comment_or_follow_or_post_update_or_comment_update, post, notified)
-    @notification = nil
     if post_notification_check(vote_or_comment_or_follow_or_post_update_or_comment_update, post, notified)
-      @notification = Notification.create!(
+      notification = Notification.create!(
         notified_id: notified.id,
         notifier_id: vote_or_comment_or_follow_or_post_update_or_comment_update.owner.id,
         notifiable_type: 'Post',
@@ -36,9 +35,7 @@ module PostsHelper
         sourceable_type: vote_or_comment_or_follow_or_post_update_or_comment_update.class.name,
         sourceable_id: vote_or_comment_or_follow_or_post_update_or_comment_update.id
       )
-    end
-    # maybe refactor, right now need to include UserHelper to call the below method
-    if !@notification.nil?
+      # maybe refactor, right now need to include UserHelper to call the below method
       WebNotificationsChannel.broadcast_to(
         notified,
         boards_notifications: user_boards_notifications_with_title(notified),
@@ -46,7 +43,7 @@ module PostsHelper
         sound: true
       )
       # delaying 30 seconds in case there are a lot of people getting updated
-      UserMailer.delay(run_at: 30.seconds.from_now).new_post(@notification)
+      UserMailer.delay(run_at: 30.seconds.from_now).new_post(notification)
     end
   end
 

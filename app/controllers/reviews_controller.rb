@@ -18,12 +18,6 @@ class ReviewsController < ApplicationController
     end
   end
 
-  def edit
-    @review = Review.find(params[:id])
-    @other_user = @review.reviewable
-    @chat_room = @review.chat_room
-  end
-
   def create
     # maybe refactor assuming here that reviewable is User, maybe change later if we make chat_room reviewable
     @review = current_user.created_reviews.new(review_params)
@@ -35,6 +29,12 @@ class ReviewsController < ApplicationController
       flash[:error] = @review.errors.full_messages.to_sentence
       redirect_to :back
     end
+  end
+
+  def edit
+    @review = Review.find(params[:id])
+    @other_user = @review.reviewable
+    @chat_room = @review.chat_room
   end
 
   def update

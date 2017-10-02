@@ -1,6 +1,6 @@
 class MaterialsController < ApplicationController
 
-  before_action :correct_user?, only: [:create, :destroy]
+  before_action :correct_user?
 
   def create
     @material = Material.new(material_params)

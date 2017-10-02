@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :current_user, :signed_in?
 
-  before_action :require_signed_in!, :set_time_zone
+  before_action :require_signed_in, :set_time_zone
 
   private
 
@@ -27,10 +27,10 @@ class ApplicationController < ActionController::Base
     session[:token] = user.reset_token!
   end
 
-  def normal_sign_in
+  def normal_sign_in!
     flash[:notice] = welcome_messages(current_user).sample
     ip_address = request.remote_ip
-    current_user.update!(ip_address: ip_address) if ip_address
+    current_user.update(ip_address: ip_address) if ip_address
     redirect_to(session[:return_to] || board_path(Board.find_by_title(current_user.language)))
     session[:return_to] = nil
   end
@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
     messages
   end
 
-  def require_signed_in!
+  def require_signed_in
     unless signed_in?
       flash[:error] = "Please log in."
       session[:return_to] = request.url

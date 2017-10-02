@@ -190,7 +190,7 @@ class UserMailer < ApplicationMailer
   def add_campaign_to_footer(campaign)
     # Maybe refactor, combine this and set_footer_urls, and move this and login_urls to views instead of setting urls here
     @url_tutors += campaign
-    @url_premium_subscription = about_url + campaign+ "#premium"
+    @url_premium_subscription = about_url + campaign + "#premium"
   end
 
   def set_login_url

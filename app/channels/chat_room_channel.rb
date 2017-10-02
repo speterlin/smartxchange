@@ -14,6 +14,7 @@ class ChatRoomChannel < ApplicationCable::Channel
   end
 
   def send_message(data)
+    # keeping bang on create method here and in chatbot response so it stops downstream processes and gives correct validation error
     message = current_user.sent_messages.create!(body: data['message'], chat_room_id: data['chat_room_id'])
     # need to refactor and implement error message here
     if message

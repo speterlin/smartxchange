@@ -3,7 +3,7 @@ class BoardsController < ApplicationController
   include PostsHelper
   include BoardsHelper
 
-  before_action :only_premium_or_admin_access_to_smart_jobs, only: [:show]
+  before_action :only_premium_or_admin_access_to_smart_jobs
 
   def show
     @board = Board.find_by_title(board_capitalize(params[:id]))
@@ -46,7 +46,7 @@ class BoardsController < ApplicationController
     # maybe refactor the "2"
     if !current_user.premium_or_admin? && params[:id] == "smart jobs"
       flash[:notice] = "Must be a <a href=\"#{about_path}#premium\">Premium</a> user to view the Smart Jobs Board"
-      redirect_to users_path and return
+      redirect_to root_path and return
     end
   end
 

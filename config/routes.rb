@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'login'   => 'sessions#new'
   get 'signup'  => 'users#new'
   get 'auth/linkedin/callback' => 'sessions#omniauth_callback'
-  root to: 'users#new'
+  root to: 'users#new' # maybe refactor and make this root to user's board path and put code in board path for redirecting to users/new if not signed in
 
   resource :session
 
@@ -22,21 +22,21 @@ Rails.application.routes.draw do
     get 'mandarin_chinese', on: :collection
     get 'map', on: :collection
     get 'exchange', on: :collection
-    get 'remove_image', on: :member
-    get 'delete_linkedin', on: :member
+    get 'remove_image' => 'users#remove_image!', on: :member
+    get 'delete_linkedin' => 'users#delete_linkedin!', on: :member
     get 'email_match/:matches_token/:match_id', to: 'users#email_match', as: 'email_match'
     get 'settings' => 'settings#show'
     get 'reset_password' => 'settings#reset_password', on: :collection
-    post 'create_password' => 'settings#create_password', on: :collection
+    post 'create_password' => 'settings#create_password!', on: :collection
     resources :settings, only: [] do
       get 'change_password', on: :collection
-      patch 'update_password',  on: :collection
+      patch 'update_password' => 'settings#update_password!',  on: :collection
       get 'email_subscription', on: :collection
       patch 'update_subscription', on: :collection
-      get 'activate', on: :collection
-      get 'deactivate', on: :collection
+      get 'activate' => 'settings#activate!', on: :collection
+      get 'deactivate' => 'settings#deactivate!', on: :collection
       get 'downgrade', on: :collection
-      get 'activate_account/:activation_token', on: :collection, to: 'settings#activate_account', as: 'activate_account'
+      get 'activate_account/:activation_token', on: :collection, to: 'settings#activate_account!', as: 'activate_account'
     end
     resources :reviews, except: [:show]
     resources :materials, only: [:create, :destroy]

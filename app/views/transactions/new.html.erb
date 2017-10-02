@@ -1,6 +1,6 @@
 <%= javascript_include_tag 'transactions.js' %>
 <h3>Details</h3>
 <p>
-  For €4,99/month, enjoy <%= Package.second.description_uncapitalize %>
+  For €4,99/month, enjoy <%= Package.second.uncapitalize_description %>
 </p>
 <%= render 'layouts/transaction_form' %>

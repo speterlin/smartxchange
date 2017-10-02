@@ -14,14 +14,14 @@ class Message < ApplicationRecord
   validates_presence_of :chat_room, :sender, :body
   validates :body, length: {minimum: 1, maximum: 1000}
 
+  after_create :notify_recipient?
+  after_create :send_peer_review?
+
   belongs_to :sender, class_name: 'User'
   belongs_to :chat_room, touch: true
 
   # maybe refactor / take out not necessary since default is asc
   default_scope -> { order(created_at: :asc) }
-
-  after_create :notify_recipient?
-  after_create :send_peer_review?
 
   # after_create_commit { SendEmailJob.perform_later(self) }
 
@@ -34,8 +34,8 @@ class Message < ApplicationRecord
   def notify_recipient?
     # if the chat_room hasn't been updated in an hour, or if I send a message and it's the first message (of many messages) I've sent in the chat room in over an hour or if it's the first response in a chat_room, notify the recipient.
     if self.chat_room.updated_at < 1.hour.ago ||
-      self.chat_room.messages.where(sender_id: self.sender.id).size > 1 && self.chat_room.messages.where(sender_id: self.sender.id)[-2].created_at < 1.hour.ago ||
-      self.chat_room.messages.where(sender_id: self.sender.id).size == 1 && self.chat_room.messages.size > 1
+    self.chat_room.messages.where(sender_id: self.sender.id).size > 1 && self.chat_room.messages.where(sender_id: self.sender.id)[-2].created_at < 1.hour.ago ||
+    self.chat_room.messages.where(sender_id: self.sender.id).size == 1 && self.chat_room.messages.size > 1
       UserMailer.delay(run_at: 10.seconds.from_now).new_message(self)
     end
   end

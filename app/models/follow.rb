@@ -14,6 +14,7 @@ class Follow < ApplicationRecord
   validates_presence_of :follower, :followable
   # wasn't able to add this validation to database, exceeds 62 character limit
   validates_uniqueness_of :follower_id, scope: [:followable_type, :followable_id]
+
   before_save :ensure_post_owner_not_follower
 
   belongs_to :followable, polymorphic: true, touch: true

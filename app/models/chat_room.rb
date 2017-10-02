@@ -37,8 +37,8 @@ class ChatRoom < ApplicationRecord
   end
 
   def person_of_interest_or_chat_bot_or_tutor_and_not_premium_or_admin?
-    initiator = User.find(self.initiator_id)
-    recipient = User.find(self.recipient_id)
+    initiator = self.initiator
+    recipient = self.recipient
     if (recipient.person_of_interest? || recipient.chat_bot? || recipient.tutor?) && !initiator.premium_or_admin?
       errors.add(:recipient_id, "is a Person of Interest, Chatbot, or Tutor, <a href=\"/about#premium\">Premium</a> membership required for Initiator")
     end
