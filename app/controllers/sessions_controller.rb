@@ -35,6 +35,7 @@ class SessionsController < ApplicationController
       flash[:error] = "Linkedin account already registered with smartXchange, please login with your Linkedin"
       redirect_to login_path and return
     else
+      # refactor: here and in update_with_omniauth! call we can do an if @user and output errors if there was a problem creating user, but have to be wary of save_valid_attributes call
       @user = User.create_with_omniauth(auth_hash)
       flash[:success] = "Please check your email (registered with Linkedin) for account activation. If you do not see the email please check your spam and promotion mailboxes."
       UserMailer.account_activation(@user).deliver_later

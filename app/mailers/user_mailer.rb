@@ -33,16 +33,16 @@ class UserMailer < ApplicationMailer
   def weekly_notifications(user, notifications)
     @user = user
     @notifications = notifications
-    add_campaign_to_login(notifications_campaign)
-    add_campaign_to_footer(notifications_campaign)
+    add_campaign_to_login(campaign("notifications"))
+    add_campaign_to_footer(campaign("notifications"))
     set_name_and_title_and_unsubscribe_and_header(@user, "smartXchange Notifications")
   end
 
   def monthly_update(user, notifications)
     @user = user
     @notifications = notifications
-    add_campaign_to_login(notifications_campaign)
-    add_campaign_to_footer(notifications_campaign)
+    add_campaign_to_login(campaign("notifications"))
+    add_campaign_to_footer(campaign("notifications"))
     set_name_and_title_and_unsubscribe_and_header(@user, "smartXchange enters its 12th and final month!")
   end
 
@@ -51,13 +51,13 @@ class UserMailer < ApplicationMailer
     @user = user
     if match_or_exchange == "match"
       @matches = @user.sort_method[0..24].shuffle[0..5]
-      campaign = matches_campaign
+      campaign = campaign("matches")
       @notify_message = "Are you interested in practicing #{@user.language} with any of the following users?"
       @login_message = "to find more people practicing #{@user.language}."
       title = "Have you messaged these language practice peers?"
     elsif match_or_exchange == "exchange"
       @matches = @user.sort_exchange[0..24].shuffle[0..5]
-      campaign = exchanges_campaign
+      campaign = campaign("exchanges")
       @notify_message = "Are you interested in exchanging your native #{user_convert_nationality_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
       @login_message = "to find more native #{@user.language} speakers practicing #{user_convert_nationality_to_language(@user.nationality)}."
       title = "Have you messaged these language exchange options?"
@@ -81,7 +81,7 @@ class UserMailer < ApplicationMailer
     # set as @user instead of @matched_user so don't have to change unsubscribe logic
     @user = matched_user
     # not using add_campaign since this is less lines of code, only need to add campaign to the view profile link
-    @url_interested_user = user_url(@interested_user) + matches_campaign
+    @url_interested_user = user_url(@interested_user) + campaign("matches")
     fetch_user_image(@interested_user)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@interested_user.name} wants to practice #{@interested_user.language}")
   end
@@ -89,24 +89,24 @@ class UserMailer < ApplicationMailer
   def unread_board(user, board)
     @user = user
     # for this and unread_jobs a check for unread posts has already been called before email is called so grab the last (ordered desc) post posted on the board
-    @board_url = board_url(board) + boards_campaign
-    add_campaign_to_footer(boards_campaign)
+    @board_url = board_url(board) + campaign("boards")
+    add_campaign_to_footer(campaign("boards"))
     set_name_and_title_and_unsubscribe_and_header(@user, "Check out the latest posts on the #{@user.language} board!")
   end
 
   def unread_jobs(user)
     @user = user
     board = Board.find(2)
-    @board_url = board_url(board) + jobs_campaign
-    add_campaign_to_footer(jobs_campaign)
+    @board_url = board_url(board) + campaign("jobs")
+    add_campaign_to_footer(campaign("jobs"))
     set_name_and_title_and_unsubscribe_and_header(@user, "View the latest jobs on the Smart Jobs board!")
   end
 
   def unread_materials(user)
     @user = user
     @material = Material.last
-    @material_url = user_url(@material.owner) + materials_campaign + "#tutor-materials"
-    add_campaign_to_footer(materials_campaign)
+    @material_url = user_url(@material.owner) + campaign("materials") + "#tutor-materials"
+    add_campaign_to_footer(campaign("materials"))
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@material.owner.name} has uploaded new material")
   end
 
@@ -114,7 +114,7 @@ class UserMailer < ApplicationMailer
     @user = chat_room.recipient
     @initiator = chat_room.initiator
     # not get @chat_room since for now chat_room is always initiated in initiator's language (to practice)
-    @chat_room_url = conversation_url(chat_room) + conversations_campaign
+    @chat_room_url = conversation_url(chat_room) + campaign("conversations")
     fetch_user_image(@initiator)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@initiator.name} has started #{a_or_an(@initiator.language)} #{@initiator.language} conversation with you")
   end
@@ -123,7 +123,7 @@ class UserMailer < ApplicationMailer
     @user = chat_room_interlocutor(message.chat_room, message.sender)
     @sender = message.sender
     @chat_room = message.chat_room
-    @chat_room_url = conversation_url(message.chat_room) + conversations_campaign
+    @chat_room_url = conversation_url(message.chat_room) + campaign("conversations")
     fetch_user_image(@sender)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
   end
@@ -133,7 +133,7 @@ class UserMailer < ApplicationMailer
     @notifier = notification.notifier
     @post = notification.notifiable
     @board = @post.board
-    @board_url = board_url(@board) + boards_campaign
+    @board_url = board_url(@board) + campaign("boards")
     fetch_user_image(@notifier)
     set_name_and_title_and_unsubscribe_and_header(@user, "You have a new post notification on the #{@board.title} board!")
   end
@@ -144,7 +144,7 @@ class UserMailer < ApplicationMailer
     @chat_room = chat_room
     @peer_review_hash = Rails.application.message_verifier(:peer_review).generate(@other_user.id)
     # have to modify reviews campaign so it's tagged onto end of list of params chat_room_id and id
-    @peer_review_url = new_user_review_url(@user, chat_room_id: @chat_room.id, id: @peer_review_hash) + "&" + reviews_campaign[1..-1]
+    @peer_review_url = new_user_review_url(@user, chat_room_id: @chat_room.id, id: @peer_review_hash) + "&" + campaign("reviews")[1..-1]
     fetch_user_image(@other_user)
     set_name_and_title_and_unsubscribe_and_header(@user, "Please review #{@other_user.name} in your #{@chat_room.title} conversation together")
   end
@@ -153,7 +153,7 @@ class UserMailer < ApplicationMailer
     @user = user
     @other_user = other_user
     @review = review
-    @peer_review_url = user_url(@user) + reviews_campaign + "#review-#{@review.id}"
+    @peer_review_url = user_url(@user) + campaign("reviews") + "#review-#{@review.id}"
     fetch_user_image(@other_user)
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@other_user.name} has left you a review")
   end
@@ -206,36 +206,10 @@ class UserMailer < ApplicationMailer
   end
 
   # campaigns built with google url builder
-  def notifications_campaign
-    "?utm_source=notifications_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_notifications"
-  end
-
-  def matches_campaign
-    "?utm_source=matches_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_matches"
-  end
-
-  def exchanges_campaign
-    "?utm_source=exchanges_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_exchanges"
-  end
-
-  def conversations_campaign
-    "?utm_source=conversation_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_conversations"
-  end
-
-  def boards_campaign
-    "?utm_source=board_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_boards"
-  end
-
-  def jobs_campaign
-    "?utm_source=job_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_jobs"
-  end
-
-  def reviews_campaign
-    "?utm_source=review_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_reviews"
-  end
-
-  def materials_campaign
-    "?utm_source=material_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_materials"
+  # assuming campaign comes in as plural
+  def campaign(name)
+    # don't singularize notifications, matches, or exchanges because these are emails that can send multiple notifications, matches, or exchanges
+    "?utm_source=#{name.in?(['notifications','matches','exchanges']) ? name : name.singularize}_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_#{name}"
   end
 
   def prevent_delivery_to_unsubscribed
