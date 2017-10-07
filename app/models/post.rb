@@ -36,7 +36,7 @@ class Post < ApplicationRecord
 
   after_validation :geocode, if: :location_present_and_changed?
   after_validation :remove_location, if: :location_not_present_and_changed?
-  after_validation :error_unless_latitude_changed, if: :location_present_and_changed?
+  after_validation :error_and_remove_location, if: :location_present_and_changed_and_latitude_unchanged?
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true

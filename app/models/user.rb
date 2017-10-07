@@ -68,12 +68,14 @@ class User < ApplicationRecord
   validates :interests, length: {maximum: 10, message: "Only 10 interests allowed"}
   # Add Linkedin to message since only using Linkedin as partner right now
   validates :uid, uniqueness: { scope: :provider, allow_nil: true, message: "Linkedin account already registered with another user" }
+  # for now only have Linkedin, in the future may add Github, Facebook, etc.
+  validates_inclusion_of :provider, in: ["linkedin"], allow_nil: true
   validates :image, file_size: { less_than_or_equal_to: 5.megabytes }
   validates :terms, acceptance: true
 
   after_validation :geocode, if: :location_present_and_changed?
   after_validation :remove_location, if: :location_not_present_and_changed?
-  after_validation :error_unless_latitude_changed, if: :location_present_and_changed?
+  after_validation :error_and_remove_location, if: :location_present_and_changed_and_latitude_unchanged?
 
   before_create :generate_activation_token
   after_create :add_email_subscription
@@ -130,9 +132,9 @@ class User < ApplicationRecord
   end
 
   def self.create_with_omniauth(auth)
-    # ensures email uniqueness validation through if statement in previous method
+    # ensures email uniqueness validation through if statement in previous previous method
     # will set password as uid, hack job need to refactor
-    # if user doesn't have a Linkedin image, name defaults to 'New User' if there is a uniqueness error
+    # maybe refactor, hack fix for if user doesn't have a Linkedin image, name defaults to 'New User' if there is a uniqueness error
     image = auth['extra']['raw_info']['pictureUrls'].values.second ? auth['extra']['raw_info']['pictureUrls'].values.second[0] : nil
     # No !'s here, add_, and update_ with_omniauth because want the user to be saved even if there are validation errors, which is why we have save_valid_attributes!
     # Default birthdate to 25 years ago
@@ -286,8 +288,11 @@ class User < ApplicationRecord
 
   # have to make unprotected so works when creating a user in User.create_with_omniauth
   def save_valid_attributes!
+    # probably refactor, hack to get user to save to database and save errors as notices
+    notices = errors.full_messages.to_sentence
     restore_attributes(errors.keys) unless valid?
     save
+    notices
   end
 
   protected

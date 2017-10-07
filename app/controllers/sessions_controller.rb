@@ -35,7 +35,7 @@ class SessionsController < ApplicationController
       flash[:error] = "Linkedin account already registered with smartXchange, please login with your Linkedin"
       redirect_to login_path and return
     else
-      # refactor: here and in update_with_omniauth! call we can do an if @user and output errors if there was a problem creating user, but have to be wary of save_valid_attributes call
+      # refactor: here, update_with_omniauth!, and add_with_omniauth! call we can do an if @user and output errors if there was a problem creating user, but have to be wary of save_valid_attributes call
       @user = User.create_with_omniauth(auth_hash)
       flash[:success] = "Please check your email (registered with Linkedin) for account activation. If you do not see the email please check your spam and promotion mailboxes."
       UserMailer.account_activation(@user).deliver_later
@@ -58,20 +58,22 @@ class SessionsController < ApplicationController
   end
 
   def add_or_update_linkedin!
-    if @user && @user == current_user #update
-      current_user.update_with_omniauth!(auth_hash)
-      flash[:success] = "Linkedin information updated"
-    elsif @user && @user != current_user #adding Linkedin but someone else is associated with this Linkedin
+    if @user && @user == current_user # update
+      # refactor, hack job hare and in add_with_omniauth! call that allows us to save valid attributes to database and display any errors with uploading
+      notices = current_user.update_with_omniauth!(auth_hash)
+      notices.empty? ? flash[:success] = "Linkedin information updated" : flash[:notice] = "Linkedin information updated, but #{notices}"
+    elsif @user && @user != current_user # adding Linkedin but someone else is associated with this Linkedin
       flash[:error] = "Linkedin account already registered with another account"
-    else #add
-      current_user.add_with_omniauth!(auth_hash)
-      flash[:success] = "Linkedin added to profile"
+    else # add
+      notices = current_user.add_with_omniauth!(auth_hash)
+      notices.empty? ? flash[:success] = "Linkedin added to profile" : flash[:notice] = "Linkedin information added, but #{notices}"
     end
     redirect_to user_path(current_user) and return
   end
 
   def omniauth_callback
     @user = User.where(:provider => auth_hash['provider'], :uid => auth_hash['uid'].to_s).first
+    # maybe refactor and make this a validation, like a uniqueness on email, uid, and provider
     if User.where(:email => auth_hash['info']['email'].downcase).first && !@user && (request.referer == login_url || request.referer == signup_url)
       flash[:error] = "User with this email already exists, please log in and add Linkedin to your profile"
       redirect_to login_path and return
