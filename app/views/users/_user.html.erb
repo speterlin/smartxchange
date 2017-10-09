@@ -15,7 +15,7 @@
             <i><%= user.age %></i>
           </div>
           <div class="language">
-            <h4><%= user.language %>, <span style="font-weight:normal"><%= user_convert_language_level(user.language_level) %></span></h4>
+            <h4><%= user.language %>, <span style="font-weight:normal"><%= user_convert_to_presented_language_level(user.language_level) %></span></h4>
           </div>
           <div class="title">
             <%= truncate(user.title, :length => 65) %>

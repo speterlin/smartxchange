@@ -58,8 +58,8 @@ class UserMailer < ApplicationMailer
     elsif match_or_exchange == "exchange"
       @matches = @user.sort_exchange[0..24].shuffle[0..5]
       campaign = campaign("exchanges")
-      @notify_message = "Are you interested in exchanging your native #{user_convert_nationality_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
-      @login_message = "to find more native #{@user.language} speakers practicing #{user_convert_nationality_to_language(@user.nationality)}."
+      @notify_message = "Are you interested in exchanging your native #{user_convert_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
+      @login_message = "to find more native #{@user.language} speakers practicing #{user_convert_to_language(@user.nationality)}."
       title = "Have you messaged these language exchange options?"
     end
     @matches_token = @user.create_matches_token!

@@ -35,7 +35,7 @@
             <label for="user-language-level">Language level</label><br>
               <select id="user-language-level" name="user[language_level]">
                 <% User::LANGUAGE_LEVELS.each do |language_level| %>
-                  <option value="<%= language_level %>" <%= 'selected' if @user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
+                  <option value="<%= language_level %>" <%= 'selected' if @user.language_level==language_level %> ><%= user_convert_to_presented_language_level(language_level) %></option>
                 <% end %>
                </select><br>
             <label for="user-nationality">Native country</label><br>
@@ -57,7 +57,7 @@
         <h1><%= @user.name %></h1>
         <h4><span style="font-weight:normal"><%= @user.age %></span></h4>
         <h4><i><%= auto_link(@user.title, html: { target: '_blank' }) %></i></h4>
-        <h4><b><%= "#{@user.language}, "%></b><span style="font-weight:normal"><%= user_convert_language_level(@user.language_level) %></span></h4>
+        <h4><b><%= "#{@user.language}, "%></b><span style="font-weight:normal"><%= user_convert_to_presented_language_level(@user.language_level) %></span></h4>
         <h4><%= @user.nationality %> <span style="font-weight:normal">National</span></h4>
         <% if @user.person_of_interest? %> <h4>Person of Interest</h4> <% end %>
         <% if @user.tutor?  %> <h4>Tutor</h4> <% end %>
@@ -115,12 +115,12 @@
           <input id="material-attachment" type="file" name="material[attachment]" style="display: inline; width: 200px;">
           <select id="material-language" name="material[language]" style="display: inline;">
             <% User::LANGUAGES.each do |language| %>
-              <option value="<%= language %>" <%= 'selected' if user_convert_nationality_to_language(@user.nationality)==language %> ><%= language %></option>
+              <option value="<%= language %>" <%= 'selected' if user_convert_to_language(@user.nationality)==language %> ><%= language %></option>
             <% end %>
           </select>
           <select id="material-language-level" name="material[language_level]">
             <% User::LANGUAGE_LEVELS.each do |language_level| %>
-              <option value="<%= language_level %>" ><%= user_convert_language_level(language_level) %></option>
+              <option value="<%= language_level %>" ><%= user_convert_to_presented_language_level(language_level) %></option>
             <% end %>
            </select>
           <input class="btn btn-primary" type="submit" value="Upload">
@@ -143,7 +143,7 @@
               <div class="user-interests-checkbox">
                 <!-- maybe refactor to_s and to_i below with inserting interests into user interest array, have to deal with existing user values -->
                 <input type="checkbox" id="user-interests-<%= sub_num %>" name="user[interests][]" value="<%= sub_num %>" <%= 'checked' if @user.interests.include?(sub_num.to_s) %> >
-                <label for="user-interests-<%= sub_num %>"><%= user_convert_interests(sub_num) %></label><br>
+                <label for="user-interests-<%= sub_num %>"><%= user_convert_to_interest(sub_num) %></label><br>
               </div>
             <% end %>
           </div>
@@ -153,8 +153,8 @@
       </form>
     <% elsif @user.interests.any? %>
       <ul>
-        <% @user.interests.each do |interest| %>
-          <li><%= user_convert_interests(interest.to_i) %></li>
+        <% @user.interests.each do |interest_num| %>
+          <li><%= user_convert_to_interest(interest_num.to_i) %></li>
         <% end %>
       </ul>
     <% else %>
@@ -167,7 +167,7 @@
     <% if @user.reviews.any? %>
       <ul>
         <% @user.reviews.each do |review| %>
-          <li id="review-<%= review.id %>"><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %></li>
+          <li id="review-<%= review.id %>"><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_to_presented_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %></li>
         <% end %>
       </ul>
     <% else %>
@@ -179,7 +179,7 @@
     <!-- refactor for when there are chatbots -->
     <% if @user.id == 1 %>
       <br><h4>Contributed Chatbots</h4>
-      <ul><li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span style="text-transform:uppercase;"><%= User.find(6).language %> <%= user_convert_language_level(User.find(6).language_level) %></span></i> Chatbot</li></ul>
+      <ul><li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span style="text-transform:uppercase;"><%= User.find(6).language %> <%= user_convert_to_presented_language_level(User.find(6).language_level) %></span></i> Chatbot</li></ul>
     <% end %>
   </div>
 </div>

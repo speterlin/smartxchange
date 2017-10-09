@@ -30,35 +30,56 @@ module UsersHelper
     false
   end
 
-  def user_convert_language_level(rating)
-    if rating == 1
+  def user_convert_to_presented_language_level(language_level)
+    # in case wrongly passed a language_level outside of User::LANGUAGE_LEVELS
+    return false unless language_level.in?(User::LANGUAGE_LEVELS)
+    if language_level == 1
       return "A1 - beginner"
-    elsif rating == 2
+    elsif language_level == 2
       return "A2 - elementary"
-    elsif rating == 3
+    elsif language_level == 3
       return "B1 - intermediate"
-    elsif rating == 4
+    elsif language_level == 4
       return "B2 - upper intermediate"
-    elsif rating == 5
+    elsif language_level == 5
       return "C1 - advanced"
-    elsif rating == 6
+    elsif language_level == 6
       return "C2 - master"
     end
   end
 
-  def user_convert_language_level_to_rating(level)
-    # assuming level always comes in as lower case
-    if level == "a1"
+  def user_convert_to_scripted_language_level(language_level)
+    # in case wrongly passed a language_level outside of User::LANGUAGE_LEVELS
+    return false unless language_level.in?(User::LANGUAGE_LEVELS)
+    if language_level == 1
+      return "a1"
+    elsif language_level == 2
+      return "a2"
+    elsif language_level == 3
+      return "b1"
+    elsif language_level == 4
+      return "b2"
+    elsif language_level == 5
+      return "c1"
+    elsif language_level == 6
+      return "c2"
+    end
+  end
+
+  def user_convert_to_language_level(scripted_language_level)
+    # in case scripted level isn't downcased already (shouldn't be the case)
+    scripted_language_level = scripted_language_level.downcase
+    if scripted_language_level == "a1"
       return 1
-    elsif level == "a2"
+    elsif scripted_language_level == "a2"
       return 2
-    elsif level == "b1"
+    elsif scripted_language_level == "b1"
       return 3
-    elsif level == "b2"
+    elsif scripted_language_level == "b2"
       return 4
-    elsif level == "c1"
+    elsif scripted_language_level == "c1"
       return 5
-    elsif level == "c2"
+    elsif scripted_language_level == "c2"
       return 6
     end
   end
@@ -67,17 +88,25 @@ module UsersHelper
     image_tag("country-flags/#{nationality}-flag-circular.png", alt: "#{nationality}")
   end
 
-  def user_convert_nationality_to_language(nationality)
-    language = nationality
-    language = 'English' if user_convert_language_to_nationalities('English').include?(nationality)
-    language = 'Spanish' if user_convert_language_to_nationalities('Spanish').include?(nationality)
-    language = 'German' if user_convert_language_to_nationalities('German').include?(nationality)
-    language = 'Mandarin Chinese' if user_convert_language_to_nationalities('Mandarin Chinese').include?(nationality)
-    language
+  def user_convert_to_language(nationality)
+    # here and in user_convert_to_nationalities, check simple nationalities first
+    if nationality.in?(['Italian', 'French'])
+      return nationality
+    elsif user_convert_to_nationalities('English').include?(nationality)
+      return 'English'
+    elsif user_convert_to_nationalities('Spanish').include?(nationality)
+      return 'Spanish'
+    elsif user_convert_to_nationalities('German').include?(nationality)
+      return 'German'
+    elsif user_convert_to_nationalities('Mandarin Chinese').include?(nationality)
+      return 'Mandarin Chinese'
+    end
   end
 
-  def user_convert_language_to_nationalities(language)
-    if language == 'English'
+  def user_convert_to_nationalities(language)
+    if language.in?(['Italian', 'French'])
+      return [language]
+    elsif language == 'English'
       return ['Australian', 'British', 'Canadian', 'Irish', 'Jamaican', 'New Zealander', 'South African', 'USA']
     elsif language == 'Spanish'
       return ['Argentinian', 'Bolivian', 'Chilean', 'Colombian', 'Costarican', 'Ecuadorian', 'El Salvadorian', 'Guatemalan', 'Honduran', 'Mexican', 'Nicaraguan', 'Panamanian', 'Peruvian', 'Spanish', 'Uruguayan', 'Venezuelan']
@@ -85,8 +114,6 @@ module UsersHelper
       return ['Austrian', 'German']
     elsif language == 'Mandarin Chinese'
       return ['Chinese']
-    else
-      return [language]
     end
   end
 
@@ -188,7 +215,7 @@ module UsersHelper
     ]
   end
 
-  def user_convert_interests(number)
+  def user_convert_to_interest(number)
     if number == 1
       return "Sales / Business Development"
     elsif number == 2
@@ -250,6 +277,14 @@ module UsersHelper
     elsif number == 30
       return "Hiking"
     end
+  end
+
+  def user_convert_to_interests(interest_nums)
+    user_interests = []
+    interest_nums.each do |interest_num|
+      user_interests << user_convert_to_interest(interest_num.to_i)
+    end
+    user_interests
   end
 
   # may refactor, this logic is something that should be in application helper, but don't want to have to include ApplicationHelper in UsersHelper and in scheduler.rake

@@ -32,51 +32,10 @@ class UsersController < ApplicationController
 
   def index
     if params[:search]
-      search = params[:search].downcase
-      @users = User.includes(:linkedin)
-      if search.scan(/tutor/).any?
-        search.slice!(search.scan(/tutor|teacher/)[0])
-        search = search.strip
-        @users = @users.where(tutor: true)
-      end
-      # maybe refactor, quite long, seperating nationality and/or language and language level from rest of search string, stripping white space, and performing search only on the remaining values for generic fields
-      # only looking at these 7 nationalities / languages, other nationalities don't have much conflict or not many users in other nationalities
-      if search.scan(/spanish|italian|english|british|usa|french|german/).any?
-        if search.scan(/[a-c][1-2]/).any?
-          levels = search.scan(/[a-c][1-2]/)
-          # removing levels from search string
-          ratings = levels.map {|level| user_convert_language_level_to_rating(level)}
-          levels.each {|level| search.slice!(level) }
-          search = search.strip
-        end
-        # if there are two language / nationalities entered first one is nationality, second is language. If there is level also search for level
-        if search.scan(/spanish|italian|english|british|usa|french|german/).count > 1
-          nationality = search.scan(/spanish|italian|british|usa|french|german/)[0]
-          language = search.scan(/spanish|italian|english|british|usa|french|german/)[1]
-          search.slice!(nationality)
-          search.slice!(language)
-          search = search.strip
-          if ratings
-            # need references to make it work, maybe refactor later
-            @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(language) LIKE :language AND language_level IN (:ratings) AND lower(nationality) LIKE :nationality)', search: "%#{search}%", language: language, ratings: ratings, nationality: nationality).references(:linkedin).paginate(page: params[:page], per_page: 12)
-          else
-            @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(language) LIKE :language AND lower(nationality) LIKE :nationality)', search: "%#{search}%", language: language, nationality: nationality).references(:linkedin).paginate(page: params[:page], per_page: 12)
-          end
-        # if there is one language or nationality entered then set language_or_nationality. If level entered then language_or_nationality becomes language, else it becomes nationality
-        else
-          # right now error if search british and language_level or english without language_level
-          language_or_nationality = /spanish|italian|english|british|usa|french|german/.match(search)[0]
-          search.slice!(language_or_nationality)
-          search = search.strip
-          if ratings
-            @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(language) LIKE :language AND language_level IN (:ratings))', search: "%#{search}%", language: language_or_nationality, ratings: ratings).references(:linkedin).paginate(page: params[:page], per_page: 12)
-          else
-            @users = @users.where('(lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search) AND (lower(nationality) LIKE :nationality)', search: "%#{search}%", nationality: language_or_nationality).references(:linkedin).paginate(page: params[:page], per_page: 12)
-          end
-        end
-      else
-        @users = @users.where('lower(name) LIKE :search OR cast(age as text) LIKE :search OR lower(title) LIKE :search OR lower(location) LIKE :search OR lower(linkedins.industry) LIKE :search OR lower(linkedins.summary) LIKE :search OR lower(nationality) LIKE :search', search: "%#{search}%").references(:linkedin).paginate(page: params[:page], per_page: 12)
-      end
+      # maybe refactor, at the moment does not allow search across multiple language levels, i.e. 'Spanish b1 b2', could do this with 'or' operator
+      # can refactor, add boosts, conversions (with searchjoy), autocomplete, custom search, highlight, boost_by_distance or within a geoshape, performance (persistent http connections, ...), routing - all on https://github.com/ankane/searchkick
+      # performs misspelling search if less than 2 results without misspellings, can do misspellings after a certain number of characters (like prefix length), can add exclude_queries
+      @users = User.search(params[:search], misspellings: {below: 2, prefix_length: 2}).results.paginate(page: params[:page], per_page: 12)
     else
       @users = current_user.sort_method.paginate(page: params[:page], per_page: 12)
     end

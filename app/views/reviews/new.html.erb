@@ -21,7 +21,7 @@
     How would you rate <%= @other_user.name %>'s language level in this language?
     <select name="review[language_level]">
       <% User::LANGUAGE_LEVELS.each do |language_level| %>
-        <option value="<%= language_level %>" <%= 'selected' if @other_user.language_level==language_level %> ><%= user_convert_language_level(language_level) %></option>
+        <option value="<%= language_level %>" <%= 'selected' if @other_user.language_level==language_level %> ><%= user_convert_to_presented_language_level(language_level) %></option>
       <% end %>
    </select>
   </p>

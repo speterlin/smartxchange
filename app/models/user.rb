@@ -34,10 +34,15 @@
 #
 
 class User < ApplicationRecord
+  # maybe refactor and take away (searchkick callbacks: :async)
+  searchkick callbacks: :async
+  # maybe refactor and add filter to only search activated accounts (precautionary)
+  scope :search_import, -> { includes(:linkedin, :materials) }
   include Locatable
   include UsersHelper
-  # need to updated _translate.html.erb any time there is a change in language offerings
+  # need to update _translate.html.erb, users_helper.rb#user_convert_to_language(nationality), #user_convert_to_nationalities(language) any time there is a change
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese"]
+  # need to update users_helper.rb#user_convert_to_scripted_language_level(language_level), #user_convert_to_language_level(scripted_language_level), #user_convert_to_presented_language_level(language_level) any time there is a change
   LANGUAGE_LEVELS = (1..6).to_a
 
   attr_reader :password, :terms
@@ -49,8 +54,9 @@ class User < ApplicationRecord
   after_initialize :ensure_session_token
 
   # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
-  before_validation :downcase_email
-  before_validation :titleize_name
+  # maybe refactor, need if present since these are before_validation, really only a problem when creating an invalid user object from the command line
+  before_validation :downcase_email, if: 'email.present?'
+  before_validation :titleize_name, if: 'name.present?'
   before_validation :calculate_age, if: 'birthdate.present?' # calculating age everytime user is updated since age should be updated everytime user performs action on platform
 
   # maybe refactor and take out :session_token so only fields that user can input
@@ -234,8 +240,8 @@ class User < ApplicationRecord
   end
 
   def sort_exchange
-    language = user_convert_nationality_to_language(self.nationality)
-    nationalities = user_convert_language_to_nationalities(self.language)
+    language = user_convert_to_language(self.nationality)
+    nationalities = user_convert_to_nationalities(self.language)
     User.where("nationality IN (:nationalities)", nationalities: nationalities).where(language: language).where.not(id: self.id).includes(:linkedin).sort {|u1, u2| u2.sort_value(self) <=> u1.sort_value(self) }
   end
 
@@ -293,6 +299,28 @@ class User < ApplicationRecord
     restore_attributes(errors.keys) unless valid?
     save
     notices
+  end
+
+  def search_data
+    # ignoring case, refactor, maybe add more categories (like post) in this way: on_sale: sale_price.present?, reindex with rake searchkick:reindex:User
+    # only after_commit reindexing on material since every time user's linkedin is updated that user is also updated (add_with_omniauth!, update_with_omniauth!, ...)
+    {
+      name: name,
+      age: age.to_s,
+      language: language,
+      language_level: user_convert_to_scripted_language_level(language_level),
+      active: active? ? "active" : nil,
+      title: title,
+      location: location,
+      nationality: nationality,
+      person_of_interest: person_of_interest? ? "person of interest" : nil,
+      tutor: tutor? ? "tutor" : nil,
+      interests: interests.any? ? user_convert_to_interests(interests).to_sentence : nil,
+      chat_bot: chat_bot? ? "chat bot" : nil,
+      linkedin_industry: linkedin.present? ? linkedin.industry : nil,
+      linkedin_summary: linkedin.present? ? linkedin.summary : nil,
+      materials: materials.any? ? "materials" : nil
+    }
   end
 
   protected

@@ -79,6 +79,12 @@ gem 'sendgrid-ruby'
 # for finding images of links on boards pages
 gem 'opengraph_parser'
 
+# for searching users (and their linkedin, materials)
+gem 'searchkick'
+# for tracking searches
+# gem 'searchjoy'
+
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 
