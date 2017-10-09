@@ -40,8 +40,8 @@
                </select><br>
             <label for="user-nationality">Native country</label><br>
               <select id="user-nationality" name="user[nationality]">
-                <% user_nationalities.each do |nationality| %>
-                  <option value="<%= nationality[0] %>" <%= "selected" if @user.nationality == nationality[0] %> ><%= nationality[1] %></option>
+                <% User::NATIONALITIES.each do |country, nationality| %>
+                  <option value="<%= nationality %>" <%= "selected" if @user.nationality == nationality %> ><%= country %></option>
                 <% end %>
               </select><br>
             <label for="user-location">Location (City, Country / Landmark)</label><br>

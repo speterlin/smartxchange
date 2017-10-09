@@ -44,6 +44,100 @@ class User < ApplicationRecord
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese"]
   # need to update users_helper.rb#user_convert_to_scripted_language_level(language_level), #user_convert_to_language_level(scripted_language_level), #user_convert_to_presented_language_level(language_level) any time there is a change
   LANGUAGE_LEVELS = (1..6).to_a
+  # maybe refactor, maybe need to change some ish to ian for language vs. nationality mix up, add other country names like 'Holland' to keys
+  NATIONALITIES = {
+    "Algeria" => "Algerian",
+    "Armenia" => "Armenian",
+    "Argentina" => "Argentinian",
+    "Australia" => "Australian",
+    "Austria" => "Austrian",
+    "Azerbaijan" => "Azerbaijani",
+    "Bangladesh" => "Bengali",
+    "Belgium" => "Belgian",
+    "Bolivia" => "Bolivian",
+    "Brazil" => "Brazilian",
+    "Bulgaria" => "Bulgarian",
+    "Cambodia" => "Cambodian",
+    "Canada" => "Canadian",
+    "Chile" => "Chilean",
+    "China" => "Chinese",
+    "Colombia" => "Colombian",
+    "Costa Rica" => "Costarican",
+    "Croatia" => "Croatian",
+    "Cyprus" => "Cypriot",
+    "Czech Republic" => "Czech",
+    "Czechoslovakia" => "Czechoslovakian",
+    "Denmark" => "Danish",
+    "Ecuador" => "Ecuadorian",
+    "Egypt" => "Egyptian",
+    "El Salvador" => "El Salvadorian",
+    "Estonia" => "Estonian",
+    "Ethiopia" => "Ethiopian",
+    "Finland" => "Finnish",
+    "France" => "French",
+    "Georgia" => "Georgian",
+    "Germany" => "German",
+    "Guatemala" => "Guatemalan",
+    "Greece" => "Greek",
+    "Honduras" => "Honduran",
+    "Hungary" => "Hungarian",
+    "Iceland" => "Icelandic",
+    "India" => "Indian",
+    "Indonesia" => "Indonesian",
+    "Iran" => "Iranian",
+    "Iraq" => "Iraqi",
+    "Ireland" => "Irish",
+    "Israel" => "Israeli",
+    "Italy" => "Italian",
+    "Japan" => "Japanese",
+    "Jamaica" => "Jamaican",
+    "Jordan" => "Jordanian",
+    "Kazakhstan" => "Kazakhstani",
+    "Kenya" => "Kenyan",
+    "Latvia" => "Latvian",
+    "Lebanon" => "Lebanese",
+    "Libya" => "Libyan",
+    "Lithuania" => "Lithuanian",
+    "Luxembourg" => "Luxembourgish",
+    "Malaysia" => "Malaysian",
+    "Malta" => "Maltan",
+    "Mexico" => "Mexican",
+    "Morocco" => "Moroccan",
+    "Netherlands" => "Dutch",
+    "New Zealand" => "New Zealander",
+    "Nicaragua" => "Nicaraguan",
+    "Nigeria" => "Nigerian",
+    "Norway" => "Norwegian",
+    "Oman" => "Omanian",
+    "Panama" => "Panamanian",
+    "Paraguay" => "Paraguayan",
+    "Peru" => "Peruvian",
+    "Philippines" => "Philippino",
+    "Poland" => "Polish",
+    "Portugal" => "Portuguese",
+    "Romania" => "Romanian",
+    "Russia" => "Russian",
+    "Qatar" => "Qatari",
+    "Saudi Arabia" => "Saudi Arabian",
+    "Singapore" => "Singaporean",
+    "Serbia" => "Serbian",
+    "Slovakia" => "Slovakian",
+    "Slovenia" => "Slovenian",
+    "South Africa" => "South African",
+    "South Korea" => "South Korean",
+    "Spain" => "Spanish",
+    "Sweden" => "Swedish",
+    "Syria" => "Syrian",
+    "Thailand" => "Thai",
+    "Turkey" => "Turkish",
+    "Ukraine" => "Ukrainian",
+    "United Arab Emirates" => "Emirati",
+    "United Kingdom" => "British",
+    "Uruguay" => "Uruguayan",
+    "U.S.A" => "American",
+    "Venezuela" => "Venezuelan",
+    "Vietnam" => "Vietnamese"
+  }
 
   attr_reader :password, :terms
 
@@ -63,20 +157,22 @@ class User < ApplicationRecord
   validates_presence_of :email, :name, :age, :language, :language_level, :password_digest, :session_token, :title, :nationality
   validates_presence_of :birthdate, on: :create
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
-  validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
-  validates :title, length: {minimum: 5, maximum: 255}
   validates :name, uniqueness: true, length: {minimum: 2, maximum: 255}, format: {:with => /\A[^.]*\Z/i, message: "No period allowed"}
-  validates :age, numericality: { only_integer: true, greater_than_or_equal_to: 18 }
+  validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
+  validates :age, numericality: { only_integer: true, greater_than_or_equal_to: 18, less_than_or_equal_to: 120 }
   validates_inclusion_of :language, in: LANGUAGES
   validates_inclusion_of :language_level, in: LANGUAGE_LEVELS
-  # to prevent nil values in boolean field, according to stackoverflow
-  validates :person_of_interest, :tutor, :inclusion => {:in => [true, false]}
-  validates :interests, length: {maximum: 10, message: "Only 10 interests allowed"}
-  # Add Linkedin to message since only using Linkedin as partner right now
-  validates :uid, uniqueness: { scope: :provider, allow_nil: true, message: "Linkedin account already registered with another user" }
+  validates :image, file_size: { less_than_or_equal_to: 5.megabytes }
+  validates :title, length: {minimum: 5, maximum: 255}
   # for now only have Linkedin, in the future may add Github, Facebook, etc.
   validates_inclusion_of :provider, in: ["linkedin"], allow_nil: true
-  validates :image, file_size: { less_than_or_equal_to: 5.megabytes }
+  # Add Linkedin to message since only using Linkedin as partner right now
+  validates :uid, uniqueness: { scope: :provider, allow_nil: true, message: "Linkedin account already registered with another user" }
+  validates_inclusion_of :nationality, in: NATIONALITIES.values
+  # maybe refactor and add latitude and longitude validations (that they're floats)
+  # to prevent nil values in boolean field, according to stackoverflow
+  validates_inclusion_of :active, :person_of_interest, :tutor, :activated, in: [true, false]
+  validates :interests, length: {maximum: 10, message: "Only 10 interests allowed"}
   validates :terms, acceptance: true
 
   after_validation :geocode, if: :location_present_and_changed?
@@ -307,19 +403,21 @@ class User < ApplicationRecord
     {
       name: name,
       age: age.to_s,
-      language: language,
-      language_level: user_convert_to_scripted_language_level(language_level),
+      language: "practicing " + language,
+      language_level: user_convert_to_presented_language_level(language_level),
       active: active? ? "active" : nil,
       title: title,
       location: location,
-      nationality: nationality,
+      nationality: nationality + " native",
       person_of_interest: person_of_interest? ? "person of interest" : nil,
       tutor: tutor? ? "tutor" : nil,
       interests: interests.any? ? user_convert_to_interests(interests).to_sentence : nil,
       chat_bot: chat_bot? ? "chat bot" : nil,
       linkedin_industry: linkedin.present? ? linkedin.industry : nil,
       linkedin_summary: linkedin.present? ? linkedin.summary : nil,
-      materials: materials.any? ? "materials" : nil
+      materials: materials.any? ? "materials" : nil,
+      material_language: materials.any? ? materials.map(&:language) : nil,
+      material_language_level: materials.any? ? materials.map {|material| user_convert_to_presented_language_level(material.language_level) } : nil
     }
   end
 

@@ -48,6 +48,7 @@ module UsersHelper
     end
   end
 
+  # unused at the moment, maybe refactor and take out
   def user_convert_to_scripted_language_level(language_level)
     # in case wrongly passed a language_level outside of User::LANGUAGE_LEVELS
     return false unless language_level.in?(User::LANGUAGE_LEVELS)
@@ -66,6 +67,7 @@ module UsersHelper
     end
   end
 
+  # also unused at the moment, maybe refactor and take out
   def user_convert_to_language_level(scripted_language_level)
     # in case scripted level isn't downcased already (shouldn't be the case)
     scripted_language_level = scripted_language_level.downcase
@@ -107,7 +109,7 @@ module UsersHelper
     if language.in?(['Italian', 'French'])
       return [language]
     elsif language == 'English'
-      return ['Australian', 'British', 'Canadian', 'Irish', 'Jamaican', 'New Zealander', 'South African', 'USA']
+      return ['Australian', 'British', 'Canadian', 'Irish', 'Jamaican', 'New Zealander', 'South African', 'American']
     elsif language == 'Spanish'
       return ['Argentinian', 'Bolivian', 'Chilean', 'Colombian', 'Costarican', 'Ecuadorian', 'El Salvadorian', 'Guatemalan', 'Honduran', 'Mexican', 'Nicaraguan', 'Panamanian', 'Peruvian', 'Spanish', 'Uruguayan', 'Venezuelan']
     elsif language == 'German'
@@ -115,104 +117,6 @@ module UsersHelper
     elsif language == 'Mandarin Chinese'
       return ['Chinese']
     end
-  end
-
-  def user_nationalities
-    # maybe refactor and make object, maybe need to change some ish to ian for language vs. nationality mix up
-    [
-      ["Algerian", "Algeria"],
-      ["Armenian", "Armenia"],
-      ["Argentinian", "Argentina"],
-      ["Australian", "Australia"],
-      ["Austrian", "Austria"],
-      ["Azerbaijani", "Azerbaijan"],
-      ["Bengali", "Bangladesh"],
-      ["Belgian", "Belgium"],
-      ["Bolivian", "Bolivia"],
-      ["Brazilian", "Brazil"],
-      ["Bulgarian", "Bulgaria"],
-      ["Cambodian", "Cambodia"],
-      ["Canadian", "Canada"],
-      ["Chilean", "Chile"],
-      ["Chinese", "China"],
-      ["Colombian", "Colombia"],
-      ["Costarican", "Costa Rica"],
-      ["Croatian", "Croatia"],
-      ["Cypriot", "Cyprus"],
-      ["Czech", "Czech Republic"],
-      ["Czechoslovakian", "Czechoslovakia"],
-      ["Danish", "Denmark"],
-      ["Dutch", "Netherlands"],
-      ["Ecuadorian", "Ecuador"],
-      ["Egyptian", "Egypt"],
-      ["El Salvadorian", "El Salvador"],
-      ["Estonian", "Estonia"],
-      ["Ethiopian", "Ethiopia"],
-      ["Filipino", "Philippines"],
-      ["Finnish", "Finland"],
-      ["French", "France"],
-      ["Georgian", "Georgia"],
-      ["German", "Germany"],
-      ["Guatemalan", "Guatemala"],
-      ["Greek", "Greece"],
-      ["Honduran", "Honduras"],
-      ["Hungarian", "Hungary"],
-      ["Icelandic", "Iceland"],
-      ["Indian", "India"],
-      ["Indonesian", "Indonesia"],
-      ["Iranian", "Iran"],
-      ["Iraqi", "Iraq"],
-      ["Irish", "Ireland"],
-      ["Israeli", "Israel"],
-      ["Italian", "Italy"],
-      ["Japanese", "Japan"],
-      ["Jamaican", "Jamaica"],
-      ["Jordanian", "Jordan"],
-      ["Kazakhstani", "Kazakhstan"],
-      ["Kenyan", "Kenya"],
-      ["Latvian", "Latvia"],
-      ["Lebanese", "Lebanon"],
-      ["Libyan", "Libya"],
-      ["Lithuanian", "Lithuania"],
-      ["Luxembourgish", "Luxembourg"],
-      ["Malaysian", "Malaysia"],
-      ["Maltan", "Malta"],
-      ["Mexican", "Mexico"],
-      ["Moroccan", "Morocco"],
-      ["New Zealander", "New Zealand"],
-      ["Nicaraguan", "Nicaragua"],
-      ["Nigerian", "Nigeria"],
-      ["Norwegian", "Norway"],
-      ["Omanian", "Oman"],
-      ["Panamanian", "Panama"],
-      ["Paraguayan", "Paraguay"],
-      ["Peruvian", "Peru"],
-      ["Philippino", "Philippines"],
-      ["Polish", "Poland"],
-      ["Portuguese", "Portugal"],
-      ["Romanian", "Romania"],
-      ["Russian", "Russia"],
-      ["Qatari", "Qatar"],
-      ["Saudi Arabian", "Saudi Arabia"],
-      ["Singaporean", "Singapore"],
-      ["Serbian", "Serbia"],
-      ["Slovakian", "Slovakia"],
-      ["Slovenian", "Slovenia"],
-      ["South African", "South Africa"],
-      ["South Korean", "South Korea"],
-      ["Spanish", "Spain"],
-      ["Swedish", "Sweden"],
-      ["Syrian", "Syria"],
-      ["Thai", "Thailand"],
-      ["Turkish", "Turkey"],
-      ["Ukrainian", "Ukraine"],
-      ["Emirati", "United Arab Emirates"],
-      ["British", "United Kingdom"],
-      ["Uruguayan", "Uruguay"],
-      ["USA", "U.S.A"],
-      ["Venezuelan", "Venezuela"],
-      ["Vietnamese", "Vietnam"]
-    ]
   end
 
   def user_convert_to_interest(number)

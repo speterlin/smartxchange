@@ -59,9 +59,9 @@
       </label><br>
       <label>Native country<br>
         <select name="user[nationality]">
-          <% user_nationalities.each do |nationality| %>
-          <!-- default to Spanish if not selected -->
-          <option value="<%= nationality[0] %>" <%= @user ?  @user.nationality == nationality[0] ? "selected" : "" : nationality[0] == "Spanish" ? "selected" : "" %> ><%= nationality[1] %></option>
+          <% User::NATIONALITIES.each do |country, nationality| %>
+            <!-- default to Spanish if not selected, keys are stored as symbols so need to convert to string, maybe refactor -->
+            <option value="<%= nationality %>" <%= @user ? (@user.nationality == nationality ? "selected" : "") : nationality == "Spanish" ? "selected" : "" %> ><%= country %></option>
           <% end %>
         </select>
       </label><br><br>
