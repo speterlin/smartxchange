@@ -34,7 +34,7 @@
 #
 
 class User < ApplicationRecord
-  # maybe refactor and take away (searchkick callbacks: :async)
+  # maybe refactor and take away (searchkick callbacks: :async), also anytime change user's active status searchkick is reindexed, which i don't think is necessary
   searchkick callbacks: :async
   # maybe refactor and add filter to only search activated accounts (precautionary)
   scope :search_import, -> { includes(:linkedin, :materials) }

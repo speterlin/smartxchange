@@ -24,6 +24,8 @@ Ruby on Rails basic application to allow users to find each other for the purpos
 
 * Opengraph Parser for displaying link images
 
+* Searchkick for searching users
+
 * Database using Sqlite3 for development and Postgres in production
 
 * Security test results from Acunetix, Beyond Security, and Detectify show medium to low vulnerability
