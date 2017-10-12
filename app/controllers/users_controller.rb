@@ -75,6 +75,19 @@ class UsersController < ApplicationController
     redirect_to user_path(current_user)
   end
 
+  # maybe refactor, very similar to #update
+  def update_interests!
+    @user = User.find_by_param(params[:id])
+    interests = params[:user].nil? ? nil : user_params["interests"].map(&:to_i)
+    if @user.update(interests: interests)
+      flash[:success] = "Profile updated! " + welcome_messages(@user).sample
+      redirect_to user_path(@user)
+    else
+      flash[:error] = @user.errors.full_messages.to_sentence
+      redirect_to :back
+    end
+  end
+
   # maybe refactor these two to be in a frontend framework or move to protected
   def all
     @users = User.all.includes(:linkedin).paginate(page: params[:page], per_page: 12)

@@ -186,7 +186,7 @@ module UsersHelper
   def user_convert_to_interests(interest_nums)
     user_interests = []
     interest_nums.each do |interest_num|
-      user_interests << user_convert_to_interest(interest_num.to_i)
+      user_interests << user_convert_to_interest(interest_num)
     end
     user_interests
   end

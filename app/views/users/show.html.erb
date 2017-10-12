@@ -133,7 +133,7 @@
   <div id="user-interests">
     <br><h4>Interests <%= "(Choose 10)" if @user == current_user %></h4>
     <% if @user == current_user %>
-      <form action="<%= user_path(@user) %>" method="post">
+      <form action="<%= update_interests_user_path(@user) %>" method="post">
         <input type="hidden" name="_method" value="patch">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <% 3.times do |num| %>
@@ -142,7 +142,7 @@
               <% sub_num = 10*num + sub_num + 1 %>
               <div class="user-interests-checkbox">
                 <!-- maybe refactor to_s and to_i below with inserting interests into user interest array, have to deal with existing user values -->
-                <input type="checkbox" id="user-interests-<%= sub_num %>" name="user[interests][]" value="<%= sub_num %>" <%= 'checked' if @user.interests.include?(sub_num.to_s) %> >
+                <input type="checkbox" id="user-interests-<%= sub_num %>" name="user[interests][]" value=<%= sub_num %> <%= 'checked' if @user.interests.include?(sub_num) %> >
                 <label for="user-interests-<%= sub_num %>"><%= user_convert_to_interest(sub_num) %></label><br>
               </div>
             <% end %>
@@ -154,7 +154,7 @@
     <% elsif @user.interests.any? %>
       <ul>
         <% @user.interests.each do |interest_num| %>
-          <li><%= user_convert_to_interest(interest_num.to_i) %></li>
+          <li><%= user_convert_to_interest(interest_num) %></li>
         <% end %>
       </ul>
     <% else %>

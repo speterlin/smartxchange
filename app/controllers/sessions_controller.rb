@@ -72,6 +72,7 @@ class SessionsController < ApplicationController
   end
 
   def omniauth_callback
+    # maybe refactor, don't know if I need the to_s
     @user = User.where(:provider => auth_hash['provider'], :uid => auth_hash['uid'].to_s).first
     # maybe refactor and make this a validation, like a uniqueness on email, uid, and provider
     if User.where(:email => auth_hash['info']['email'].downcase).first && !@user && (request.referer == login_url || request.referer == signup_url)

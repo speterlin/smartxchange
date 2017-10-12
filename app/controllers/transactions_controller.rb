@@ -76,6 +76,7 @@ class TransactionsController < ApplicationController
       if value.length == 0
         customer[:errors] << "Please fill in #{name} field"
       else
+        # maybe refactor .to_sym
         if name == "first_name" || name == "last_name" || name == "company"
           /^[a-zA-Z]+$/i =~ value ? customer[name.to_sym] = value : customer[:errors] << "Only letter characters allowed in #{name} field"
         elsif name == "phone"
