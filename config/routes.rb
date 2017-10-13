@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   get 'login'   => 'sessions#new'
   get 'signup'  => 'users#new'
   get 'auth/linkedin/callback' => 'omniauth#callback'
+  get '/auth/failure' => 'omniauth#failure'
   root to: 'users#new' # maybe refactor and make this root to user's board path and put code in board path for redirecting to users/new if not signed in
 
   resource :session

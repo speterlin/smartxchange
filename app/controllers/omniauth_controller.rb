@@ -86,6 +86,13 @@ class OmniauthController < ApplicationController
     end
   end
 
+  # maybe refactor, change from alert: to flash[:error], maybe change redirects based on session[omniauth]
+  def failure
+    session[:omniauth] = nil
+    redirect_to root_path, alert: "Authentication failed, please try again."
+  end
+
+
   protected
 
   def auth_hash
