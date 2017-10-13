@@ -411,7 +411,7 @@ class User < ApplicationRecord
       nationality: nationality + " native",
       person_of_interest: person_of_interest? ? "person of interest" : nil,
       tutor: tutor? ? "tutor" : nil,
-      interests: interests.any? ? user_convert_to_interests(interests).to_sentence : nil,
+      interests: interests.any? ? user_convert_to_interests(interests) : nil,
       chat_bot: chat_bot? ? "chat bot" : nil,
       linkedin_industry: linkedin.present? ? linkedin.industry : nil,
       linkedin_summary: linkedin.present? ? linkedin.summary : nil,

@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   include UsersHelper
 
   skip_before_action :require_signed_in, only: [:new, :create, :email_match]
-  before_action :correct_user?, only: [:update, :destroy, :remove_image!, :delete_linkedin!]
+  before_action :correct_user?, only: [:update, :destroy, :remove_image!]
   before_action :require_admin?, only: [:active, :map]
   # before_action :premium_subscription, only: [:create]
 
@@ -70,12 +70,7 @@ class UsersController < ApplicationController
     redirect_to user_path(@user)
   end
 
-  def delete_linkedin!
-    current_user.delete_omniauth!
-    redirect_to user_path(current_user)
-  end
-
-  # maybe refactor, very similar to #update
+  # maybe refactor, very similar to #update, can't check params[:user][:interests] for situation when user unchecks all
   def update_interests!
     @user = User.find_by_param(params[:id])
     interests = params[:user].nil? ? nil : user_params["interests"].map(&:to_i)

@@ -4,10 +4,17 @@ Rails.application.routes.draw do
   get 'contact' => 'static_pages#contact'
   get 'login'   => 'sessions#new'
   get 'signup'  => 'users#new'
-  get 'auth/linkedin/callback' => 'sessions#omniauth_callback'
+  get 'auth/linkedin/callback' => 'omniauth#callback'
   root to: 'users#new' # maybe refactor and make this root to user's board path and put code in board path for redirecting to users/new if not signed in
 
   resource :session
+
+  # maybe make this a nested user resource
+  resource :omniauth, controller: :omniauth do
+    get 'register'
+    get 'login'
+    get 'add_or_update'
+  end
 
   resources :users do
     get 'all', on: :collection
@@ -23,7 +30,6 @@ Rails.application.routes.draw do
     get 'map', on: :collection
     get 'exchange', on: :collection
     get 'remove_image' => 'users#remove_image!', on: :member
-    get 'delete_linkedin' => 'users#delete_linkedin!', on: :member
     patch 'update_interests' => 'users#update_interests!', on: :member
     get 'email_match/:matches_token/:match_id', to: 'users#email_match', as: 'email_match'
     get 'settings' => 'settings#show'
