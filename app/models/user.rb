@@ -181,6 +181,7 @@ class User < ApplicationRecord
 
   before_create :generate_activation_token
   after_create :add_email_subscription
+  after_create :add_standard_package
 
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
@@ -441,6 +442,10 @@ class User < ApplicationRecord
 
   def add_email_subscription
     EmailSubscription.create!(user_id: self.id) # exclamation mark here, don't want to have a user created without associated email subscription object
+  end
+
+  def add_standard_package
+    self.package = Package.first
   end
 
   def generate_activation_token
