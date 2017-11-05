@@ -40,8 +40,8 @@ class User < ApplicationRecord
   scope :search_import, -> { includes(:linkedin, :materials) }
   include Locatable
   include UsersHelper
-  # need to update _translate.html.erb, users_helper.rb#user_convert_to_language(nationality), #user_convert_to_nationalities(language) any time there is a change
-  LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese"]
+  # need to update _translate.html.erb, users_helper.rb#user_convert_to_language(nationality), #user_convert_to_nationalities(language), users/index.html.erb, routes.rb, and seeds.rb any time there is a change
+  LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese", "Danish"]
   # need to update users_helper.rb#user_convert_to_scripted_language_level(language_level), #user_convert_to_language_level(scripted_language_level), #user_convert_to_presented_language_level(language_level) any time there is a change
   LANGUAGE_LEVELS = (1..6).to_a
   # maybe refactor, maybe need to change some ish to ian for language vs. nationality mix up, add other country names like 'Holland' to keys

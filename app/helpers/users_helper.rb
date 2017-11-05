@@ -92,7 +92,7 @@ module UsersHelper
 
   def user_convert_to_language(nationality)
     # here and in user_convert_to_nationalities, check simple nationalities first
-    if nationality.in?(['Italian', 'French'])
+    if nationality.in?(['Italian', 'French', 'Danish'])
       return nationality
     elsif user_convert_to_nationalities('English').include?(nationality)
       return 'English'
@@ -106,7 +106,7 @@ module UsersHelper
   end
 
   def user_convert_to_nationalities(language)
-    if language.in?(['Italian', 'French'])
+    if language.in?(['Italian', 'French', 'Danish'])
       return [language]
     elsif language == 'English'
       return ['Australian', 'British', 'Canadian', 'Irish', 'Jamaican', 'New Zealander', 'South African', 'American']
