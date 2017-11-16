@@ -18,19 +18,6 @@ Rails.application.routes.draw do
   end
 
   resources :users do
-    get 'all', on: :collection
-    get 'active', on: :collection
-    get 'chat_bots', on: :collection
-    get 'tutors', on: :collection
-    get 'spanish', on: :collection
-    get 'italian', on: :collection
-    get 'french', on: :collection
-    get 'german', on: :collection
-    get 'english', on: :collection
-    get 'mandarin_chinese', on: :collection
-    get 'danish', on: :collection
-    get 'map', on: :collection
-    get 'exchange', on: :collection
     get 'remove_image' => 'users#remove_image!', on: :member
     patch 'update_interests' => 'users#update_interests!', on: :member
     get 'email_match/:matches_token/:match_id', to: 'users#email_match', as: 'email_match'
