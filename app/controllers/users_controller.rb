@@ -34,22 +34,6 @@ class UsersController < ApplicationController
     # maybe refactor and allow for multiple params, for example ?language=French&search=Engineering, and also maybe incorporate into a frontend framework
     if params[:language]
       @users = User.where(language: params[:language]).includes(:linkedin).paginate(page: params[:page], per_page: 12)
-    elsif params[:scope]
-      # maybe move some of these into their own methods, may be better to write users/tutors and users/all rather than users?scope=tutors
-      if params[:scope] == "all"
-        @users = User.all.includes(:linkedin).paginate(page: params[:page], per_page: 12)
-      elsif params[:scope] == "active"
-        @users = User.where(active: true).includes(:linkedin).paginate(page: params[:page], per_page: 12)
-      elsif params[:scope] == "chat_bots" #currently unused, may use or take out eventually
-        @users = User.where(id: 6).paginate(page: params[:page], per_page: 12)
-      elsif params[:scope] == "tutors"
-        @users = User.where(tutor: true).includes(:linkedin).paginate(page: params[:page], per_page: 12)
-      elsif params[:scope] == "map"
-        @users = User.where.not(latitude: nil)
-        render :map
-      elsif params[:scope] == "exchange"
-        @users = current_user.sort_exchange.paginate(page: params[:page], per_page: 12)
-      end
     elsif params[:search]
       # maybe refactor, at the moment does not allow search across multiple language levels, i.e. 'Spanish b1 b2', could do this with 'or' operator, maybe add includes(:linkedin)
       # can refactor, add boosts, conversions (with searchjoy), autocomplete, custom search, highlight, boost_by_distance or within a geoshape, performance (persistent http connections, ...), routing - all on https://github.com/ankane/searchkick
@@ -100,6 +84,31 @@ class UsersController < ApplicationController
       flash[:error] = @user.errors.full_messages.to_sentence
       redirect_to :back
     end
+  end
+
+  def all
+    @users = User.all.includes(:linkedin).paginate(page: params[:page], per_page: 12)
+    render :index
+  end
+
+  def active
+    @users = User.where(active: true).includes(:linkedin).paginate(page: params[:page], per_page: 12)
+    render :index
+  end
+
+  def exchange
+    @users = current_user.sort_exchange.paginate(page: params[:page], per_page: 12)
+    render :index
+  end
+
+  def tutors
+    @users = User.where(tutor: true).includes(:linkedin).paginate(page: params[:page], per_page: 12)
+    render :index
+  end
+
+  def map
+    @users = User.where.not(latitude: nil)
+    render :map
   end
 
   def email_match

@@ -18,6 +18,11 @@ Rails.application.routes.draw do
   end
 
   resources :users do
+    get 'all' => 'users#all', on: :collection
+    get 'active' => 'users#active', on: :collection
+    get 'exchange' => 'users#exchange', on: :collection
+    get 'tutors' => 'users#tutors', on: :collection
+    get 'map' => 'users#map', on: :collection
     get 'remove_image' => 'users#remove_image!', on: :member
     patch 'update_interests' => 'users#update_interests!', on: :member
     get 'email_match/:matches_token/:match_id', to: 'users#email_match', as: 'email_match'
