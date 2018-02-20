@@ -2,7 +2,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # allow origins can subscribe to the channels
-  config.action_cable.allowed_request_origins = ['http://smartxchange.herokuapp.com',
+  config.action_cable.allowed_request_origins = ['http://smartxchange.herokuapp.com', 'http://smartexchange.herokuapp.com',
                                                'http://www.smartxchange.es']
 
   # action cable url provided
