@@ -47,6 +47,7 @@ module PostsHelper
     end
   end
 
+  # maybe refactor and add check here so don't get duplicate notifications, could add variable context to notification.rb to describe that this is a mention
   def post_mention_create_notification(post_or_comment, post, notified)
     notification = Notification.create!(
       notified_id: notified.id,
