@@ -36,9 +36,11 @@
 class User < ApplicationRecord
   # maybe refactor and take away (searchkick callbacks: :async), also anytime change user's active status searchkick is reindexed, which i don't think is necessary
   searchkick callbacks: :async
+  acts_as_tagger
   # maybe refactor and add filter to only search activated accounts (precautionary)
   scope :search_import, -> { includes(:linkedin, :materials) }
   include Locatable
+  # not sure if it's a good idea to have helpers in model files
   include UsersHelper
   # need to update _translate.html.erb, users_helper.rb#user_convert_to_language(nationality), #user_convert_to_nationalities(language), users/index.html.erb, routes.rb, and seeds.rb any time there is a change
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese", "Danish"]

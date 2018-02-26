@@ -2,5 +2,5 @@ Dear <%= @user.name %>,
 ===============================================
 
   <%= image_tag(attachments["#{@notifier.name}.jpg"].url, alt: "#{@notifier.name}") %></p>
-    <%= "#{@notifier.name}" %>, <%= "#{@notifier.title}, has updated a post you own or are following on the " %><%= "#{@board.title}"%><%=" board" %>
+    <%= "#{@notifier.name}" %>, <%= "#{@notifier.title}, #{@description} " %><%= "#{@board.title}"%><%=" board" %>
     <%= link_to "View Board", @board_url, class: 'mail-btn' %>

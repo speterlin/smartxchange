@@ -31,4 +31,10 @@ module BoardsHelper
     result
   end
 
+  # assuming every name has already been checked, downcasing so not case sensitive
+  def board_render_post_or_comment_with_hashtags_and_usertags(content)
+    content.gsub(/#\w+/){|word| link_to word, "/boards/hashtag?tag=#{word.delete('#')}"}
+    .gsub(/@[\w+\.?]+/){|name| link_to name, "/users/#{name.delete('@').split('.').join('%20').downcase}"}.html_safe
+  end
+
 end

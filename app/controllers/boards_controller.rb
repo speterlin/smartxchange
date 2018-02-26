@@ -7,21 +7,28 @@ class BoardsController < ApplicationController
 
   def show
     @board = Board.find_by_title(board_capitalize(params[:id]))
-    # refactor sql query, right now orders by sum(value) then updated_at, also not filtering posts based on board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
-    # coalesce because postgres does not return sum of empty column
-    @posts = Post.find_by_sql("
-      select p.*, v.votable_id, count(v.votable_id) as votes_count, coalesce(sum(v.value),0) as votes_value_sum
-      from posts p
-      left join votes v on p.id = v.votable_id
-      where p.board_id = #{@board.id}
-      group by p.id, v.votable_id
-      order by votes_value_sum desc, p.updated_at desc")
-      # only way to get includes to work on the array returned from the sql statement above, maybe refactor don't need all followers information
-      ActiveRecord::Associations::Preloader.new.preload(@posts, [:owner, :comments, {comments: :owner}, :followers])
-    if @board.id == 2
+    if @board.id == 9
+      # not sure why we need uniq, prob refactor
+      @posts = Post.uniq.tagged_with(params[:tag])
+    else
+      # refactor sql query, right now orders by sum(value) then updated_at, also not filtering posts based on board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
+      # coalesce because postgres does not return sum of empty column
+      @posts = Post.find_by_sql("
+        select p.*, v.votable_id, count(v.votable_id) as votes_count, coalesce(sum(v.value),0) as votes_value_sum
+        from posts p
+        left join votes v on p.id = v.votable_id
+        where p.board_id = #{@board.id}
+        group by p.id, v.votable_id
+        order by votes_value_sum desc, p.updated_at desc")
+        # only way to get includes to work on the array returned from the sql statement above, maybe refactor don't need all followers information
+        ActiveRecord::Associations::Preloader.new.preload(@posts, [:owner, :comments, {comments: :owner}, :followers])
+    end
+    # probably need to refactor this
+    if (@board.id == 2 || @board.id == 9) && current_user.premium_or_admin?
       @jobs_offered_posts = @posts.select {|post| post.category == 'Jobs-Offered'}
       @jobs_wanted_posts = @posts.select {|post| post.category == 'Jobs-Wanted'}
-    else
+    end
+    if @board.id != 2
       @interest_posts = @posts.select {|post| post.category == 'Interest'}
       @educational_posts = @posts.select {|post| post.category == 'Educational'}
       @tutoring_posts = @posts.select {|post| post.category == 'Tutoring'}

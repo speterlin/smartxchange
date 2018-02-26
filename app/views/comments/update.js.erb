@@ -1,3 +1,3 @@
 $('#comment-<%= @comment.id %> .comment-form.edit').remove();
-$('#comment-<%= @comment.id %> time').before("<div class='comment-text'><%= j(auto_link(@comment.content, html: { target: '_blank' })) %></div>");
+$('#comment-<%= @comment.id %> time').before("<div class='comment-text'><%= j(auto_link(board_render_post_or_comment_with_hashtags_and_usertags(@comment.content), html: { target: '_blank' })) %></div>");
 $('#comment-<%= @comment.id %> .edit-comment').data('clicked', false);

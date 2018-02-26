@@ -128,14 +128,16 @@ class UserMailer < ApplicationMailer
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@sender.name} has sent you a message in your #{@chat_room.title} conversation")
   end
 
-  def new_post(notification)
+  def new_post(notification, mention = false)
     @user = notification.notified
     @notifier = notification.notifier
     @post = notification.notifiable
     @board = @post.board
     @board_url = board_url(@board) + campaign("boards")
     fetch_user_image(@notifier)
-    set_name_and_title_and_unsubscribe_and_header(@user, "You have a new post notification on the #{@board.title} board!")
+    @description = mention ? "has mentioned you in a post on the": "has updated a post you own or are following on the"
+    title = mention ? "You have been mentioned in a post on the" : "You have a new post notification on the"
+    set_name_and_title_and_unsubscribe_and_header(@user, "#{title} #{@board.title} board!")
   end
 
   def peer_review(user, other_user, chat_room)

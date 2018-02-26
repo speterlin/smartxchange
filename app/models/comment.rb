@@ -12,6 +12,11 @@
 #
 
 class Comment < ApplicationRecord
+  # probably refactor, helper files in model file
+  include UsersHelper
+  include PostsHelper
+  include Taggable
+
   validates_presence_of :content, :owner, :commentable
   validates :content, length: {minimum: 5, maximum: 255}
 
@@ -19,6 +24,12 @@ class Comment < ApplicationRecord
   belongs_to :commentable, polymorphic: true, touch: true
   # only doing has_one notification here because can't delete vote or message, no index on sourceable since only called here which is very rare
   has_many :notifications, as: :sourceable, dependent: :destroy
+
+  after_create :update_owned_tags
+
+  before_update :update_owned_tags, if: :content_present_and_changed?
+
+  before_destroy :remove_owned_tags
 
   default_scope -> { order(created_at: :asc) }
 

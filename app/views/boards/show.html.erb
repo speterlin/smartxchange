@@ -1,11 +1,12 @@
-<h1><%= @board.title %></h1>
+<h1><%= @board.title unless @board.id == 9%></h1>
 <div id="board-description" data-board-id="<%= @board.id %>">
   <%= @board.description %>
 </div>
 <br>
 
 <ul id="posts">
-  <% if @board.id == 2 %>
+  <!-- probably refactor -->
+  <% if (@board.id == 2 || @board.id == 9) && current_user.premium_or_admin? %>
     <ul id="jobs-offered">
       <h3>Jobs Offered</h3>
       <%= render @jobs_offered_posts if @jobs_offered_posts.any? %>
@@ -14,7 +15,8 @@
       <h3>Jobs Wanted</h3>
       <%= render @jobs_wanted_posts if @jobs_wanted_posts.any? %>
     </ul>
-  <% else %>
+  <% end %>
+  <% if @board.id != 2 %>
     <ul id="interest">
       <h3>Interest</h3>
       <%= render @interest_posts if @interest_posts.any? %>
@@ -43,35 +45,38 @@
 </ul>
 <br>
 
-<div class="post-form new">
-  <form action="<%= posts_path %>" method="post" data-remote="true">
-    <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-    <textarea id="message-body" name="post[content]"></textarea>
-    <input type="hidden" name="post[board_id]" value="<%= @board.id %>">
-    <input type="submit" class="btn btn-primary send-post"  value="Post">
-    <div id="post-url">
-      <label>Url (http://... https://...) <input type='text' name='post[url]'></label>
-    </div>
-    <div id="post-category">
-      Category: <select name="post[category]">
-        <% if @board.id == 2 %>
-          <option value="Jobs-Offered">Jobs Offered</option>
-          <option value="Jobs-Wanted">Jobs Wanted</option>
-        <% else %>
-          <option value="Interest">Interest</option>
-          <option value="Educational">Educational</option>
-          <option value="Tutoring">Tutoring</option>
-          <option value="Meetup">Meetup</option>
-          <option value="Professional">Professional</option>
-          <option value="Other">Other</option>
-        <% end %>
-      </select>
-    </div>
-    <div id="post-location"></div>
-  </form>
-</div>
-<br>
-<%= render 'layouts/translate' %>
+<!-- probably refactor -->
+<% if @board.id != 9 %>
+  <div class="post-form new">
+    <form action="<%= posts_path %>" method="post" data-remote="true">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      <textarea id="message-body" name="post[content]"></textarea>
+      <input type="hidden" name="post[board_id]" value="<%= @board.id %>">
+      <input type="submit" class="btn btn-primary send-post"  value="Post">
+      <div id="post-url">
+        <label>Url (http://... https://...) <input type='text' name='post[url]'></label>
+      </div>
+      <div id="post-category">
+        Category: <select name="post[category]">
+          <% if @board.id == 2 %>
+            <option value="Jobs-Offered">Jobs Offered</option>
+            <option value="Jobs-Wanted">Jobs Wanted</option>
+          <% else %>
+            <option value="Interest">Interest</option>
+            <option value="Educational">Educational</option>
+            <option value="Tutoring">Tutoring</option>
+            <option value="Meetup">Meetup</option>
+            <option value="Professional">Professional</option>
+            <option value="Other">Other</option>
+          <% end %>
+        </select>
+      </div>
+      <div id="post-location"></div>
+    </form>
+  </div>
+  <br>
+  <%= render 'layouts/translate' %>
+<% end %>
 
 <script type="text/javascript">
   $('.edit-post').each(function(index, value) {
@@ -99,11 +104,13 @@
     setTimeout(function(){document.getElementById('post-<%= @notification.notifiable_id %>').scrollIntoView()},0);
   <% end %>
   // probably need to refactor this and application.js.erb, same code
-  $('.post-form.new #post-category').on('change', function() {
-    if ($(this).find(":selected").val() == "Meetup") {
-      $('#post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]'></label>");
-    } else {
-      $('#post-location').text("");
-    }
-  })
+  <% if @board.id != 9 %>
+    $('.post-form.new #post-category').on('change', function() {
+      if ($(this).find(":selected").val() == "Meetup") {
+        $('#post-location').html("<label>Location (City, Country / Landmark) <input type='text' name='post[location]'></label>");
+      } else {
+        $('#post-location').text("");
+      }
+    })
+  <% end %>
 </script>

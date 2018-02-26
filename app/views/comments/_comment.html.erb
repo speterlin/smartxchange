@@ -1,6 +1,6 @@
 <li id="comment-<%= comment.id %>">
   <div class="comment-content">
-    <div class="comment-text"><%= auto_link(comment.content, html: { target: '_blank' }) %></div>
+    <div class="comment-text"><%= auto_link(board_render_post_or_comment_with_hashtags_and_usertags(comment.content), html: { target: '_blank' }) %></div>
     <time datetime="<%= comment.created_at %>">
       <%= link_to comment.owner.name, user_path(comment.owner) %>  <%= comment.timestamp %>
       <% if comment.owner == current_user %>

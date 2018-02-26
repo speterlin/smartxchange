@@ -7,11 +7,14 @@
       <div class="vote-numbers"><%= post.respond_to?(:votes_value_sum) ? post.votes_value_sum : post.votes.sum(:value) %> (<%= post.respond_to?(:votes_count) ? post.votes_count : post.votes.size %>)</div>
     </div>
     <!-- refactor this later, get rid of p tag, maybe float this div left, change padding -->
-    <div class="post-text"><%= auto_link(post.content, html: { target: '_blank' }) %></div>
+    <div class="post-text"><%= auto_link(board_render_post_or_comment_with_hashtags_and_usertags(post.content), html: { target: '_blank' }) %></div>
     </p>
     <time datetime="<%= post.updated_at %>">
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>
-      <span style="display: inline;" class="post-category" ><%= "• #{post.category}" %></span>
+      <span style="display: inline;" class="post-category" >
+        <!-- refactor, only show board.title if board is hashtag(#9) -->
+        <%= "• #{post.category} • #{post.board.title}" %>
+      </span>
       <% if post.owner == current_user %>
         <%= link_to "• Edit", "#", class: "edit-post", :data => { 'post-id' => post.id, :clicked => "false" } %>
         <%= link_to "• Delete", post_path(post), remote: true, method: :delete, data: {confirm: "Are you sure you want to delete this post? All associated comments, votes, and follows will be destroyed as well."}  %>

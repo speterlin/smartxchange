@@ -84,6 +84,9 @@ gem 'searchkick'
 # for tracking searches
 # gem 'searchjoy'
 
+# for tagging posts
+gem 'acts-as-taggable-on', '~> 4.0'
+
 
 # Use Unicorn as the app server
 # gem 'unicorn'

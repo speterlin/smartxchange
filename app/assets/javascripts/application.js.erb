@@ -18,12 +18,12 @@
 //= require bootstrap
 //= require cable
 
-function set_time_zone_offset() {
+function setTimeZoneOffset() {
     var current_time = new Date();
     // gets timezone offset in minutes, offset off of GMT
     document.cookie = 'time_zone='+current_time.getTimezoneOffset();
 }
-set_time_zone_offset()
+setTimeZoneOffset()
 
 function translateText(response) {
   if (response.error) {
@@ -98,7 +98,7 @@ function addEventEditPost (edit_post) {
     } else {
       var post_content = $('.post-form.edit textarea').val();
       $('#post-'+post_id+' .post-form.edit').remove();
-      $('#post-'+post_id+' .post-votes').after("<div class='post-text'>"+post_content+"</div>");
+      $('#post-'+post_id+' .post-votes').after("<div class='post-text'>"+renderPostOrCommentWithHashtagsAndUsertags(post_content)+"</div>");
       $(this).data('clicked', false);
     }
     event.preventDefault();
@@ -124,9 +124,25 @@ function addEventEditComment (edit_comment, post_id) {
     } else {
       var comment_content = $('.comment-form.edit textarea').val();
       $('#comment-'+comment_id+' .comment-form.edit').remove();
-      $('#comment-'+comment_id+' time').before("<div class='comment-text'>"+comment_content+"</div>");
+      $('#comment-'+comment_id+' time').before("<div class='comment-text'>"+renderPostOrCommentWithHashtagsAndUsertags(comment_content)+"</div>");
       $(this).data('clicked', false);
     }
     event.preventDefault();
   })
+}
+
+function hashtagReplacer(match) {
+  var word = match.replace('#','');
+  return "<a href='/boards/hashtag?tag=" + word + "'>" + match + "</a>";
+}
+
+function usertagReplacer(match) {
+  var name = match.replace('@','');
+  return "<a href='/users/" + name.split('.').join('%20').toLowerCase() + "'>" + match + "</a>";
+}
+
+// not html safe at the moment, may add
+function renderPostOrCommentWithHashtagsAndUsertags(content) {
+  return content.replace(/#\w+/g, hashtagReplacer)
+  .replace(/@[\w+\.?]+/g, usertagReplacer);
 }

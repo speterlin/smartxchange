@@ -18,9 +18,15 @@
 
 class Post < ApplicationRecord
   include Locatable
+  # probably refactor, don't like having helpers in model files
+  include UsersHelper
+  include PostsHelper
+  include Taggable
 
   geocoded_by :location
   mount_uploader :image, AvatarUploader
+  acts_as_taggable
+  acts_as_taggable_on :users
 
   # maybe refactor and move this to a standard validation since want to check url before uploading image, but also want to set image before validation, could also make remove_url_and_image an after_validation call
   before_validation :upload_or_update_image, if: :url_present_and_changed?
@@ -28,7 +34,8 @@ class Post < ApplicationRecord
 
   validates_presence_of :content, :owner, :board, :category
   validates :content, length: {minimum: 5, maximum: 500}
-  validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted", "Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}
+  validates :category, inclusion: {in: ["Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}, if: 'board.id != 2'
+  validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted"]}, if: 'board.id == 2'
   validates_uniqueness_of :url, scope: :board_id, unless: 'url.blank?'
   # maybe refactor: ?: to avoid capturing extra groups, taken from this site: https://forums.asp.net/t/1761988.aspx?Regular+expression+for+Validating+URL+with+or+without+http
   validates :url, length: {maximum: 255 }, format: {:with => /(^(?:https?\:\/\/)(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+.*)/i}, if: :url_present_and_changed?
@@ -37,6 +44,10 @@ class Post < ApplicationRecord
   after_validation :geocode, if: :location_present_and_changed?
   after_validation :remove_location, if: :location_not_present_and_changed?
   after_validation :error_and_remove_location, if: :location_present_and_changed_and_latitude_unchanged?
+
+  after_create :update_owned_tags
+
+  before_update :update_owned_tags, if: :content_present_and_changed?
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true

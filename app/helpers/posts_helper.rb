@@ -47,6 +47,26 @@ module PostsHelper
     end
   end
 
+  def post_mention_create_notification(post_or_comment, post, notified)
+    notification = Notification.create!(
+      notified_id: notified.id,
+      notifier_id: post_or_comment.owner.id,
+      notifiable_type: 'Post',
+      notifiable_id: post.id,
+      sourceable_type: post_or_comment.class.name,
+      sourceable_id: post_or_comment.id
+    )
+    # maybe refactor, right now need to include UserHelper to call the below method
+    WebNotificationsChannel.broadcast_to(
+      notified,
+      boards_notifications: user_boards_notifications_with_title(notified),
+      total_notifications: notified.notifications.count,
+      sound: true
+    )
+    # delaying 30 seconds in case there are a lot of people getting updated
+    UserMailer.delay(run_at: 30.seconds.from_now).new_post(notification, true)
+  end
+
   def post_create_follow(post, user)
     return if post.followers.include?(user)
     return if post.owner == user
