@@ -1,6 +1,7 @@
 module BoardsHelper
 
   def board_has_unread?(board, user)
+    return false if board.id == 9 # precautionary, not necessary
     return false if board.id == 2 && !user.premium_or_admin?
     # hack job here and below method don't want to add another column to users maybe refactor, + 1 since delay in when board is updated and readable is updated upon new post / comment / vote / follow etc
     user.read_boards << board unless user.read_boards.include?(board)
@@ -10,11 +11,13 @@ module BoardsHelper
     false
   end
 
-  def boards_have_unread?(user)
-    Board.all.each do |board|
-      return true if board_has_unread?(board, user)
+  # maybe refactor and change hash to array, hash takes up more memory but can label each board by its id
+  def boards_unread(user)
+    unread_boards = Hash.new
+    boards_postable.all.each do |board|
+      unread_boards[board.id] = true if board_has_unread?(board, user)
     end
-    false
+    unread_boards
   end
 
   def board_mark_read(board)
@@ -35,6 +38,11 @@ module BoardsHelper
   def board_render_post_or_comment_with_hashtags_and_usertags(content)
     content.gsub(/#\w+/){|word| link_to word, "/boards/hashtag?tag=#{word.delete('#')}"}
     .gsub(/@[\w+\.?]+/){|name| link_to name, "/users/#{name.delete('@').split('.').join('%20').downcase}"}.html_safe
+  end
+
+  def boards_postable
+    # all boards you can post to (all except the hashtag board)
+    return Board.where.not(id: 9)
   end
 
 end

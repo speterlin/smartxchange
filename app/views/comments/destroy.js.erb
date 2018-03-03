@@ -1,6 +1,6 @@
-//maybe refactor, same code as posts/update.js.erb and comments/create.js.erb
+//maybe refactor, same code as posts/update.js.erb and comments/create.js.erb, rendering whole post after destroying a comment
 $('#post-<%= @post.id %>').remove();
-$('#posts ul#<%= @post.category.downcase %>').append("<%= j(render(:partial => 'posts/post', :locals => {post: @post})) %>")
+$('#posts ul#<%= @post.category.downcase %>').append("<%= j(render(:partial => 'posts/post', :locals => {post: @post, board: @post.board})) %>")
 addEventEditPost($('#post-<%= @post.id %> .edit-post'));
 $('#post-<%= @post.id %> .edit-comment').each(function(index, value) {
   addEventEditComment(value, <%= @post.id %>);

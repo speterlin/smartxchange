@@ -9,11 +9,11 @@
     <!-- refactor this later, get rid of p tag, maybe float this div left, change padding -->
     <div class="post-text"><%= auto_link(board_render_post_or_comment_with_hashtags_and_usertags(post.content), html: { target: '_blank' }) %></div>
     </p>
-    <time datetime="<%= post.updated_at %>">
+    <time datetime="<%= post.created_at %>">
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>
       <span style="display: inline;" class="post-category" >
-        <!-- refactor, only show board.title if board is hashtag(#9) -->
-        <%= "• #{post.category} • #{post.board.title}" %>
+        <!-- refactor, have to pass in board variable for all partials (update, upvote, unfollow, follow, downvote, create, comments/create & destroy) - since it's so rare that someone shoud update/unfollow/upvote... on the hashtag board page maybe take out in future -->
+        <%= "• #{post.category}" %> <%= @board ? (@board.id == 9 ? "• #{post.board.title}" : "") : (board.id == 9 ? "• #{post.board.title}" : "") %>
       </span>
       <% if post.owner == current_user %>
         <%= link_to "• Edit", "#", class: "edit-post", :data => { 'post-id' => post.id, :clicked => "false" } %>

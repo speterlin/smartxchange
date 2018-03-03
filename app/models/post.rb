@@ -60,7 +60,7 @@ class Post < ApplicationRecord
   default_scope -> { order(updated_at: :desc) }
 
   def timestamp
-    updated_at.strftime('%H:%M:%S %d %B %Y')
+    created_at.strftime('%H:%M:%S %d %B %Y')
   end
 
   def upload_or_update_image

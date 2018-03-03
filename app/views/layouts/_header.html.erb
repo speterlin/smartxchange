@@ -35,17 +35,13 @@
         <ul class="nav navbar-nav navbar-right">
           <% if signed_in? %>
             <li class="boards-header dropdown">
-              <%= link_to "Boards#{@unread_posts}", "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: "#{'color:yellow' if boards_have_unread?(current_user)}"  %>
+              <% unread_boards = boards_unread(current_user) %>
+              <%= link_to "Boards#{@unread_posts}", "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: "#{'color:yellow' if unread_boards.any?}"  %>
               <ul class="dropdown-menu" style="background-color: #000;">
-                <!-- maybe refactor later, especially yellow class  part -->
-                <% Board.all.each do |board| %>
-                  <% next if board.id == 9 %>
-                  <% unread_board_posts = user_count_unread_board_notifications(current_user, board) > 0 ? " (#{user_count_unread_board_notifications(current_user, board)})" : "" %>
-                  <% if board_has_unread?(board, current_user) %>
-                    <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{unread_board_posts}", board_path(board), style: "color:yellow" %> </li>
-                  <% else %>
-                    <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{unread_board_posts}", board_path(board) %> </li>
-                  <% end %>
+                <!-- maybe refactor, issue with Boards() post notifications being 1 higher than sum of dropdown post notifications -->
+                <% unread_boards_notifications = user_boards_notifications(current_user) %>
+                <% boards_postable.each do |board| %>
+                  <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{unread_boards_notifications[board.id] ? ' (' + unread_boards_notifications[board.id].to_s + ')' : ''}", board_path(board), style: "#{'color:yellow' if unread_boards[board.id]}" %> </li>
                 <% end %>
               </ul>
             </li>

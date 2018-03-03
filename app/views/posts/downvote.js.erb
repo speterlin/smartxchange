@@ -1,9 +1,9 @@
 var prev_post = $('#post-<%= @post.id %>').prev();
 $('#post-<%= @post.id %>').remove();
 if (prev_post.length) {
-  $("<%= j(render(:partial => 'post', :locals => {post: @post})) %>").insertAfter(prev_post);
+  $("<%= j(render(:partial => 'post', :locals => {post: @post, board: @post.board})) %>").insertAfter(prev_post);
 } else {
-  $('#posts ul#<%= @post.category.downcase %>').prepend($("<%= j(render(:partial => 'post', :locals => {post: @post})) %>"))
+  $('#posts ul#<%= @post.category.downcase %>').prepend($("<%= j(render(:partial => 'post', :locals => {post: @post, board: @post.board})) %>"))
 }
 
 <%= render partial: 'layouts/move_post_down', locals: { up_votes: @up_votes, post: @post, moved: false }  %>

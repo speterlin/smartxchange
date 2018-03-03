@@ -9,7 +9,7 @@ class BoardsController < ApplicationController
     @board = Board.find_by_title(board_capitalize(params[:id]))
     if @board.id == 9
       # not sure why we need uniq, prob refactor
-      @posts = Post.uniq.tagged_with(params[:tag])
+      @posts = Post.includes(:owner, :comments, {comments: :owner}, :followers).tagged_with(params[:tag]).uniq
     else
       # refactor sql query, right now orders by sum(value) then updated_at, also not filtering posts based on board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
       # coalesce because postgres does not return sum of empty column
@@ -40,7 +40,7 @@ class BoardsController < ApplicationController
       @notification = user_first_unread_board_notification(current_user, @board)
       # maybe refactor this and chat_room_mark_read to notification_mark_read, and delete notification
       post_mark_read(@notification)
-    elsif board_has_unread?(@board, current_user)
+    elsif @board.posts.any? && board_has_unread?(@board, current_user)  # hack job, checking for posts should only be a problem in the beginning when there are no posts on a given board
       # if board has unread get most recently updated post and the most recent notification for that post
       @notification = Notification.where(notifiable: @board.posts.first).last ? Notification.where(notifiable: @board.posts.first).last : Notification.new(notified_id: current_user.id, notifier_id: current_user.id, notifiable_type: @board.posts.first.class.name, notifiable_id: @board.posts.first.id, sourceable_type: @board.posts.first.class.name, sourceable_id: @board.posts.first.id)
       board_mark_read(@board)

@@ -18,9 +18,10 @@ App.web_notifications = App.cable.subscriptions.create "WebNotificationsChannel"
     if (typeof data['boards_notifications'] != 'undefined')
       boards_notifications = 0
       for k,v of data['boards_notifications']
-        $('#board-'+k+'-header a')[0].innerHTML = if v[1] > 0 then "#{v[0]} (#{v[1]})" else "#{v[0]}"
-        $('#board-'+k+'-header a').css("color", "yellow") if v[1] > 0
-        boards_notifications += v[1] if v[1] > 0
+        board_title = $('#board-'+k+'-header a')[0].innerHTML.match(/\w+(\s+\w+)?/)[0]
+        $('#board-'+k+'-header a')[0].innerHTML = "#{board_title} (#{v})"
+        $('#board-'+k+'-header a').css("color", "yellow")
+        boards_notifications += v
       $('.boards-header a')[0].innerHTML = if boards_notifications > 0 then "Boards (#{boards_notifications})" else "Boards"
       $('.boards-header .dropdown-toggle').css("color", "yellow")
     if (typeof data['total_notifications'] != 'undefined')

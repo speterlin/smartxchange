@@ -38,7 +38,7 @@ module PostsHelper
       # maybe refactor, right now need to include UserHelper to call the below method
       WebNotificationsChannel.broadcast_to(
         notified,
-        boards_notifications: user_boards_notifications_with_title(notified),
+        boards_notifications: user_boards_notifications(notified),
         total_notifications: notified.notifications.count,
         sound: true
       )
@@ -60,7 +60,7 @@ module PostsHelper
     # maybe refactor, right now need to include UserHelper to call the below method
     WebNotificationsChannel.broadcast_to(
       notified,
-      boards_notifications: user_boards_notifications_with_title(notified),
+      boards_notifications: user_boards_notifications(notified),
       total_notifications: notified.notifications.count,
       sound: true
     )
