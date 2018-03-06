@@ -30,7 +30,7 @@ module UsersHelper
     user.posts_notifications.each do |post_notification|
       next unless post_notification.read == false # bug need to fix but there is a lag
       board_id = post_notification.notifiable.board_id
-      boards_notifications[board_id] = boards_notifications[board_id] ? boards_notifications[board_id] += 1  : 1
+      boards_notifications[board_id] = boards_notifications[board_id] ? boards_notifications[board_id] + 1  : 1
     end
     boards_notifications
   end

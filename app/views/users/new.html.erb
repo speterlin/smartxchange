@@ -61,7 +61,7 @@
         <select name="user[nationality]">
           <% User::NATIONALITIES.each do |country, nationality| %>
             <!-- default to Spanish if not selected, keys are stored as symbols so need to convert to string, maybe refactor -->
-            <option value="<%= nationality %>" <%= @user ? (@user.nationality == nationality ? "selected" : "") : nationality == "Spanish" ? "selected" : "" %> ><%= country %></option>
+            <option value="<%= nationality %>" <%= @user ? (@user.nationality == nationality ? "selected" : "") : (nationality == "Spanish" ? "selected" : "") %> ><%= country %></option>
           <% end %>
         </select>
       </label><br><br>

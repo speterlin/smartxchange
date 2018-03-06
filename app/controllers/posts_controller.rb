@@ -10,6 +10,7 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.new(post_params)
+    add_or_update_url(@post, post_params[:content])
     if @post.save
       # in future may use js along with json to assign values to post.votes_count and post.votes_value_sum
       respond_to do |format|
@@ -24,6 +25,7 @@ class PostsController < ApplicationController
 
   def update
     @post = Post.find(params[:id])
+    add_or_update_url(@post, post_params[:content])
     if @post.update(post_params)
       post_create_notifications(@post, @post)
       respond_to do |format|
@@ -103,7 +105,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:content, :board_id, :category, :location, :url)
+    params.require(:post).permit(:content, :board_id, :category, :location)
   end
 
   def vote_limit
@@ -134,6 +136,16 @@ class PostsController < ApplicationController
     unless post.owner == current_user
       flash[:error] = "Unauthorized access"
       redirect_to root_path
+    end
+  end
+
+  # only returns first matched url, maybe refactor - gsub tags is burdensome, also have to add http:// (maybe make it https, don't think it matters)to get link to work correctly in _post.html.erb, also if link has neither http(s):// nor www. this method will accept it as link but rails_autolink will not, also don't like passing both post and content to method but only way to work with #update
+  def add_or_update_url(post, content)
+    url = content.gsub(/@[\w+\.?]+/, '').gsub(/#\w+/, '').scan(/(?:https?\:\/\/)?(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+/i)[0]
+    url = "http://" + url unless url.match(/(?:https?\:\/\/)/i)
+    # if there is a url present in content and it doesn't equal an existing url
+    if url && url != post.url
+      post.url = url
     end
   end
 

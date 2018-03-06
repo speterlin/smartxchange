@@ -53,9 +53,6 @@
       <textarea id="message-body" name="post[content]"></textarea>
       <input type="hidden" name="post[board_id]" value="<%= @board.id %>">
       <input type="submit" class="btn btn-primary send-post"  value="Post">
-      <div id="post-url">
-        <label>Url (http://... https://...) <input type='text' name='post[url]'></label>
-      </div>
       <div id="post-category">
         Category: <select name="post[category]">
           <% if @board.id == 2 %>

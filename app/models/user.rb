@@ -186,9 +186,10 @@ class User < ApplicationRecord
   after_create :add_standard_package
 
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
+  # maybe refactor and get rid of read_notifications, mainly used for destroying notifications not covered in above
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
   has_many :created_notifications, :foreign_key => :notifier_id, class_name: 'Notification', dependent: :destroy
-  # No dependent: :destroy here since covered in above
+  # No dependent: :destroy here since covered in above, refactor, read: false not picking up when cycling through posts_notifications in users_helper.rb#user_boards_notifications
   has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification'
   has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification'
   # keeping this for the dependent: :destroy aspect
