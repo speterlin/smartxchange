@@ -141,9 +141,8 @@ class PostsController < ApplicationController
 
   # only returns first matched url, maybe refactor - gsub tags is burdensome, also have to add http:// (maybe make it https, don't think it matters)to get link to work correctly in _post.html.erb, also if link has neither http(s):// nor www. this method will accept it as link but rails_autolink will not, also don't like passing both post and content to method but only way to work with #update
   def add_or_update_url(post, content)
-    url = content.gsub(/@[\w+\.?]+/, '').gsub(/#\w+/, '').scan(/(?:https?\:\/\/)?(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+/i)[0]
-    url = "http://" + url unless url.match(/(?:https?\:\/\/)/i)
-    # if there is a url present in content and it doesn't equal an existing url
+    url = content.gsub(/(?<=\s|^)@[\w+\.?]+/, '').gsub(/(?<=\s|^)#\w+/, '').scan(/(?:https?\:\/\/)?(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+/i)[0]
+    url = "http://" + url if url && !url.match(/(?:https?\:\/\/)/i)
     if url && url != post.url
       post.url = url
     end

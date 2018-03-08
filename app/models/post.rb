@@ -45,9 +45,9 @@ class Post < ApplicationRecord
   after_validation :remove_location, if: :location_not_present_and_changed?
   after_validation :error_and_remove_location, if: :location_present_and_changed_and_latitude_unchanged?
 
-  after_create :update_owned_tags
+  after_create :add_or_update_owned_tags
 
-  before_update :update_owned_tags, if: :content_present_and_changed?
+  before_update :add_or_update_owned_tags, if: :content_present_and_changed?
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true

@@ -55,7 +55,6 @@ function addEventEditPost (edit_post) {
       var post_category = $('#post-'+post_id+' .post-category').text().match(/[A-Z].*/i)[0];
       // so that post_location is not listed as undefined below
       var post_location = $('#post-'+post_id+' .post-location').data('location') ? $('#post-'+post_id+' .post-location').data('location') : "";
-      var post_url = $('#post-'+post_id+' .post-image a').attr('href') ? $('#post-'+post_id+' .post-image a').attr('href') : "";
       $('#post-'+post_id+' .post-text').remove();
       // hack job until I find a better solution, can't render js variable in rendered ruby code, server side vs. client side
       var form = "<div class='post-form edit'><form action='/posts/"+post_id+"' method='post' data-remote='true'>";
@@ -142,6 +141,6 @@ function usertagReplacer(match) {
 
 // not html safe at the moment, may add
 function renderPostOrCommentWithHashtagsAndUsertags(content) {
-  return content.replace(/#\w+/g, hashtagReplacer)
-  .replace(/@[\w+\.?]+/g, usertagReplacer);
+  return content.replace(/(?<=\s|^)#\w+/g, hashtagReplacer)
+  .replace(/(?<=\s|^)@[\w+\.?]+/g, usertagReplacer);
 }

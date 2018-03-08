@@ -25,9 +25,9 @@ class Comment < ApplicationRecord
   # only doing has_one notification here because can't delete vote or message, no index on sourceable since only called here which is very rare
   has_many :notifications, as: :sourceable, dependent: :destroy
 
-  after_create :update_owned_tags
+  after_create :add_or_update_owned_tags
 
-  before_update :update_owned_tags, if: :content_present_and_changed?
+  before_update :add_or_update_owned_tags, if: :content_present_and_changed?
 
   before_destroy :remove_owned_tags
 

@@ -34,10 +34,10 @@ module BoardsHelper
     result
   end
 
-  # assuming every name has already been checked, downcasing so not case sensitive
+  # maybe refactor, issue with emails and hashtags avoided by adding (?<=\s|^) which only matches if tags are preceded by white space or content starts with it, assuming every name has already been checked, if change regex need to change in posts_controller.rb, application.js.erb, and taggable.rb
   def board_render_post_or_comment_with_hashtags_and_usertags(content)
-    content.gsub(/#\w+/){|word| link_to word, "/boards/hashtag?tag=#{word.delete('#')}"}
-    .gsub(/@[\w+\.?]+/){|name| link_to name, "/users/#{name.delete('@').split('.').join('%20').downcase}"}.html_safe
+    content.gsub(/(?<=\s|^)#\w+/){|word| link_to word, "/boards/hashtag?tag=#{word.delete('#')}"}
+    .gsub(/(?<=\s|^)@[\w+\.?]+/){|name| link_to name, "/users/#{name.delete('@').split('.').join('%20').downcase}"}.html_safe
   end
 
   def boards_postable

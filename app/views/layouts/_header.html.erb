@@ -15,9 +15,9 @@
         <!-- probably refactor need to reposition correctly and put css in a file, maybe make different styling for admin and premium-->
         <% if signed_in? %>
           <% if current_user.admin? %>
-            <span style="color:#fed136;float:left;" id="premium-header">Admin</span>
+            <span id="premium-header">Admin</span>
           <% elsif current_user.premium?  %>
-            <span style="color:#fed136;float:left;" id="premium-header">Premium</span>
+            <span id="premium-header">Premium</span>
           <% end %>
         <% end %>
       </div>
