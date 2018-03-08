@@ -139,9 +139,9 @@ class PostsController < ApplicationController
     end
   end
 
-  # only returns first matched url, maybe refactor - gsub tags is burdensome, also have to add http:// (maybe make it https, don't think it matters)to get link to work correctly in _post.html.erb, also if link has neither http(s):// nor www. this method will accept it as link but rails_autolink will not, also don't like passing both post and content to method but only way to work with #update
+  # maybe refactor: only returns first matched url, using regex look-behind and look-ahead to avoid usertags, hashtags and emails, adding a post is currently quite slow don't know if this is the reason (probably image is reason), also have to add http:// (maybe make it https, don't think it matters)to get link to work correctly in _post.html.erb, also if link has neither http(s):// nor www. this method will accept it as link but rails_autolink will not, also don't like passing both post and content to method but only way to work with #update
   def add_or_update_url(post, content)
-    url = content.gsub(/(?<=\s|^)@[\w+\.?]+/, '').gsub(/(?<=\s|^)#\w+/, '').scan(/(?:https?\:\/\/)?(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+/i)[0]
+    url = content.scan(/(?<=\s|^)(?:https?\:\/\/)?(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+(?=\s|$)/i)[0]
     url = "http://" + url if url && !url.match(/(?:https?\:\/\/)/i)
     if url && url != post.url
       post.url = url

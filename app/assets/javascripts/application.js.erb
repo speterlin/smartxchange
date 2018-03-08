@@ -130,17 +130,19 @@ function addEventEditComment (edit_comment, post_id) {
 }
 
 function hashtagReplacer(match) {
+  match = match.trim();
   var word = match.replace('#','');
   return "<a href='/boards/hashtag?tag=" + word + "'>" + match + "</a>";
 }
 
 function usertagReplacer(match) {
+  match = match.trim();
   var name = match.replace('@','');
   return "<a href='/users/" + name.split('.').join('%20').toLowerCase() + "'>" + match + "</a>";
 }
 
-// not html safe at the moment, may add, escaping # and @ since invalid regex error when uploading to heroku
+// maybe refactor, name could be renderPostOrCommentWithTags, not html safe at the moment - may add later, javascript doesn't support look-behind (like used in taggable.rb and boards_helper.rb) and therefore scanning for whitespace before tag
 function renderPostOrCommentWithHashtagsAndUsertags(content) {
-  return content.replace(/(?<=\s|^)\#\w+/g, hashtagReplacer)
-  .replace(/(?<=\s|^)\@[\w+\.?]+/g, usertagReplacer);
+  return content.replace(/(\s|^)#\w+/g, hashtagReplacer)
+  .replace(/(\s|^)@[\w+\.?]+/g, usertagReplacer);
 }
