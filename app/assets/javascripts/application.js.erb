@@ -139,8 +139,8 @@ function usertagReplacer(match) {
   return "<a href='/users/" + name.split('.').join('%20').toLowerCase() + "'>" + match + "</a>";
 }
 
-// not html safe at the moment, may add
+// not html safe at the moment, may add, escaping # and @ since invalid regex error when uploading to heroku
 function renderPostOrCommentWithHashtagsAndUsertags(content) {
-  return content.replace(/(?<=\s|^)#\w+/g, hashtagReplacer)
-  .replace(/(?<=\s|^)@[\w+\.?]+/g, usertagReplacer);
+  return content.replace(/(?<=\s|^)\#\w+/g, hashtagReplacer)
+  .replace(/(?<=\s|^)\@[\w+\.?]+/g, usertagReplacer);
 }
