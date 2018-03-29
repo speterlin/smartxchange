@@ -41,6 +41,8 @@ Rails.application.routes.draw do
     end
     resources :reviews, except: [:show]
     resources :materials, only: [:create, :destroy]
+    get 'autocomplete' => 'users#autocomplete', on: :collection
+    get 'autocomplete_usertag' => 'users#autocomplete_usertag', on: :collection
   end
 
   resources :conversations, controller: :chat_rooms, only: [:new, :create, :show, :index, :destroy]
@@ -53,6 +55,7 @@ Rails.application.routes.draw do
     post "follow", on: :member
     post "unfollow", on: :member
     get "followers", on: :member
+    get 'autocomplete_hashtag' => 'posts#autocomplete_hashtag', on: :collection
   end
   resources :comments, only: [:create, :update, :destroy]
 

@@ -14,6 +14,7 @@
  // according to github page need to get rid of these
  // *= require_self
  // *= require_tree
+ // *= require jquery-textcomplete
  */
 // sets website to collapse to either 900px or 1000px depending on device
 $grid-float-breakpoint: 1100px;
@@ -116,6 +117,7 @@ h1,h2,h3,h4,h5,h6 {
   background-color:#8fb8e2;
   border-color:transparent;
   padding-bottom: 29px;
+  z-index: 90;
 }
 .navbar-default .navbar-brand {
   color:#fed136;
@@ -161,6 +163,36 @@ h1,h2,h3,h4,h5,h6 {
   color:#fff;
   background-color:#fec503
 }
+@media (max-width:1200px) {
+  .text-right {
+    text-align: left;
+  }
+  .g-recaptcha div {
+    margin-right: auto;
+  }
+}
+@media (min-width:1200px) {
+  .timeline>li {
+    min-height:170px
+  }
+  .timeline>li .timeline-panel {
+    padding:0 20px 20px 100px
+  }
+  .timeline>li .timeline-image {
+    width:170px;
+    height:170px;
+    margin-left:-85px
+  }
+  .timeline>li .timeline-image h4 {
+    margin-top:40px
+  }
+  .timeline>li.timeline-inverted>.timeline-panel {
+    padding:0 100px 20px 20px
+  }
+  .g-recaptcha div {
+    margin-left: auto;
+  }
+}
 // change to 1100px since now collapsing at 1000px instead of 768px
 @media (min-width:1100px) {
   .navbar-default {
@@ -190,6 +222,88 @@ h1,h2,h3,h4,h5,h6 {
   }
   .navbar-default .navbar-collapse {
     text-align: center;
+  }
+}
+@media (min-width:992px) {
+  .timeline>li {
+    min-height:150px
+  }
+  .timeline>li .timeline-panel {
+    padding:0 20px 20px
+  }
+  .timeline>li .timeline-image {
+    width:150px;
+    height:150px;
+    margin-left:-75px
+  }
+  .timeline>li .timeline-image h4 {
+    font-size:18px;
+    margin-top:30px;
+    line-height:26px
+  }
+  .timeline>li.timeline-inverted>.timeline-panel {
+    padding:0 20px 20px
+  }
+}
+@media (min-width:768px) {
+  header .intro-text {
+    padding-top:300px;
+    padding-bottom:200px
+  } header .intro-text .intro-lead-in {
+    font-family:"Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-style:italic;
+    font-size:40px;
+    line-height:40px;
+    margin-bottom:25px
+  } header .intro-text .intro-heading {
+    font-family:Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    text-transform:uppercase;
+    font-weight:700;
+    font-size:75px;
+    line-height:75px;
+    margin-bottom:50px
+  }
+  .timeline:before {
+    left:50%
+  }
+  .timeline>li {
+    margin-bottom:100px;
+    min-height:100px
+  }
+  .timeline>li .timeline-panel {
+    width:41%;
+    float:left;
+    padding:0 20px 20px 30px;
+    text-align:right
+  }
+  .timeline>li .timeline-image {
+    width:100px;
+    height:100px;
+    left:50%;
+    margin-left:-50px
+  }
+  .timeline>li .timeline-image h4 {
+    font-size:13px;
+    margin-top:16px;
+    line-height:18px
+  }
+  .timeline>li.timeline-inverted>.timeline-panel {
+    float:right;
+    text-align:left;
+    padding:0 30px 20px 20px
+  }
+}
+// refactor, need li element text to wrap
+@media (max-width: 768px) {
+  ul.dropdown-menu.textcomplete-dropdown {
+    width: 70%;
+    overflow: auto;
+  } 
+}
+// probably refactor, don't know why this has to be different from 768px
+@media (min-width:767px) {
+  #portfolio .portfolio-item {
+    margin:0 0 30px
   }
 }
 header {
@@ -223,25 +337,6 @@ header .intro-text .intro-heading {
   line-height:50px;
   margin-bottom:25px
 }
-@media (min-width:768px) {
-  header .intro-text {
-    padding-top:300px;
-    padding-bottom:200px
-  } header .intro-text .intro-lead-in {
-    font-family:"Droid Serif","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-style:italic;
-    font-size:40px;
-    line-height:40px;
-    margin-bottom:25px
-  } header .intro-text .intro-heading {
-    font-family:Montserrat,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    text-transform:uppercase;
-    font-weight:700;
-    font-size:75px;
-    line-height:75px;
-    margin-bottom:50px
-  }
-}
 section {
   padding:100px 0
 }
@@ -257,21 +352,6 @@ section h3.section-subheading {
   font-style:italic;
   font-weight:400;
   margin-bottom:75px
-}
-
-@media (min-width:768px) {
-  section {
-    //custom from 150-100
-    padding:100px 0
-  }
-}
-@media (max-width:1200px) {
-  .text-right {
-    text-align: left;
-  }
-  .g-recaptcha div {
-    margin-right: auto;
-  }
 }
 .service-heading {
   margin:15px 0;
@@ -337,11 +417,6 @@ section h3.section-subheading {
 #portfolio * {
   z-index:2
 }
-@media (min-width:767px) {
-  #portfolio .portfolio-item {
-    margin:0 0 30px
-  }
-}
 .timeline {
   list-style:none;
   padding:0;
@@ -394,7 +469,7 @@ section h3.section-subheading {
   width:80px;
   height:80px;
   position:absolute;
-  z-index:100;
+  z-index:80;
   background-color:#fed136;
   color:#fff;
   border-radius:100%;
@@ -435,77 +510,6 @@ section h3.section-subheading {
 }
 .timeline .timeline-body>p,.timeline .timeline-body>ul {
   margin-bottom:0
-}
-@media (min-width:768px) {
-  .timeline:before {
-    left:50%
-  }
-  .timeline>li {
-    margin-bottom:100px;
-    min-height:100px
-  }
-  .timeline>li .timeline-panel {
-    width:41%;
-    float:left;
-    padding:0 20px 20px 30px;
-    text-align:right
-  }
-  .timeline>li .timeline-image {
-    width:100px;
-    height:100px;
-    left:50%;
-    margin-left:-50px
-  }
-  .timeline>li .timeline-image h4 {
-    font-size:13px;
-    margin-top:16px;
-    line-height:18px
-  }
-  .timeline>li.timeline-inverted>.timeline-panel {
-    float:right;
-    text-align:left;
-    padding:0 30px 20px 20px
-  }
-}
-@media (min-width:992px) {
-  .timeline>li {
-    min-height:150px
-  }
-  .timeline>li .timeline-panel {
-    padding:0 20px 20px
-  }
-  .timeline>li .timeline-image {
-    width:150px;
-    height:150px;
-    margin-left:-75px
-  }
-  .timeline>li .timeline-image h4 {
-    font-size:18px;
-    margin-top:30px;
-    line-height:26px
-  }
-  .timeline>li.timeline-inverted>.timeline-panel {
-    padding:0 20px 20px
-  }
-}
-@media (min-width:1200px) {
-  .timeline>li {
-    min-height:170px
-  }
-  .timeline>li .timeline-panel {
-    padding:0 20px 20px 100px
-  }
-  .timeline>li .timeline-image {
-    width:170px;
-    height:170px;
-    margin-left:-85px
-  }
-  .timeline>li .timeline-image h4 {
-    margin-top:40px
-  }
-  .timeline>li.timeline-inverted>.timeline-panel {
-    padding:0 100px 20px 20px
-  }
 }
 .team-member {
   text-align:center;
@@ -777,6 +781,25 @@ form.new select {
   width: 175px;
 }
 
+// correcting dropdown-menus in navbar due to conflict with textcomplete
+.navbar .dropdown-menu {
+  background-color: #000;
+  border: none;
+}
+
+.navbar .dropdown-menu li {
+  border: none;
+}
+
+.navbar .dropdown-menu li:hover {
+  background-color: #8fb8e2;
+}
+
+.navbar .dropdown-menu li a:hover {
+  background-color: #8fb8e2;
+  color: #fec503;
+}
+
 // !important was only way to get it to work
 .dropdown-toggle[aria-expanded="true"] {
   background-color: #fec503 !important;
@@ -787,6 +810,11 @@ form.new select {
   padding: 0;
   padding-left: 10px;
   padding-top: -10px;
+}
+
+// dropdown menu for jquery-textcomplete
+ul.dropdown-menu.textcomplete-dropdown {
+  z-index: 100;
 }
 
 time {
@@ -859,13 +887,6 @@ footer ul li {
   margin-left: 15px;
   font-size: 14px;
 }
-
-@media (min-width: 1200px) {
-  .g-recaptcha div {
-    margin-left: auto;
-  }
-}
-
 
 /* mixins, variables, etc. */
 

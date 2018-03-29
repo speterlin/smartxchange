@@ -17,6 +17,11 @@
 #
 
 class Post < ApplicationRecord
+  searchkick callbacks: :async, text_start: [:hashtags]
+  scope :search_import, -> { includes(:users, :tags) }
+  acts_as_taggable
+  acts_as_taggable_on :users
+
   include Locatable
   # probably refactor, don't like having helpers in model files
   include UsersHelper
@@ -25,8 +30,6 @@ class Post < ApplicationRecord
 
   geocoded_by :location
   mount_uploader :image, AvatarUploader
-  acts_as_taggable
-  acts_as_taggable_on :users
 
   # maybe refactor and move this to a standard validation since want to check url before uploading image, but also want to set image before validation, could also make remove_url_and_image an after_validation call
   before_validation :upload_or_update_image, if: :url_present_and_changed?
@@ -67,6 +70,14 @@ class Post < ApplicationRecord
     og = OpenGraph.new(self.url)
     # Maybe refactor, assign_attributes is same as update_attributes but doesn't save
     og.images.blank? ? self.assign_attributes(remove_image: true) : self.remote_image_url = og.images.first
+  end
+
+  # not using usertags for search at the moment, maybe refactor
+  def search_data
+    {
+      usertags: "#{users.map(&:name).join(" ")}",
+      hashtags: "#{tags.map(&:name).join(" ")}"
+    }
   end
 
   protected

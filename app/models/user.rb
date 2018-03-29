@@ -34,11 +34,12 @@
 #
 
 class User < ApplicationRecord
-  # maybe refactor and take away (searchkick callbacks: :async), also anytime change user's active status searchkick is reindexed, which i don't think is necessary
-  searchkick callbacks: :async
-  acts_as_tagger
+  # maybe refactor, anytime change user's active status searchkick is reindexed, which I don't think is necessary
+  searchkick callbacks: :async, text_start: [:name, :language_and_level, :location]
   # maybe refactor and add filter to only search activated accounts (precautionary)
   scope :search_import, -> { includes(:linkedin, :materials) }
+  # maybe add this (for all autocomplete fields), not sure if it helps: scope :name_like, -> (name) { where("name ilike ?", name) }
+  acts_as_tagger
   include Locatable
   # not sure if it's a good idea to have helpers in model files
   include UsersHelper
@@ -159,6 +160,7 @@ class User < ApplicationRecord
   validates_presence_of :email, :name, :age, :language, :language_level, :password_digest, :session_token, :title, :nationality
   validates_presence_of :birthdate, on: :create
   validates :email, uniqueness: true, length: {maximum: 255}, format: {:with => /\A[^@\s]+@([^@\s]+\.)+[^@\s]+\z/i, on: :create}
+  # maybe refactor lowercase \z instead of \Z like above
   validates :name, uniqueness: true, length: {minimum: 2, maximum: 255}, format: {:with => /\A[^.]*\Z/i, message: "No period allowed"}
   validates :password, length: { minimum: 5, maximum: 50, allow_nil: true }
   validates :age, numericality: { only_integer: true, greater_than_or_equal_to: 18, less_than_or_equal_to: 120 }
@@ -407,21 +409,20 @@ class User < ApplicationRecord
     {
       name: name,
       age: age.to_s,
-      language: "practicing " + language,
-      language_level: user_convert_to_presented_language_level(language_level),
+      # No space between practicing and language, hack that returns better results (only those users who are actually practicing that language - don't know why it works better but it does) - works better except if language has a space like 'Mandarin Chinese' which becomes 'practicingMandarin Chinese' in search_data
+      language: "practicing" + language,
+      language_and_level: language + " " + user_convert_to_presented_language_level(language_level),
       active: active? ? "active" : nil,
       title: title,
       location: location,
-      nationality: nationality + " native",
+      nationality: "native" + nationality,
       person_of_interest: person_of_interest? ? "person of interest" : nil,
       tutor: tutor? ? "tutor" : nil,
       interests: interests.any? ? user_convert_to_interests(interests) : nil,
       chat_bot: chat_bot? ? "chat bot" : nil,
-      linkedin_industry: linkedin.present? ? linkedin.industry : nil,
-      linkedin_summary: linkedin.present? ? linkedin.summary : nil,
-      materials: materials.any? ? "materials" : nil,
-      material_language: materials.any? ? materials.map(&:language) : nil,
-      material_language_level: materials.any? ? materials.map {|material| user_convert_to_presented_language_level(material.language_level) } : nil
+      # maybe refactor linkedin, rather have one check for linkedin.present? even if it's eager loaded, if someone has a Linkedin should always have industry and summary so ( || ) is just precautionary
+      linkedin_industry_and_summary: linkedin.present? ? (linkedin.industry || "") + " " + (linkedin.summary || "") : nil,
+      material_language_and_level: materials.any? ? materials.map {|material| material.language + " " + user_convert_to_presented_language_level(material.language_level) + " materials" } : nil
     }
   end
 

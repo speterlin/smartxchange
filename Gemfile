@@ -87,6 +87,8 @@ gem 'searchkick'
 # for tagging posts
 gem 'acts-as-taggable-on', '~> 4.0'
 
+# for boards and header autocomplete
+gem 'jquery-textcomplete-rails'
 
 # Use Unicorn as the app server
 # gem 'unicorn'

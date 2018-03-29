@@ -27,7 +27,7 @@
         <% if signed_in? %><!-- maybe refactor -->
           <div id="search">
             <form action="<%= users_path %>" method="get">
-              <input type="text" name="search" class="search-field" placeholder="<%= ["(Nationality) 'native' 'practicing '(Language) (Language_level) (keyword)", "Spanish intermediate materials", "Spanish B1 Business Development", "German Intermediate", "French B2 materials", "Italian beginner", "English chat bot", "American native practicing Spanish", "Spanish native practicing intermediate English", "French native practicing Spanish", "French Engineer materials", "British Marketing"].sample + " ..." %>">
+              <input type="text" name="search" class="search-field" placeholder="<%= ["'native' (Nationality) 'practicing '(Language) (Language_level) (keyword)", "Spanish intermediate materials", "Spanish Business Development", "German PhD", "French B2 materials", "Italian beginner", "English chat bot", "native American practicing Spanish", "native Spanish practicing English", "native French practicing Spanish", "French Engineer materials", "British Marketing"].sample + " ..." %>">
               <input type="submit" value="Search" class="btn btn-primary">
             </form>
           </div>
@@ -37,7 +37,7 @@
             <li class="boards-header dropdown">
               <% unread_boards = boards_unread(current_user) %>
               <%= link_to "Boards#{@unread_posts}", "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: "#{'color:yellow' if unread_boards.any?}"  %>
-              <ul class="dropdown-menu" style="background-color: #000;">
+              <ul class="dropdown-menu">
                 <!-- maybe refactor, issue with Boards() post notifications being 1 higher than sum of dropdown post notifications -->
                 <% unread_boards_notifications = user_boards_notifications(current_user) %>
                 <% boards_postable.each do |board| %>
@@ -51,7 +51,7 @@
             <li><%= link_to "About", about_path %></li>
             <li class="user-settings dropdown">
               <%= link_to image_tag('settings.png'), "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: 'margin-right: 10px' %>
-              <ul class="dropdown-menu" style="background-color: #000;">
+              <ul class="dropdown-menu">
                 <li><%= link_to "Settings", user_settings_path(current_user) %></li>
                 <li><%= link_to "Log out", session_path, method: :delete %></li>
               </ul>
@@ -62,7 +62,20 @@
           <% end %>
         </ul>
       </div>
-      <!-- /.navbar-collapse -->
-  </div>
-  <!-- /.container-fluid -->
+    </div>
 </nav>
+<script>
+  $('.search-field').textcomplete([
+    {
+      match: /(\s|^)(\w+)$/,
+      search: function (term, callback) {
+        $.getJSON('/users/autocomplete', { query: term })
+          .done(function (resp) { callback(resp); })
+          .fail(function ()     { callback([]);   });
+      },
+      replace: function (value) {
+        return '$1' + value + ' ';
+      }
+    }
+  ]);
+</script>

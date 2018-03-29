@@ -44,6 +44,53 @@ class UsersController < ApplicationController
     end
   end
 
+  # need to refactor, currently making 3 calls to User.search for every autocomplete, would like to search the 3 fields and return the matching
+  def autocomplete
+    render json: autocomplete_name + autocomplete_language_and_level + autocomplete_location
+  end
+
+  def autocomplete_usertag
+    # probably refactor, not great regex, could also use =~ for if statement
+    render json: User.search(params[:query], {
+      fields: ["name"],
+      # match: :word_start,
+      limit: 10,
+      load: false,
+      misspellings: {below: 2}
+    }).map{|user| user.name.downcase.prepend('@').split(' ').join('.')}
+  end
+
+  def autocomplete_name
+    User.search(params[:query], {
+      fields: ["name"],
+      # match: :word_start,
+      limit: 10,
+      load: false,
+      misspellings: {below: 2}
+    }).map(&:name)
+  end
+
+  def autocomplete_language_and_level
+    p params[:query]
+    User.search(params[:query], {
+      fields: ["language_and_level"],
+      # match: :word_start,
+      limit: 10,
+      load: false,
+      misspellings: {below: 2}
+    }).map(&:language_and_level)
+  end
+
+  def autocomplete_location
+    User.search(params[:query], {
+      fields: ["location"],
+      # match: :word_start,
+      limit: 10,
+      load: false,
+      misspellings: {below: 2}
+    }).map(&:location)
+  end
+
   def show
     @user = User.find_by_param(params[:id])
     @materials = @user.materials if @user.materials

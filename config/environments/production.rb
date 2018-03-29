@@ -69,7 +69,7 @@ Rails.application.configure do
   # config.cache_store = :mem_cache_store
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
-  # config.action_controller.asset_host = 'http://assets.example.com'
+  config.action_controller.asset_host = ENV['HTTP_HOST']
 
   # host header protection
   config.action_controller.default_url_options = { host: ENV['HTTP_HOST'] }

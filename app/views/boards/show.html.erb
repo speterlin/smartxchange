@@ -50,7 +50,7 @@
   <div class="post-form new">
     <form action="<%= posts_path %>" method="post" data-remote="true">
       <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-      <textarea id="message-body" name="post[content]"></textarea>
+      <textarea id="message-body" class="textcomplete" name="post[content]"></textarea>
       <input type="hidden" name="post[board_id]" value="<%= @board.id %>">
       <input type="submit" class="btn btn-primary send-post"  value="Post">
       <div id="post-category">
@@ -110,4 +110,32 @@
       }
     })
   <% end %>
+  // maybe refactor .textarea to also be used in chat_room, important to note difference in regex between here and in other places where we match usertags (taggable.rb, application.js.erb, boards_helper.rb) in that here we are using () to match group where we would otherwise use [] to match single characters
+  $('.textcomplete').textcomplete([
+    {
+      // Usertag strategy
+      match: /(\s|^)@(\w+\.?)+$/,
+      search: function (term, callback) {
+        $.getJSON('/users/autocomplete_usertag', { query: term })
+          .done(function (resp) { callback(resp); })
+          .fail(function ()     { callback([]);   });
+      },
+      replace: function (value) {
+        return '$1' + value + ' ';
+      }
+    },
+    {
+      // Hashtag strategy
+      match: /(\s|^)#(\w+)$/,
+      search: function (term, callback) {
+        $.getJSON('/posts/autocomplete_hashtag', { query: term })
+          .done(function (resp) { callback(resp); })
+          .fail(function ()     { callback([]);   });
+      },
+      replace: function (value) {
+        return '$1' + value + ' ';
+      }
+    }
+  ]);
+
 </script>
