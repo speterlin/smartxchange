@@ -65,7 +65,7 @@ gem 'braintree', '~> 2.33.1'
 gem 'gon', '~> 5.1.2'
 
 # recaptcha
-gem "recaptcha", require: "recaptcha/rails"
+gem 'recaptcha', require: 'recaptcha/rails'
 
 # for background jobs
 gem 'delayed_job_active_record'

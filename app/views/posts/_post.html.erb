@@ -11,7 +11,7 @@
     </p>
     <time datetime="<%= post.created_at %>">
       <%= link_to post.owner.name, user_path(post.owner) %> • <%= post.timestamp %>
-      <span style="display: inline;" class="post-category" >
+      <span style="display: inline;" class="post-category" data-category="<%= post.category %>">
         <!-- refactor, have to pass in board variable for all partials (update, upvote, unfollow, follow, downvote, create, comments/create & destroy) - since it's so rare that someone shoud update/unfollow/upvote... on the hashtag board page maybe take out in future -->
         <%= "• #{post.category}" %> <%= @board ? (@board.id == 9 ? "• #{post.board.title}" : "") : (board.id == 9 ? "• #{post.board.title}" : "") %>
       </span>

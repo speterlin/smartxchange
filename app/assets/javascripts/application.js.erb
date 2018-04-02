@@ -53,7 +53,7 @@ function addEventEditPost (edit_post) {
     var post_id = $(this).data('post-id');
     if (!$(this).data('clicked')) {
       var post_content = $('#post-'+post_id+' .post-text').text();
-      var post_category = $('#post-'+post_id+' .post-category').text().match(/[A-Z].*/i)[0];
+      var post_category = $('#post-'+post_id+' .post-category').data('category');
       // so that post_location is not listed as undefined below
       var post_location = $('#post-'+post_id+' .post-location').data('location') ? $('#post-'+post_id+' .post-location').data('location') : "";
       $('#post-'+post_id+' .post-text').remove();
