@@ -7,12 +7,17 @@ module Taggable
     false
   end
 
+  def usertags_present?
+    return true if self.content.scan(/(?<=\s|^)@[^\s]+/).any?
+    false
+  end
+
   # refactor, a lot of database calls, maybe add non-owned tags
   def add_or_update_owned_tags
     combined_content = combine_content
     add_or_update_owned_hashtags(combined_content)
     add_or_update_owned_usertags(combined_content)
-    # because saving in before_update
+    # because if it is a post, tag_item is self and it will save at end
     tag_item.save if !self.is_a?(Post)
   end
 
@@ -24,12 +29,7 @@ module Taggable
   end
 
   def add_or_update_owned_usertags(content)
-    usertags = parse_usertags(content.scan(/(?<=\s|^)@[\w+\.?]+/))
-    content_usertags = usertags - (usertags - self.content.gsub('@', '').split(" "))
-    content_usertags.each do |usertag|
-      next if usertag == self.owner.name.downcase.split(" ").join(".")
-      post_mention_create_notification(self, tag_item, User.find_by_name(usertag.split(".").join(" ").titleize))
-    end
+    usertags = parse_usertags(content.scan(/(?<=\s|^)@[^\s]+/))
     self.owner.tag(tag_item, :with => usertags.join(","), :on => :users, :skip_save => true)
   end
 
@@ -48,10 +48,20 @@ module Taggable
   end
 
   def remove_owned_usertags
-    usertags = parse_usertags(self.content.scan(/(?<=\s|^)@[\w+\.?]+/))
+    usertags = parse_usertags(self.content.scan(/(?<=\s|^)@[^\s]+/))
     owned_user_list = tag_item.users_from(self.owner)
     owned_user_list -= usertags
     self.owner.tag(tag_item, :with => owned_user_list.join(","), :on => :users, :skip_save => true)
+  end
+
+  def notify_usertag_mentions
+    usertags = tag_item.users.pluck(:name)
+    content_usertags = usertags - (usertags - self.content.gsub('@', '').split(" "))
+    # maybe refactor, uniq in case user is mentioned more than once in post and comments
+    content_usertags.uniq.each do |usertag|
+      next if usertag == self.owner.name.downcase.split(" ").join(".")
+      post_mention_create_notification(self, tag_item, User.find_by_name(usertag.split(".").join(" ").titleize))
+    end
   end
 
   # refactor, if else statement to prevent stack loop error in parse_usertags after saving content
@@ -78,7 +88,6 @@ module Taggable
         usertag.downcase.delete('@')
       else
         self.content.gsub!(usertag, "")
-        self.save
         next
       end
     end.compact.uniq

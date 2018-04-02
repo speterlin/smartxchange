@@ -181,9 +181,10 @@ class User < ApplicationRecord
 
   after_validation :geocode, if: :location_present_and_changed?
   after_validation :remove_location, if: :location_not_present_and_changed?
-  after_validation :error_and_remove_location, if: :location_present_and_changed_and_latitude_unchanged?
+  after_validation :error_and_remove_location, if: [:location_present_and_changed?, :latitude_unchanged?]
 
   before_create :generate_activation_token
+
   after_create :add_email_subscription
   after_create :add_standard_package
 

@@ -34,9 +34,11 @@ class Post < ApplicationRecord
   # maybe refactor and move this to a standard validation since want to check url before uploading image, but also want to set image before validation, could also make remove_url_and_image an after_validation call
   before_validation :upload_or_update_image, if: :url_present_and_changed?
   before_validation :remove_url_and_image, if: :url_not_present_and_changed?
+  # before_validation because content can change (remove invalid usertags) and don't want empty posts or comments created
+  before_validation :add_or_update_owned_tags, if: :content_present_and_changed?
 
   validates_presence_of :content, :owner, :board, :category
-  validates :content, length: {minimum: 5, maximum: 500}
+  validates :content, length: {minimum: 1, maximum: 500}
   validates :category, inclusion: {in: ["Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}, if: 'board.id != 2'
   validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted"]}, if: 'board.id == 2'
   validates_uniqueness_of :url, scope: :board_id, unless: 'url.blank?'
@@ -46,11 +48,9 @@ class Post < ApplicationRecord
 
   after_validation :geocode, if: :location_present_and_changed?
   after_validation :remove_location, if: :location_not_present_and_changed?
-  after_validation :error_and_remove_location, if: :location_present_and_changed_and_latitude_unchanged?
+  after_validation :error_and_remove_location, if: [:location_present_and_changed?, :latitude_unchanged?]
 
-  after_create :add_or_update_owned_tags
-
-  before_update :add_or_update_owned_tags, if: :content_present_and_changed?
+  after_save :notify_usertag_mentions, if: [:content_present_and_changed?, :usertags_present?]
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true

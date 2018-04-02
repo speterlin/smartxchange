@@ -34,10 +34,10 @@ module BoardsHelper
     result
   end
 
-  # maybe refactor, name could be just board_render_post_or_comment_with_tags, issue with emails and hashtags avoided by adding (?<=\s|^) which only matches if tags are preceded by white space or content starts with it, assuming every name has already been checked, if change regex need to change in application.js.erb (with workaround since js doesn't support look-behinds) and taggable.rb
+  # maybe refactor, name could be just board_render_post_or_comment_with_tags, issue with emails and hashtags avoided by adding (?<=\s|^) which only matches if tags are preceded by white space or content starts with it, assuming every name has already been checked, implement [^\s]+ for usertags matching to allow for letters with accents - allows for all punctuaction, if change regex need to change in application.js.erb (with workaround since js doesn't support look-behinds) and taggable.rb
   def board_render_post_or_comment_with_hashtags_and_usertags(content)
     content.gsub(/(?<=\s|^)#\w+/){|word| link_to word, "/boards/hashtag?tag=#{word.delete('#')}"}
-    .gsub(/(?<=\s|^)@[\w+\.?]+/){|name| link_to name, "/users/#{name.delete('@').split('.').join('%20').downcase}"}.html_safe
+    .gsub(/(?<=\s|^)@[^\s]+/){|name| link_to name, "/users/#{name.delete('@').split('.').join('%20').downcase}"}.html_safe
   end
 
   def boards_postable

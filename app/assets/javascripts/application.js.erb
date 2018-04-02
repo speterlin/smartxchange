@@ -61,7 +61,7 @@ function addEventEditPost (edit_post) {
       var form = "<div class='post-form edit'><form action='/posts/"+post_id+"' method='post' data-remote='true'>";
       form += "<input type='hidden' name='_method' value='patch'>";
       form += "<input type='hidden' name='authenticity_token' value='"+$('meta[name="csrf-token"]')[0].content+"'>";
-      form += "<textarea name='post[content]'>"+post_content+"</textarea>";
+      form += "<textarea class='textcomplete' name='post[content]'>"+post_content+"</textarea>";
       form += "<input type='hidden' name='post[board_id]' value='"+board_id+"'>";
       form += "<input type='submit' class='btn btn-primary send-post'  value='Edit'>";
       form += "<div id='post-category'> Category: <select name='post[category]'>";
@@ -78,6 +78,7 @@ function addEventEditPost (edit_post) {
       form += "</div>";
       form += "</form></div>";
       $('#post-'+post_id+' .post-votes').after(form);
+      addTextCompleteForHashtagsAndUsertags($('#post-' + post_id + ' .textcomplete'));
       $(this).data('clicked', true);
       // needs refactoring
       $('#post-'+post_id+' #post-category select').on('change', function() {
@@ -113,12 +114,13 @@ function addEventEditComment (edit_comment, post_id) {
       var form = "<div class='comment-form edit'><form action='/comments/"+comment_id+"' method='post' data-remote='true'>";
       form += "<input type='hidden' name='_method' value='patch'>";
       form += "<input type='hidden' name='authenticity_token' value='"+$('meta[name="csrf-token"]')[0].content+"'>";
-      form += "<textarea name='comment[content]'>"+comment_content+"</textarea>";
+      form += "<textarea class='textcomplete' name='comment[content]'>"+comment_content+"</textarea>";
       form += "<input type='hidden' name='comment[commentable_type]' value='Post'>";
       form += "<input type='hidden' name='comment[commentable_id]' value='"+post_id+"'>";
       form += "<input type='submit' class='btn btn-primary send-comment' value='Edit'>";
       form += "</form></div>";
       $('#comment-'+comment_id+' time').before(form);
+      addTextCompleteForHashtagsAndUsertags($('#post-' + post_id + ' .textcomplete'));
       $(this).data('clicked', true);
     } else {
       var comment_content = $('.comment-form.edit textarea').val();
@@ -128,6 +130,36 @@ function addEventEditComment (edit_comment, post_id) {
     }
     event.preventDefault();
   })
+}
+
+// maybe refactor, important to note difference in regex between here and in other places where we match usertags (taggable.rb, application.js.erb, boards_helper.rb) in that here we are using () to match group where we would otherwise use [] to match single characters
+function addTextCompleteForHashtagsAndUsertags($textarea) {
+  $textarea.textcomplete([
+    {
+      // Usertag strategy
+      match: /(\s|^)@([^\s]+)$/,
+      search: function (term, callback) {
+        $.getJSON('/users/autocomplete_usertag', { query: term })
+          .done(function (resp) { callback(resp); })
+          .fail(function ()     { callback([]);   });
+      },
+      replace: function (value) {
+        return '$1' + value + ' ';
+      }
+    },
+    {
+      // Hashtag strategy
+      match: /(\s|^)#(\w+)$/,
+      search: function (term, callback) {
+        $.getJSON('/posts/autocomplete_hashtag', { query: term })
+          .done(function (resp) { callback(resp); })
+          .fail(function ()     { callback([]);   });
+      },
+      replace: function (value) {
+        return '$1' + value + ' ';
+      }
+    }
+  ]);
 }
 
 function hashtagReplacer(match) {
@@ -145,5 +177,5 @@ function usertagReplacer(match) {
 // maybe refactor, name could be renderPostOrCommentWithTags, not html safe at the moment - may add later, javascript doesn't support look-behind (like used in taggable.rb and boards_helper.rb) and therefore scanning for whitespace before tag
 function renderPostOrCommentWithHashtagsAndUsertags(content) {
   return content.replace(/(\s|^)#\w+/g, hashtagReplacer)
-  .replace(/(\s|^)@[\w+\.?]+/g, usertagReplacer);
+  .replace(/(\s|^)@[^\s]+/g, usertagReplacer);
 }

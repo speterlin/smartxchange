@@ -17,17 +17,17 @@ class Comment < ApplicationRecord
   include PostsHelper
   include Taggable
 
+  before_validation :add_or_update_owned_tags, if: :content_present_and_changed?
+
   validates_presence_of :content, :owner, :commentable
-  validates :content, length: {minimum: 5, maximum: 255}
+  validates :content, length: {minimum: 1, maximum: 255}
 
   belongs_to :owner, class_name: 'User'
   belongs_to :commentable, polymorphic: true, touch: true
   # only doing has_one notification here because can't delete vote or message, no index on sourceable since only called here which is very rare
   has_many :notifications, as: :sourceable, dependent: :destroy
 
-  after_create :add_or_update_owned_tags
-
-  before_update :add_or_update_owned_tags, if: :content_present_and_changed?
+  after_save :notify_usertag_mentions, if: [:content_present_and_changed?, :usertags_present?]
 
   before_destroy :remove_owned_tags
 
