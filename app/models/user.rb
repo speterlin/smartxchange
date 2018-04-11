@@ -45,7 +45,7 @@ class User < ApplicationRecord
   include UsersHelper
   # need to update _translate.html.erb, users_helper.rb#user_convert_to_language(nationality), #user_convert_to_nationalities(language), users/index.html.erb, routes.rb, and seeds.rb any time there is a change
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese", "Danish"]
-  # need to update users_helper.rb#user_convert_to_scripted_language_level(language_level), #user_convert_to_language_level(scripted_language_level), #user_convert_to_presented_language_level(language_level) any time there is a change
+  # need to update users_helper.rb#user_convert_to_presented_language_level(language_level) any time there is a change
   LANGUAGE_LEVELS = (1..6).to_a
   # maybe refactor, maybe need to change some ish to ian for language vs. nationality mix up, add other country names like 'Holland' to keys
   NATIONALITIES = {
@@ -192,7 +192,7 @@ class User < ApplicationRecord
   # maybe refactor and get rid of read_notifications, mainly used for destroying notifications not covered in above
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
   has_many :created_notifications, :foreign_key => :notifier_id, class_name: 'Notification', dependent: :destroy
-  # No dependent: :destroy here since covered in above, refactor, read: false not picking up when cycling through posts_notifications in users_helper.rb#user_boards_notifications
+  # No dependent: :destroy here since covered in above, refactor: read: false not picking up when cycling through posts_notifications in user.rb#boards_notifications
   has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification'
   has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification'
   # keeping this for the dependent: :destroy aspect
@@ -342,6 +342,7 @@ class User < ApplicationRecord
     User.where(language: self.language).where.not(id: self.id).includes(:linkedin).sort {|u1, u2| u2.sort_value(self) <=> u1.sort_value(self) }
   end
 
+  # maybe make #user_convert_to_language and #user_convert_to_nationalities User methods so don't have to include users_helper.rb
   def sort_exchange
     language = user_convert_to_language(self.nationality)
     nationalities = user_convert_to_nationalities(self.language)
@@ -402,6 +403,25 @@ class User < ApplicationRecord
     restore_attributes(errors.keys) unless valid?
     save
     notices
+  end
+
+  def boards_notifications
+    boards_notifications = Hash.new
+    self.posts_notifications.each do |post_notification|
+      # bug, need to fix but there is a lag and a mismatch between total boards notifications and individual boards notifications displayed
+      next unless post_notification.read == false
+      board_id = post_notification.notifiable.board_id
+      boards_notifications[board_id] ? boards_notifications[board_id] << post_notification : boards_notifications[board_id] = [post_notification]
+    end
+    boards_notifications
+  end
+
+  def boards_notifications_count
+    boards_notifications_count = Hash.new
+    boards_notifications.each do |board_id, board_notifications|
+      boards_notifications_count[board_id] = board_notifications.count
+    end
+    boards_notifications_count
   end
 
   def search_data

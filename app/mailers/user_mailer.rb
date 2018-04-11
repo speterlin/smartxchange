@@ -5,14 +5,19 @@ class UserMailer < ApplicationMailer
   #     UserMailer.monthly_update(user, user.notifications.count).deliver_now
   # end
 
-  # for using a_or_an method in emails
+  # for using #a_or_an in emails
   add_template_helper(ApplicationHelper)
+  # for using #user_convert_to_presented_language_level in related_material.html.erb&text.erb
+  add_template_helper(UsersHelper)
+  # needed for #num_to_month
   include ApplicationHelper
-  include ChatRoomsHelper
+  # needed for #user_convert_to_language and #user_related_material
   include UsersHelper
+  # only need for chat_room_interlocutor, maybe refactor and make this method a chat_room.rb method
+  include ChatRoomsHelper
 
   # all emails where we're using normal footer_mail (rather than footer_mail_simple)
-  before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update, :unread_board, :unread_jobs, :unread_materials]
+  before_action :set_footer_urls, only: [:welcome_new, :weekly_notifications, :monthly_update, :unread_board, :unread_jobs, :unread_materials, :related_material]
   # all emails where there is a login link
   before_action :set_login_url, only: [:welcome_new, :weekly_notifications, :monthly_update, :language_matches]
   # before_action :set_header_logo
@@ -108,6 +113,17 @@ class UserMailer < ApplicationMailer
     @material_url = user_url(@material.owner) + campaign("materials") + "#tutor-materials"
     add_campaign_to_footer(campaign("materials"))
     set_name_and_title_and_unsubscribe_and_header(@user, "#{@material.owner.name} has uploaded new material")
+  end
+
+  def related_material(user)
+    @user = user
+    @materials = user_related_material(@user)
+    @material_urls = Hash.new
+    @materials.each do |material|
+      @material_urls[material.id] = user_url(material.owner) + campaign("materials") + "#tutor-materials"
+    end
+    add_campaign_to_footer(campaign("materials"))
+    set_name_and_title_and_unsubscribe_and_header(@user, "We have found #{@materials.count} related materials for you!")
   end
 
   def new_conversation(chat_room)

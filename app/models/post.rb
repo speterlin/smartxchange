@@ -22,10 +22,9 @@ class Post < ApplicationRecord
   acts_as_taggable
   acts_as_taggable_on :users
 
-  include Locatable
-  # probably refactor, don't like having helpers in model files
-  include UsersHelper
+  # probably refactor, don't like having helpers in model files, need posts_helper.rb because we use post_mention_create_notification in taggable concern
   include PostsHelper
+  include Locatable
   include Taggable
 
   geocoded_by :location

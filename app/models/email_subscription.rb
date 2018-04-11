@@ -18,6 +18,7 @@
 #  unread_jobs          :boolean          default(TRUE), not null
 #  new_post             :boolean          default(TRUE), not null
 #  unread_materials     :boolean          default(TRUE), not null
+#  related_material     :boolean          default(TRUE), not null
 #
 
 class EmailSubscription < ApplicationRecord

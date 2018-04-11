@@ -38,10 +38,10 @@
               <% unread_boards = boards_unread(current_user) %>
               <%= link_to "Boards#{@unread_posts}", "#", class: 'dropdown-toggle', data: {toggle: 'dropdown'}, style: "#{'color:yellow' if unread_boards.any?}"  %>
               <ul class="dropdown-menu">
-                <!-- maybe refactor, issue with Boards() post notifications being 1 higher than sum of dropdown post notifications -->
-                <% unread_boards_notifications = user_boards_notifications(current_user) %>
+                <!-- maybe refactor, issue with Boards() post notifications being 1 higher than sum of dropdown post notifications (if don't include check for read == false in user#boards_notifications method)  -->
+                <% boards_notifications_count = current_user.boards_notifications_count %>
                 <% boards_postable.each do |board| %>
-                  <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{unread_boards_notifications[board.id] ? ' (' + unread_boards_notifications[board.id].to_s + ')' : ''}", board_path(board), style: "#{'color:yellow' if unread_boards[board.id]}" %> </li>
+                  <li id="board-<%= board.id %>-header"><%= link_to "#{board.title}#{boards_notifications_count[board.id] ? ' (' + boards_notifications_count[board.id].to_s + ')' : ''}", board_path(board), style: "#{'color:yellow' if unread_boards[board.id]}" %> </li>
                 <% end %>
               </ul>
             </li>

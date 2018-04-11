@@ -38,6 +38,10 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.unread_materials(User.first)
   end
 
+  def related_material
+    UserMailer.related_material(User.first)
+  end
+
   def new_conversation
     UserMailer.new_conversation(ChatRoom.first)
   end

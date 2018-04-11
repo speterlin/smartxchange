@@ -1,0 +1,12 @@
+Dear <%= @user.name %>,
+===============================================
+We have found material which matches your practice language and level.
+
+  <ul>
+    <% @materials.each do |material|%>
+        <li>
+          <%= "#{material.name}, #{material.language} #{user_convert_to_presented_language_level(material.language_level)}" %>
+          <%= link_to "View Material", @material_urls[material.id], class: 'mail-btn' %>
+        </li>
+    <% end %>
+  </ul>

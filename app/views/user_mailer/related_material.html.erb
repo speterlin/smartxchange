@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <%= render 'layouts/header_mail' %>
+  <body>
+    <h4>Dear <%= @user.name %>,</h4>
+      <p>
+        We have found material which matches your practice language and level.
+      </p>
+      <ul>
+        <% @materials.each do |material| %>
+          <li>
+            <!-- maybe refactor since not a mail-user, more a mail-material -->
+            <div class="mail-user">
+              <div class="mail-user-text">
+                <p><span class="bold-uppercase"><%= "#{material.name}" %></span>, <%= "#{material.language} #{user_convert_to_presented_language_level(material.language_level)}" %></p>
+                <%= link_to "View Material", @material_urls[material.id], class: 'mail-btn' %>
+              </div>
+            </div>
+          </li>
+        <% end %>
+      </ul>
+  </body>
+  <%= render 'layouts/footer_mail' %>
+
+</html>

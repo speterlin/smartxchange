@@ -1,43 +1,13 @@
 module UsersHelper
 
-  # unused at the moment probably need to refactor the below 3 methods, this method has a bug - counting twice if there's a match
-  def user_count_unread_board_notifications(user, board)
-    count = 0
-    user.posts_notifications.each do |post_notification|
-      count += 1 if post_notification.notifiable.board_id == board.id && post_notification.read == false
-    end
-    count
-  end
-
-  def user_first_unread_board_notification(user, board)
-    user.posts_notifications.each do |post_notification|
-      return post_notification if post_notification.notifiable.board_id == board.id
-    end
-  end
-
-  # unused at the moment, maybe refactor and change hash to array, array takes up less space (232 vs. 40), also need to include boards helper, also maybe merge with user_boards_notifications, only used to use with notifications channel to prevent regex
-  def user_boards_notifications_with_title(user)
-    boards_notifications = Hash.new
-    boards_postable.all.each do |board|
-      # maybe refactor get rid of board title, need for web notifications channel displaying in header
-      boards_notifications[board.id] = [board.title, user_count_unread_board_notifications(user, board)]
-    end
-    boards_notifications
-  end
-
-  def user_boards_notifications(user)
-    boards_notifications = Hash.new
-    user.posts_notifications.each do |post_notification|
-      next unless post_notification.read == false # bug need to fix but there is a lag
-      board_id = post_notification.notifiable.board_id
-      boards_notifications[board_id] = boards_notifications[board_id] ? boards_notifications[board_id] + 1  : 1
-    end
-    boards_notifications
-  end
-
   def user_has_unread_materials?(user)
     return true if user.updated_at < Material.last.updated_at
     false
+  end
+
+  def user_related_material(user)
+    related_material = Material.where(language: user.language).where('language_level >= ? AND language_level <= ?',(user.language_level - 1), (user.language_level + 1)).order(updated_at: :desc).limit(10)
+    related_material
   end
 
   def user_convert_to_presented_language_level(language_level)
@@ -55,44 +25,6 @@ module UsersHelper
       return "C1 - advanced"
     elsif language_level == 6
       return "C2 - master"
-    end
-  end
-
-  # unused at the moment, maybe refactor and take out
-  def user_convert_to_scripted_language_level(language_level)
-    # in case wrongly passed a language_level outside of User::LANGUAGE_LEVELS
-    return false unless language_level.in?(User::LANGUAGE_LEVELS)
-    if language_level == 1
-      return "a1"
-    elsif language_level == 2
-      return "a2"
-    elsif language_level == 3
-      return "b1"
-    elsif language_level == 4
-      return "b2"
-    elsif language_level == 5
-      return "c1"
-    elsif language_level == 6
-      return "c2"
-    end
-  end
-
-  # also unused at the moment, maybe refactor and take out
-  def user_convert_to_language_level(scripted_language_level)
-    # in case scripted level isn't downcased already (shouldn't be the case)
-    scripted_language_level = scripted_language_level.downcase
-    if scripted_language_level == "a1"
-      return 1
-    elsif scripted_language_level == "a2"
-      return 2
-    elsif scripted_language_level == "b1"
-      return 3
-    elsif scripted_language_level == "b2"
-      return 4
-    elsif scripted_language_level == "c1"
-      return 5
-    elsif scripted_language_level == "c2"
-      return 6
     end
   end
 
@@ -201,18 +133,20 @@ module UsersHelper
     user_interests
   end
 
-  # may refactor, this logic is something that should be in application helper, but don't want to have to include ApplicationHelper in UsersHelper and in scheduler.rake
+  # maybe refactor, this logic is something that should be in application helper, but don't want to have to include ApplicationHelper in UsersHelper and in scheduler.rake
   def user_days_from_beginning_of_year
-    (Date.today - Date.parse("1/1/2017")).to_i
+    (Date.today - Date.parse("1/1/#{Date.today.year}")).to_i
   end
 
-  # num indicates day of the week, counts up to 6, 0 is Sunday, 1 is Monday ... 6 is Saturday. Jan 1,  2017 was a Sunday, this is why 0 = Sunday. Number is offset by 1, i.e. Jan 30 would be 29 days from beginning of year
-  def user_weekly_beginning_and_end(num)
-    number = User.count / 7
-    multiple = (user_days_from_beginning_of_year % 7 + num) % 7
-    beginning_number = multiple * number
-    ending_number = multiple == 6 ? User.count : beginning_number + number
-    User.all[beginning_number...ending_number]
+  # group_num indicates day of the week, counts up to 6, for 2017: 0 is Sunday, 1 is Monday ... 6 is Saturday. Jan 1,  2017 was a Sunday, this is why 0 = Sunday. Number is offset by 1, i.e. Jan 30 would be 29 days from beginning of year
+  def users_group_by_day_of_week_and_group_num(group_num)
+    users_in_each_group = User.count / 7
+    current_day_of_week = user_days_from_beginning_of_year % 7
+    # + group_num % 7 so it starts over at 0 after get above 6
+    current_group_num = (current_day_of_week + group_num) % 7
+    start_index = current_group_num * users_in_each_group
+    end_index = current_group_num == 6 ? User.count : start_index + users_in_each_group
+    User.all[start_index...end_index]
   end
 
 end

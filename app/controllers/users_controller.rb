@@ -1,6 +1,5 @@
 require 'will_paginate/array'
 class UsersController < ApplicationController
-  include UsersHelper
 
   skip_before_action :require_signed_in, only: [:new, :create, :email_match]
   before_action :correct_user?, only: [:update, :destroy, :remove_image!]
@@ -46,7 +45,7 @@ class UsersController < ApplicationController
 
   # need to refactor, currently making 3 calls to User.search for every autocomplete, would like to search the 3 fields and return the matching
   def autocomplete
-    render json: autocomplete_name + autocomplete_language_and_level + autocomplete_location
+    render json: autocomplete_language_and_level + autocomplete_location
   end
 
   def autocomplete_usertag

@@ -36,7 +36,7 @@ module ChatRoomsHelper
       WebNotificationsChannel.broadcast_to(
         recipient,
         chat_rooms_notifications: recipient.chat_rooms_notifications.count,
-        total_notifications: recipient.notifications.count,
+        total_notifications_count: recipient.notifications.count,
         sound: true
       )
       # if sending from this chat room mark last notification from sender as read
@@ -45,7 +45,7 @@ module ChatRoomsHelper
       WebNotificationsChannel.broadcast_to(
         message.sender,
         chat_rooms_notifications: message.sender.chat_rooms_notifications.count,
-        total_notifications: message.sender.notifications.count,
+        total_notifications_count: message.sender.notifications.count,
         sound: false
       )
     end

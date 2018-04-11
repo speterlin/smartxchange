@@ -1,5 +1,4 @@
 class PostsController < ApplicationController
-  include UsersHelper
   include PostsHelper
   include BoardsHelper
 

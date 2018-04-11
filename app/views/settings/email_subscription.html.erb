@@ -60,7 +60,12 @@
   <div class="email-subscription-checkbox">
     <input type="hidden" name="email[unread_materials]" value="false">
     <input type="checkbox" id="unread_materials" name="email[unread_materials]" value="true" <%= 'checked' if @user.email_subscription.unread_materials %> >
-    <label for="unread_materials">Unread Materials Notification (once per week we will email you if there are new materials uploaded)</label><br><br>
+    <label for="unread_materials">Unread Materials Notification (once per week we will email you if there are new materials uploaded)</label>
+  </div>
+  <div class="email-subscription-checkbox">
+    <input type="hidden" name="email[related_material]" value="false">
+    <input type="checkbox" id="related_material" name="email[related_material]" value="true" <%= 'checked' if @user.email_subscription.related_material %> >
+    <label for="related_material">Related Material Notification (once per week we will email you if there are materials that match your practice language and level)</label><br><br>
   </div>
   <input type="submit" value="Update Subscriptions" class="btn btn-primary settings">
 </form>
