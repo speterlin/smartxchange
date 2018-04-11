@@ -41,7 +41,7 @@ class User < ApplicationRecord
   # maybe add this (for all autocomplete fields), not sure if it helps: scope :name_like, -> (name) { where("name ilike ?", name) }
   acts_as_tagger
   include Locatable
-  # not sure if it's a good idea to have helpers in model files
+  # not sure if it's a good idea to have helpers in model files, maybe move methods into concern file or user application_controller.rb#helper_method
   include UsersHelper
   # need to update _translate.html.erb, users_helper.rb#user_convert_to_language(nationality), #user_convert_to_nationalities(language), users/index.html.erb, routes.rb, and seeds.rb any time there is a change
   LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese", "Danish"]

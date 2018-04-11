@@ -59,16 +59,6 @@ class UsersController < ApplicationController
     }).map{|user| user.name.downcase.prepend('@').split(' ').join('.')}
   end
 
-  def autocomplete_name
-    User.search(params[:query], {
-      fields: ["name"],
-      # match: :word_start,
-      limit: 10,
-      load: false,
-      misspellings: {below: 2}
-    }).map(&:name)
-  end
-
   def autocomplete_language_and_level
     p params[:query]
     User.search(params[:query], {

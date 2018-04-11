@@ -41,7 +41,8 @@ class CommentsController < ApplicationController
     @comment = Comment.find(params[:id])
     @comment.destroy
     @post = @comment.commentable
-    post_destroy_follow(@post, current_user)
+    # don't destroy follow if there is still a comment on the post owned by the current user
+    post_destroy_follow(@post, current_user) unless @post.comments.pluck(:owner_id).include?(current_user.id)
     respond_to do |format|
       format.js
     end

@@ -65,7 +65,7 @@ class PostsController < ApplicationController
     @post.votes << vote
     @post.updated_at = vote.updated_at
     @up_votes = @post.votes.sum(:value)
-    post_destroy_follow(@post, current_user)
+    # may add this back later: post_destroy_follow(@post, current_user)
     post_create_notifications(vote, @post)
     respond_to do |format|
       format.js
