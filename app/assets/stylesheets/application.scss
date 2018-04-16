@@ -14,7 +14,7 @@
  // according to github page need to get rid of these
  // *= require_self
  // *= require_tree
- // *= require jquery-textcomplete
+ // *= require jquery.textcomplete
  */
 // sets website to collapse to either 900px or 1000px depending on device
 $grid-float-breakpoint: 1100px;
@@ -298,7 +298,7 @@ h1,h2,h3,h4,h5,h6 {
   ul.dropdown-menu.textcomplete-dropdown {
     width: 70%;
     overflow: auto;
-  } 
+  }
 }
 // probably refactor, don't know why this has to be different from 768px
 @media (min-width:767px) {

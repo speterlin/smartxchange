@@ -92,7 +92,7 @@ module Taggable
         next
       end
     # maybe refactor, compact to get rid of nil values (created if there is an erroneous usertag), uniq here and in parse_hashtags because of #remove_owned_hashtags&usertags call, owned_usertag&hashtag_list in #add_or_update_owned_hashtags&usertags automatically calls uniq (still trying to figure out how)
-  end.compact.uniq
+    end.compact.uniq
   end
 
   # assuming only post or comment, maybe refactor
