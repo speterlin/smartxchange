@@ -34,7 +34,7 @@ class Material < ApplicationRecord
   end
 
   def reindex_owner
-    owner.reindex(async: true)
+    owner.reindex
   end
 
 end
