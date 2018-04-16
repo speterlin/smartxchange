@@ -33,7 +33,7 @@ gem 'bcrypt'
 #for uploading images and attachments, need mini_magick
 gem 'carrierwave', '~> 1.0'
 gem 'mini_magick'
-gem 'fog', require: 'fog/aws'
+gem 'fog-aws'
 # file size limit
 gem 'file_validators'
 
