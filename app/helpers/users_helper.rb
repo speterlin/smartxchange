@@ -6,7 +6,7 @@ module UsersHelper
   end
 
   def user_related_material(user)
-    related_material = Material.where(language: user.language).where('language_level >= ? AND language_level <= ?',(user.language_level - 1), (user.language_level + 1)).order(updated_at: :desc).limit(10)
+    related_material = Material.where(language: user.language).where.not(owner_id: user.id).where('language_level >= ? AND language_level <= ?',(user.language_level - 1), (user.language_level + 1)).order(updated_at: :desc).limit(10)
     related_material
   end
 
