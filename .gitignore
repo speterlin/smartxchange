@@ -33,8 +33,12 @@
 # Ignore application.yml with secret variables
 /config/application.yml
 
-# Ignore all image assets since it's a public repo now
-/app/assets/images/*
+# Ignore logo image assets since it's a public repo now
+/app/assets/images/logo.png
+/app/assets/images/logo-square.png
+/app/assets/images/apple-touch-icon-v2-144.png
+/app/assets/images/apple-touch-icon.png
+
 
 # Ignore files relating to downloading of data
 dump.csv

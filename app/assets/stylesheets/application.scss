@@ -836,7 +836,7 @@ form.new {
 }
 
 // used to make li element orange when list is expanded beneath it
-li.boards-header.dropdown.open a.dropdown-toggle[aria-expanded="true"] {
+li.dropdown.open a.dropdown-toggle[aria-expanded="true"] {
   background-color: #fec503;
 }
 
