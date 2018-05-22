@@ -4,8 +4,19 @@
 
 .email-subscription-checkbox {
   padding-bottom: 5px;
+
+  label {
+    display: inline;
+  }
+
 }
 
-.email-subscription-checkbox label {
-  display: inline;
+.btn.btn-primary.stealth {
+  background-color: #696969;
+  border: none;
+
+  &:hover {
+    background-color: #808080;
+  }
+
 }

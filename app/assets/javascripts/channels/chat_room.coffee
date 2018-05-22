@@ -31,7 +31,7 @@ jQuery(document).on 'turbolinks:load', ->
           $messages.append($new_message)
         messages_to_bottom()
 
-      send_message: (message,chat_room_id) ->
+      send_message: (message, chat_room_id) ->
         console.log('chatroom - send_message')
         @perform 'send_message', message: message, chat_room_id: chat_room_id
 

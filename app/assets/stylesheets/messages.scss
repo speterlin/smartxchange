@@ -1,3 +1,93 @@
 // Place all the styles related to the messages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+// for chat_rooms/show.html.erb
+#messages {
+  border-left: 1px solid #cccccc;
+  border-right: 1px solid #cccccc;
+  border-bottom: 1px solid #eeeeee;
+  height: 300px;
+  overflow-y: auto;
+  // -webkit-over:
+  padding: 5px;
+
+  .message {
+    overflow: auto;
+    clear: both;
+    padding: 5px;
+
+    .image {
+      // for chrome safari opera
+      -webkit-filter: grayscale(0%);
+    }
+
+    .content {
+      background: white;
+      padding: 10px;
+      border-radius: 2px;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+      max-width: 80%;
+
+      // need to change this eventually
+      p {
+        font-size: 12px;
+        margin: 0 0 0.2rem 0;
+        -ms-word-break: break-all;
+
+        /* Non standard for webkit */
+        word-break: break-word;
+
+        -webkit-hyphens: auto;
+        -moz-hyphens: auto;
+        hyphens: auto;
+      }
+
+    }
+
+  }
+
+}
+
+.message.self {
+
+  .content {
+    float: right;
+  }
+
+  .image {
+    float: right;
+  }
+
+}
+
+.message.other {
+
+  .image {
+    float: left;
+  }
+
+  .content {
+    float: left;
+  }
+
+}
+
+#message-form {
+  overflow: auto;
+}
+
+#new_message textarea {
+  font-size: 16px;
+}
+
+#message-body {
+  width: 80%;
+  float:left;
+}
+
+.send-message {
+  width: 20%;
+  height: 50px;
+  float: left;
+}

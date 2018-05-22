@@ -24,10 +24,10 @@
 
       <!-- Collect the nav links, forms, and other content for toggling -->
       <div class="collapse navbar-collapse" id="smartxchange">
-        <% if signed_in? %><!-- maybe refactor -->
+        <% if signed_in? %><!-- maybe refactor, #search and #search-field ids (not sure if need both)-->
           <div id="search">
             <form action="<%= users_path %>" method="get">
-              <input type="text" name="search" class="search-field" placeholder="<%= ["'native' (Nationality) 'practicing '(Language) (Language_level) (keyword)", "Spanish intermediate materials", "Spanish Business Development", "German PhD", "French B2 materials", "Italian beginner", "English chat bot", "native American practicing Spanish", "native Spanish practicing English", "native French practicing Spanish", "French Engineer materials", "British Marketing"].sample + " ..." %>">
+              <input type="text" name="search" id="search-field" placeholder="<%= ["'native' (Nationality) 'practicing '(Language) (Language_level) (keyword)", "Spanish intermediate materials", "Spanish Business Development", "German PhD", "French B2 materials", "Italian beginner", "English chat bot", "native American practicing Spanish", "native Spanish practicing English", "native French practicing Spanish", "French Engineer materials", "British Marketing"].sample + " ..." %>">
               <input type="submit" value="Search" class="btn btn-primary">
             </form>
           </div>
@@ -66,9 +66,9 @@
 </nav>
 <script>
   // maybe refactor and move to application.js.erb, right now only used in _header.html.erb
-  $('.search-field').textcomplete([
+  $('#search-field').textcomplete([
     {
-      match: /(\s|^)(\w+)$/,
+      match: /(\s|^)(\w+\s?)+$/,
       search: function (term, callback) {
         $.getJSON('/users/autocomplete', { query: term })
           .done(function (resp) { callback(resp); })

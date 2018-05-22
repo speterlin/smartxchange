@@ -1,17 +1,17 @@
 <div class="row">
 
-    <div id="profile-image">
-      <div id="user">
+    <div id="profile-left">
+      <div id="user-image">
         <p>
           <%= image_tag(@user.image.thumb.url, alt: @user.name) %><br>
         </p>
       </div>
       <br>
       <%= link_to "Remove Image", remove_image_user_path(@user), data: {confirm: "Are you sure you wish to delete your profile image? Your image will be replaced with the default avatar image"} if @user == current_user && @user.image? %>
-      <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@user.latitude},#{@user.longitude}&markers=#{@user.latitude},#{@user.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", style: "padding-top: 10px;", alt: "#{@user.name} on the map" if current_user == @user %>
+      <%= image_tag "http://maps.googleapis.com/maps/api/staticmap?center=#{@user.latitude},#{@user.longitude}&markers=#{@user.latitude},#{@user.longitude}&zoom=12&size=250x250&key=#{ENV['GOOGLE_API_KEY']}", alt: "#{@user.name} on the map" if current_user == @user %>
     </div>
 
-    <div class="user-content profile">
+    <div id="profile-center">
       <!-- maybe move this later -->
       <% if @user.active  %>
         <%= image_tag('green-dot.png', alt: 'Active') %> <br>
@@ -55,13 +55,13 @@
       <% else %>
         <!-- need to refactor this, span part -->
         <h1><%= @user.name %></h1>
-        <h4><span style="font-weight:normal"><%= @user.age %></span></h4>
+        <h4><span><%= @user.age %></span></h4>
         <h4><i><%= auto_link(@user.title, html: { target: '_blank' }) %></i></h4>
-        <h4><b><%= "#{@user.language}, "%></b><span style="font-weight:normal"><%= user_convert_to_presented_language_level(@user.language_level) %></span></h4>
-        <h4><%= @user.nationality %> <span style="font-weight:normal">National</span></h4>
+        <h4><b><%= "#{@user.language}, "%></b><span><%= user_convert_to_presented_language_level(@user.language_level) %></span></h4>
+        <h4><%= @user.nationality %> <span>National</span></h4>
         <% if @user.person_of_interest? %> <h4>Person of Interest</h4> <% end %>
         <% if @user.tutor?  %> <h4>Tutor</h4> <% end %>
-        <h4><span style="font-weight:normal"><i><%= @user.location %></i></span></h4><br>
+        <h4><span><i><%= @user.location %></i></span></h4><br>
         <!-- may change class to start-chat but have to make sure it doesn't conflict with js code -->
         <br>
 
@@ -74,12 +74,12 @@
     </div>
 
     <!-- Display linkedin information -->
-    <div id="linkedin-content">
+    <div id="profile-right">
       <% if @user.linkedin %>
         <br> <!-- maybe refactor later break is just for appearances now -->
-        <a href="<%= @user.linkedin.public_url %>" target="_blank"><%= image_tag('linkedin-button.png', alt: 'Linkedin') %></a>
+        <a href="<%= @user.linkedin.public_url %>" target="_blank"><%= image_tag('linkedin-icon.png', alt: 'Linkedin') %></a>
         <h4><%= @user.linkedin.industry %></h4>
-        <p><span style="font-weight:normal"><%= @user.linkedin.summary %></span></p>
+        <p><span><%= @user.linkedin.summary %></span></p>
         <% if @user == current_user  %>
           <%= button_to "Update Linkedin", add_or_update_omniauth_path, method: :get, class: "btn btn-primary linkedin" %><br>
           <%= button_to "Delete Linkedin", omniauth_path, method: :delete, data: {confirm: "Are you sure you want to delete the Linkedin information associated with your account? Warning: If you registered with Linkedin you will not be able to sign back in to this account."}, class: "btn btn-primary delete" %>
@@ -95,15 +95,15 @@
   <div id="tutor-materials">
     <% if @user.tutor? %>
       <br><h4>Tutor materials</h4>
-        <ul id="materials">
-          <% if @materials.any? %>
-              <%= render @materials %>
-          <% elsif @user != current_user && current_user.premium_or_admin? %>
-            <h5>Tutoring materials are on their way...</h5>
-          <% elsif @user != current_user && !current_user.premium_or_admin?  %>
-            <%= link_to "Upgrade to Premium", "/about#premium", class: 'btn btn-primary premium' %>
-          <% end %>
-        </ul>
+      <ul id="materials">
+        <% if @materials.any? %>
+            <%= render @materials %>
+        <% elsif @user != current_user && current_user.premium_or_admin? %>
+          <h5>Tutoring materials are on their way...</h5>
+        <% elsif @user != current_user && !current_user.premium_or_admin?  %>
+          <%= link_to "Upgrade to Premium", "/about#premium", class: 'btn btn-primary premium' %>
+        <% end %>
+      </ul>
       <!-- upload form -->
       <% if @user == current_user %>
         <form action="<%= user_materials_path(@user) %>" method="post" data-remote="true" enctype="multipart/form-data">
@@ -112,19 +112,19 @@
           <label for="material-name"></label>
           <input id="material-name" type="text" name="material[name]" >
           <label for="material-attachment"></label>
-          <input id="material-attachment" type="file" name="material[attachment]" style="display: inline; width: 200px;">
-          <select id="material-language" name="material[language]" style="display: inline;">
+          <input id="material-attachment" type="file" name="material[attachment]">
+          <select id="material-language" name="material[language]">
             <% User::LANGUAGES.each do |language| %>
-              <option value="<%= language %>" <%= 'selected' if user_convert_to_language(@user.nationality)==language %> ><%= language %></option>
+              <option value="<%= language %>" <%= 'selected' if user_convert_to_language(@user.nationality) == language %> ><%= language %></option>
             <% end %>
           </select>
           <select id="material-language-level" name="material[language_level]">
             <% User::LANGUAGE_LEVELS.each do |language_level| %>
               <option value="<%= language_level %>" ><%= user_convert_to_presented_language_level(language_level) %></option>
             <% end %>
-           </select>
+          </select>
           <input class="btn btn-primary" type="submit" value="Upload">
-          <div style="display: inline;">(Max file size: 5mb)</div>
+          <span>(Max file size: 5mb)</span>
         </form>
       <% end %>
     <% end %>
@@ -137,19 +137,20 @@
         <input type="hidden" name="_method" value="patch">
         <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
         <% 3.times do |num| %>
-          <div class="user-interests-column">
+          <!-- + 1 to be consistent with checkbox indexing -->
+          <div class="column <%= num + 1 %>">
             <% 10.times do |sub_num| %>
-              <% sub_num = 10*num + sub_num + 1 %>
-              <div class="user-interests-checkbox">
+              <% sub_num = 10 * num + sub_num + 1 %>
+              <!-- interest-checkbox so there is no conflict with .checkbox styling -->
+              <div class="interest-checkbox <%= sub_num %>">
                 <!-- maybe refactor to_s and to_i below with inserting interests into user interest array, have to deal with existing user values -->
-                <input type="checkbox" id="user-interests-<%= sub_num %>" name="user[interests][]" value=<%= sub_num %> <%= 'checked' if @user.interests.include?(sub_num) %> >
-                <label for="user-interests-<%= sub_num %>"><%= user_convert_to_interest(sub_num) %></label><br>
+                <input type="checkbox" id="checkbox <%= sub_num %>" name="user[interests][]" value=<%= sub_num %> <%= 'checked' if @user.interests.include?(sub_num) %> >
+                <label for="checkbox <%= sub_num %>"><%= user_convert_to_interest(sub_num) %></label><br>
               </div>
             <% end %>
           </div>
         <% end %>
-
-        <input class="btn btn-primary" type="submit" value="Update Interests" style="clear:both;display:block;">
+        <input class="btn btn-primary" type="submit" value="Update Interests">
       </form>
     <% elsif @user.interests.any? %>
       <ul>
@@ -167,7 +168,7 @@
     <% if @user.reviews.any? %>
       <ul>
         <% @user.reviews.each do |review| %>
-          <li id="review-<%= review.id %>"><span style="font-weight:700;text-transform:uppercase;"><%= review.language %></span>, rated  <i><span style="text-transform:uppercase;"><%= user_convert_to_presented_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %></li>
+          <li id="review-<%= review.id %>"><span style="font-weight:700;"><%= review.language %></span>, rated  <i><span><%= user_convert_to_presented_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %></li>
         <% end %>
       </ul>
     <% else %>
@@ -179,9 +180,10 @@
     <!-- refactor for when there are chatbots -->
     <% if @user.id == 1 %>
       <br><h4>Contributed Chatbots</h4>
-      <ul><li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span style="text-transform:uppercase;"><%= User.find(6).language %> <%= user_convert_to_presented_language_level(User.find(6).language_level) %></span></i> Chatbot</li></ul>
+      <ul><li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span><%= User.find(6).language %> <%= user_convert_to_presented_language_level(User.find(6).language_level) %></span></i> Chatbot</li></ul>
     <% end %>
   </div>
+
 </div>
 
 

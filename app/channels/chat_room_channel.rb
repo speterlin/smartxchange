@@ -2,7 +2,7 @@
 # For uri encoding, URI:encode is deprecated according to stackoverflow question 6714196, probably refactor CGI out eventually
 require 'cgi'
 class ChatRoomChannel < ApplicationCable::Channel
-  include UsersHelper
+  # for using #chat_room_create_notification
   include ChatRoomsHelper
 
   def subscribed

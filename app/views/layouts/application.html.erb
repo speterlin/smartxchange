@@ -43,7 +43,6 @@
     ga('xyz.send', 'pageview');
   </script>
 
-
   <!-- for google adsense -->
   <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
   <script>
@@ -55,7 +54,8 @@
 
   <meta content='<%= signed_in? ? current_user.id : "" %>' name='user-id'/>
   <%= csrf_meta_tags %>
-  <!-- For google search console (to verify smartxchange gmail account creation)-->
+
+  <!-- maybe refactor and remove: for google search console (to verify smartxchange gmail account creation)-->
   <meta name="google-site-verification" content="4JWatk4KhWB1Hk0g2IWSL3DErLnLsRU2wM7rio8FGRU" />
 
   <!-- for SEO  -->

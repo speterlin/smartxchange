@@ -38,15 +38,15 @@
 
 .post-list-followers {
   display: inline;
-}
 
-.post-list-followers ul {
-  display: inline;
-  padding: 0px;
-}
+  ul {
+    display: inline;
+    padding: 0px;
+  }
 
-.post-list-followers li {
-  display: inline;
+  li {
+    display: inline;
+  }
 }
 
 .comment-content p {
@@ -56,13 +56,14 @@
 
 .comment-form {
   overflow:auto;
-}
 
-.comment-form form textarea {
-  height: 40px;
-  width: 40%;
-  float: left;
-  margin-left: 35px;
+  form textarea {
+    height: 40px;
+    width: 40%;
+    float: left;
+    margin-left: 35px;
+  }
+
 }
 
 //maybe refactor
@@ -79,16 +80,19 @@
 .post-form {
   overflow: auto;
   padding-left: 5px;
-}
 
-.post-form form {
-  display: inline;
-}
+  // maybe refactor, not really necessary at the moment
+  form {
+    display: inline;
 
-.post-form form textarea {
-  height: 50px;
-  width:70%;
-  float:left;
+    textarea {
+      height: 50px;
+      width:70%;
+      float:left;
+    }
+
+  }
+
 }
 
 .send-post {
@@ -114,16 +118,16 @@ ul.post-comments {
   margin-left: 35px;
 }
 
-//800px for tablets and phones.
-@media all and (max-width:800px)
+//768px for tablets and phones.
+@media all and (max-width:768px)
 {
-    .comment-form form textarea {
-      width: 50%;
-    }
-    .send-comment {
-      width: 30%;
-    }
-    .send-post {
-        width: 20%;
-    }
+  .comment-form form textarea {
+    width: 50%;
+  }
+  .send-comment {
+    width: 30%;
+  }
+  .send-post {
+    width: 20%;
+  }
 }

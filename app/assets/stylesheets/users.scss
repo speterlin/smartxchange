@@ -2,71 +2,57 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// for users/_user.html.erb
 .portfolio-item {
   margin-bottom: 10px;
   font-family: Ubuntu,Arial,sans-serif;
   font-size: 14px;
   line-height: 1.42857143;
   color: #333;
+
+  a {
+    display: block;
+    min-height: 150px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+  }
+
 }
-.portfolio-item a {
-  display: block;
-  min-height: 150px;
-  background-color: #f8f8f8;
-  border-radius: 10px;
-}
+
 // need to refactor the black part, overriding something else at the moment
 .user-content {
   overflow: hidden;
   padding-left:15px;
   padding-top: 10px;
   color: black;
+
+  .name {
+    min-height: 52px;
+
+    // maybe refactor, here and in #profile-center have repeat code
+    h3 {
+      padding:0;
+      margin: 0;
+    }
+
+  }
+
+  .language h4 {
+    font-size: 14px;
+    margin: 0px
+  }
+
+  .title {
+    color: #777;
+    padding-top: 3px;
+    font-weight: 500;
+    color: black;
+  }
+
 }
-.user-content .name {
-  min-height: 52px;
-}
-.user-content .title {
-  color: #777;
-  padding-top: 3px;
-  font-weight: 500;
-  color: black;
-}
-// for users/show page
-#profile-image {
-  float: left;
-  overflow: hidden;
-  padding: 5px;
-  // hack job setting width to 250px so that I can position delete button correctly for everyone
-  width: 250px;
-}
-#profile-image #user {
-  height: 250px;
-  width: 250px;
-  display: table;
-  text-align: center;
-}
-#profile-image #user p {
-  display: table-cell;
-  vertical-align: middle;
-}
-.user-content.profile {
-  width: 30%;
-  float: left;
-  padding-top: 5px;
-}
-.user-content h1 {
-  text-transform: uppercase;
-}
-.user-content h3 {
-  padding:0;
-  margin: 0;
-}
-// need to change span and header use here
-.user-content h4 {
-  font-size: 14px;
-  margin: 0px
-}
-//for aligning image horizontally
+
+// for users/_user.html.erb, chat_rooms/show.html.erb, chat_rooms/_chat_room.html.erb
+// for aligning image horizontally
 .user-image {
   background-color: #000;
   width: 50px;
@@ -78,22 +64,99 @@
   overflow: hidden;
   float: left;
   display: table;
-}
-//for aligning image vertically
-.user-image p {
-  display: table-cell;
-  vertical-align: middle;
+
+  //for aligning image vertically
+  p {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
 }
 
+// for users/show.html.erb
+#profile-left {
+  float: left;
+  overflow: hidden;
+  padding: 5px;
+  // hack job setting width to 250px so that I can position delete button correctly for everyone
+  width: 250px;
+
+  #user-image {
+    height: 250px;
+    display: table;
+    text-align: center;
+
+    // p to align image in the center (vertically)
+    p {
+      display: table-cell;
+      vertical-align: middle;
+    }
+
+  }
+
+  img {
+    padding-top: 10px;
+  }
+
+}
+
+#profile-center {
+  overflow: hidden;
+  padding-left:15px;
+  padding-top: 10px;
+  color: black;
+  width: 30%;
+  float: left;
+
+  h1 {
+    text-transform: uppercase;
+  }
+
+  h3 {
+    padding:0;
+    margin: 0;
+  }
+
+  h4 {
+    font-size: 14px;
+    margin: 0px;
+
+    span {
+      font-weight: normal;
+    }
+
+  }
+
+}
+
+// 35% because it seems to be the right point at which the div drops down instead of intruding on text input areas
+#profile-right {
+  width: 35%;
+  float: left;
+  padding-left: 15px;
+
+  // maybe refactor, only used once so not sure if it's worth the extra space
+  p {
+    font-weight: normal;
+  }
+
+}
+
+// for settings/reset_password.html.erb and users/new.html.erb
 #user-email {
   width: 200px;
 }
+
+// for users/new.html.erb
 #user-password {
   width: 200px;
 }
+
+// for users/new.html.erb&show.html.erb
 #user-name {
   width: 200px;
 }
+
 #user-birthdate {
   width: 150px;
 }
@@ -101,93 +164,88 @@
 #user-title {
   width: 200px;
 }
-.filter-image {
-  // for chrome safari opera
-  -webkit-filter: grayscale(0%);
-}
 
+// for sessions/new.html.erb and users/new.html.erb&show.html.erb
 .btn.btn-primary.linkedin {
   // for showing 'add Linkedin' button for user without linked Linkedin profile
   margin-top: 5px;
   background-color: #287bbc;
   border: none;
   height: 40px;
+
+  &:hover {
+    background-color: #286fbc;
+  }
+
 }
 
-.btn.btn-primary.linkedin:hover {
-  background-color: #286fbc;
-}
-
-// 35% because it seems to be the right point at which the div drops down instead of intruding on text input areas
-#linkedin-content {
-  width: 35%;
-  float: left;
-  padding-left: 15px;
-}
-.btn.btn-primary.delete {
-  background-color: #ff0000;
-  border: none;
-}
-.btn.btn-primary.delete:hover {
-  background-color: #e50000;
-}
-.btn.btn-primary.settings {
-  background-color: #00b200;
-  border: none;
-}
-.btn.btn-primary.settings:hover {
-  background-color: #009900;
-}
-.btn.btn-primary.stealth {
-  background-color: #696969;
-  border: none;
-}
-.btn.btn-primary.stealth:hover {
-  background-color: #808080;
-}
-.linkedin-button {
+// for users/_user.html.erb
+.linkedin-icon-small {
   float: left;
   clear: both;
   margin-left: 2px;
   margin-top: 5px;
 }
+
+// for users/show.html.erb
 #tutor-materials {
   padding-left: 10px;
+
+  #material-attachment {
+    display: inline;
+    width: 200px;
+  }
+
 }
+
+#user-interests {
+  padding-left: 10px;
+
+  .column {
+    width:30%;
+    float:left;
+  }
+
+  .btn.btn-primary {
+    clear:both;
+    display:block;
+  }
+
+}
+
 #user-reviews {
   padding-left: 10px;
+
+  ul {
+    padding: 0px;
+  }
+
 }
-#user-reviews ul {
-  padding: 0px;
-}
+
 #user-chatbots {
   padding-left: 10px;
 }
-#user-interests {
-  padding-left: 10px;
-}
-.user-interests-column {
-  width:30%;
-  float:left;
+
+#user-reviews, #user-chatbots {
+  li span {
+    text-transform:uppercase;
+  }
 }
 
-//800pxfor tablets
-@media all and (max-width:800px)
-{
-  .user-content.profile, #linkedin-content
-  {
+//768px for phones and tablets
+@media all and (max-width:768px) {
+  #profile-center, #profile-right {
     float: none;
     width: 100%;
   }
-  .user-interests-column {
+
+  #user-interests .column {
     float: none;
     width: 100%;
   }
-}
-//500px for phones
-@media all and (max-width:500px)
-{
+
   .reset-password input[type="submit"] {
     margin-top: 10px;
   }
+
 }

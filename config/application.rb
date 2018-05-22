@@ -31,8 +31,8 @@ module SmartXchange
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
+    # Do not swallow errors in after_commit/after_rollback callbacks, no longer valid configuration value in current version of rails
+    # config.active_record.raise_in_transactional_callbacks = true
 
     #for using Faye as middleware and mounting onto /faye path
     # config.middleware.delete Rack::Lock
@@ -40,6 +40,6 @@ module SmartXchange
 
     # for using delayed_job
     config.active_job.queue_adapter = :delayed_job
-    
+
   end
 end

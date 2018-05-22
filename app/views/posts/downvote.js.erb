@@ -9,6 +9,6 @@ addEventEditPost($('#post-<%= @post.id %> .edit-post'));
 $('#post-<%= @post.id %> .edit-comment').each(function(index, value) {
   addEventEditComment(value, <%= @post.id %>);
 })
-addTextCompleteForHashtagsAndUsertags($('#post-<%= @post.id %> .textcomplete'))
+addTextcompleteForHashtagsAndUsertags($('#post-<%= @post.id %> .textcomplete'))
 
 <%= render partial: 'layouts/move_post_down', locals: { up_votes: @up_votes, post: @post, moved: false }  %>

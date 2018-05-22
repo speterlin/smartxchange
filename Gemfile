@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0.0'
+gem 'rails', '~> 5.0'
 #will need postgres for heroku deployment
 #gem 'pg', '~> 0.18.4' error installing will keep out for now
 # Use SCSS for stylesheets
@@ -85,9 +85,9 @@ gem 'searchkick'
 # gem 'searchjoy'
 
 # for tagging posts
-gem 'acts-as-taggable-on', '~> 4.0'
+gem 'acts-as-taggable-on', '~> 5.0'
 
-# for boards and header autocomplete
+# for boards and header autocomplete, path: '../jquery_textcomplete'
 gem 'jquery_textcomplete'
 
 # Use Unicorn as the app server

@@ -38,9 +38,9 @@ class Post < ApplicationRecord
 
   validates_presence_of :content, :owner, :board, :category
   validates :content, length: {minimum: 1, maximum: 500}
-  validates :category, inclusion: {in: ["Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}, if: 'board.id != 2'
-  validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted"]}, if: 'board.id == 2'
-  validates_uniqueness_of :url, scope: :board_id, unless: 'url.blank?'
+  validates :category, inclusion: {in: ["Interest", "Educational", "Tutoring", "Meetup", "Professional", "Other"]}, if: -> { board.id != 2 }
+  validates :category, inclusion: {in: ["Jobs-Offered", "Jobs-Wanted"]}, if: -> { board.id == 2 }
+  validates_uniqueness_of :url, scope: :board_id, unless: -> { url.blank? }
   # maybe refactor: ?: to avoid capturing extra groups, if refactor need to update posts_controller.rb#add_or_update_url - a little redundant checking here since scanning for it in this method, taken from this site: https://forums.asp.net/t/1761988.aspx?Regular+expression+for+Validating+URL+with+or+without+http
   validates :url, length: {maximum: 255 }, format: {:with => /(?:https?\:\/\/)?(?:www\.)?(?:[-a-z0-9]+\.)+[-a-z0-9]+/i}, if: :url_present_and_changed?
   validates :image, file_size: { less_than_or_equal_to: 5.megabytes }

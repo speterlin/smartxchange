@@ -92,7 +92,7 @@ class UsersController < ApplicationController
       redirect_to user_path(@user)
     else
       flash[:error] = @user.errors.full_messages.to_sentence
-      redirect_to :back
+      redirect_to user_path(@user)
     end
   end
 
@@ -118,7 +118,7 @@ class UsersController < ApplicationController
       redirect_to user_path(@user)
     else
       flash[:error] = @user.errors.full_messages.to_sentence
-      redirect_to :back
+      redirect_to user_path(@user)
     end
   end
 

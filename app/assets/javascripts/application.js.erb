@@ -78,7 +78,7 @@ function addEventEditPost (edit_post) {
       form += "</div>";
       form += "</form></div>";
       $('#post-'+post_id+' .post-votes').after(form);
-      addTextCompleteForHashtagsAndUsertags($('#post-' + post_id + ' .textcomplete'));
+      addTextcompleteForHashtagsAndUsertags($('#post-' + post_id + ' .textcomplete'));
       $(this).data('clicked', true);
       // needs refactoring
       $('#post-'+post_id+' #post-category select').on('change', function() {
@@ -120,7 +120,7 @@ function addEventEditComment (edit_comment, post_id) {
       form += "<input type='submit' class='btn btn-primary send-comment' value='Edit'>";
       form += "</form></div>";
       $('#comment-'+comment_id+' time').before(form);
-      addTextCompleteForHashtagsAndUsertags($('#post-' + post_id + ' .textcomplete'));
+      addTextcompleteForHashtagsAndUsertags($('#post-' + post_id + ' .textcomplete'));
       $(this).data('clicked', true);
     } else {
       var comment_content = $('.comment-form.edit textarea').val();
@@ -133,25 +133,25 @@ function addEventEditComment (edit_comment, post_id) {
 }
 
 // maybe refactor, important to note difference in regex between here and in other places where we match usertags (taggable.rb, application.js.erb, boards_helper.rb) in that here we are using () to match group where we would otherwise use [] to match single characters
-function addTextCompleteForHashtagsAndUsertags($textarea) {
+function addTextcompleteForHashtagsAndUsertags($textarea) {
   $textarea.textcomplete([
     {
-      // Usertag strategy
-      match: /(\s|^)@([^\s]+)$/,
+      // Hashtag strategy
+      match: /(\s|^)#(\w+)$/,
       search: function (term, callback) {
-        $.getJSON('/users/autocomplete_usertag', { query: term })
-          .done(function (resp) { callback(resp); })
-          .fail(function ()     { callback([]);   });
+        $.getJSON('/posts/autocomplete_hashtag', { query: term })
+        .done(function (resp) { callback(resp); })
+        .fail(function ()     { callback([]);   });
       },
       replace: function (value) {
         return '$1' + value + ' ';
       }
     },
     {
-      // Hashtag strategy
-      match: /(\s|^)#(\w+)$/,
+      // Usertag strategy
+      match: /(\s|^)@([^\s]+)$/,
       search: function (term, callback) {
-        $.getJSON('/posts/autocomplete_hashtag', { query: term })
+        $.getJSON('/users/autocomplete_usertag', { query: term })
           .done(function (resp) { callback(resp); })
           .fail(function ()     { callback([]);   });
       },

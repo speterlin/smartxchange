@@ -2,7 +2,7 @@ $('.post-form.new textarea').val("")
 $('#posts ul#<%= @post.category.downcase %>').append("<%= j(render(:partial => 'post', :locals => {post: @post, board: @post.board})) %>")
 
 addEventEditPost($('#post-<%= @post.id %> .edit-post'));
-addTextCompleteForHashtagsAndUsertags($('#post-<%= @post.id %> .textcomplete'))
+addTextcompleteForHashtagsAndUsertags($('#post-<%= @post.id %> .textcomplete'))
 
 // Upvotes will always be 0 for new post
 <%= render partial: 'layouts/move_post_up', locals: { up_votes: 0, post: @post, moved: true }  %>

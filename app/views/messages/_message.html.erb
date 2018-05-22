@@ -1,8 +1,8 @@
 <div class="message <%= message_self_or_other(message, current_user) %>" data-sender-id="<%= message.sender.id%>" data-message-id="<%= message.id %>">
-  <div class="message-image">
+  <div class="image">
     <%= message_convert_level_to_img(message) %>
   </div>
-  <div class="message-content">
+  <div class="content">
     <p><%= auto_link(message.body, html: { target: '_blank' }) %> </p>
     <time datetime="<%= message.created_at %>">
       <%= message.sender.name %> • <%= message.timestamp %>

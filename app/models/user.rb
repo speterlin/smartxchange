@@ -152,9 +152,9 @@ class User < ApplicationRecord
 
   # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
   # maybe refactor, need if present since these are before_validation, really only a problem when creating an invalid user object from the command line
-  before_validation :downcase_email, if: 'email.present?'
-  before_validation :titleize_name, if: 'name.present?'
-  before_validation :calculate_age, if: 'birthdate.present?' # calculating age everytime user is updated since age should be updated everytime user performs action on platform
+  before_validation :downcase_email, if: -> { email.present? }
+  before_validation :titleize_name, if: -> { name.present? }
+  before_validation :calculate_age, if: -> { birthdate.present? } # calculating age everytime user is updated since age should be updated everytime user performs action on platform
 
   # maybe refactor and take out :session_token so only fields that user can input
   validates_presence_of :email, :name, :age, :language, :language_level, :password_digest, :session_token, :title, :nationality

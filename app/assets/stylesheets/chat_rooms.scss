@@ -2,153 +2,76 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// for chat_rooms/_chat_room.html.erb
 .chat-room {
   clear: both;
   height: 60px;
   margin-left: 5px;
+
+  .user-image {
+    margin-top: 5px;
+  }
+
+  a.chat-room-open {
+    // bit of a hack until I figure out how to make anchor tag fill entire height of div
+    height: 60px;
+    display: block;
+    width: 80%;
+    // float so that display block doesn't take up the whole width
+    float: left;
+  }
+
+  .chat-room-content {
+    float: left;
+    height: inherit;
+    display: table;
+
+    // for aligning content vertically
+    p {
+      display: table-cell;
+      vertical-align: middle;
+      padding-left: 5px;
+    }
+
+  }
+
+  a.chat-room-delete {
+    float: left;
+  }
+
+
+  &:hover {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+
 }
 
-a.chat-room {
-  // bit of a hack until I figure out how to make anchor tag fill entire height of div
-  height: 60px;
-  display: block;
-  width: 80%;
-  // float so that display block doesn't take up the whole width
-  float: left;
-}
-
-a.chat-room-show {
-  display: inline;
-}
-
-// refactor, cheap way to center 50px div in 60px a href tag
-.user-image.chat-room {
-  margin-top: 5px;
-}
-
+// for chat_rooms/show.html.erb
 .chat-room-show-name {
   display: inline;
+
+  // need to refactor padding-left
+  p {
+    font-size: inherit;
+    display: inline;
+    padding-left: 10px;
+  }
+
 }
 
 .chat-room-show-language {
   display: inline;
 }
 
-// need to refactor padding-left
-.chat-room-show-name p {
-  font-size: inherit;
-  display: inline;
-  padding-left: 10px;
-}
-
-// .chat-room-image {
-//   float: left;
-//   padding-top: 5px;
-// }
-
-.chat-room-content {
-  float: left;
-  height: inherit;
-  display: table;
-}
-
-//for aligning image vertically
-.chat-room-content p {
-  display: table-cell;
-  vertical-align: middle;
-  padding-left: 5px;
-}
-
-// a href tag to delete chat room
-.delete-chat-room {
-  float: left;
-}
-
-div.chat-room:hover {
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-#messages {
-  border-left: 1px solid #cccccc;
-  border-right: 1px solid #cccccc;
-  border-bottom: 1px solid #eeeeee;
-  height: 300px;
-  overflow-y: auto;
-  // -webkit-over:
-  padding: 5px;
-}
-
-.message {
-  overflow: auto;
-  clear: both;
-  padding: 5px;
-}
-
-.self .message-content {
-  border-bottom-right-radius: 0;
-}
-
-.self .message-image {
-  float: right;
-}
-.self .message-content {
-  float: right;
-}
-
-.other .message-image {
-  float: left;
-}
-
-.other .message-content {
-  float: left;
-}
-
-#messages .message-content {
-    background: white;
-    padding: 10px;
-    border-radius: 2px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    max-width: 80%
-}
-
-// need to change this eventually
-.message-content p {
-    font-size: 12px;
-    margin: 0 0 0.2rem 0;
-    -ms-word-break: break-all;
-
-    /* Non standard for webkit */
-    word-break: break-word;
-
-    -webkit-hyphens: auto;
-    -moz-hyphens: auto;
-    hyphens: auto;
-}
-
-#message-form {
-  overflow: auto;
-}
-
-#new_message textarea {
-  font-size: 16px;
-}
-
-#message-body {
-  width: 80%;
-  float:left;
-}
-.send-message {
-  width: 20%;
-  height: 50px;
-  float: left;
-}
-
-@media all and (max-width:800px)
+@media all and (max-width:768px)
 {
-  .chat-room-content {
+
+  .chat-room .chat-room-content {
     width: 75%;
-  }
-  .chat-room-content p {
-    word-wrap: break-word;
+
+    p {
+      word-wrap: break-word;
+    }
+
   }
 }

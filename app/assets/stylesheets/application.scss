@@ -11,13 +11,16 @@
  * file per style scope.
  *
  * Using startbootstrap-agency template throughout, most of code here is from this github repo
- // according to github page need to get rid of these
- // *= require_self
- // *= require_tree
- // *= require jquery.textcomplete
+ // according to github page need to get rid of these (?), require self first so application.scss code is loaded first then the rest after, so other css code overrides application.scss code
+ *= require_self
+ *= require_tree .
+ *= require jquery.textcomplete
  */
+
 // sets website to collapse to either 900px or 1000px depending on device
 $grid-float-breakpoint: 1100px;
+// maybe refactor, unused at the moment
+$gray-medium-light: #eaeaea;
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
@@ -85,6 +88,30 @@ h1,h2,h3,h4,h5,h6 {
   color:#fed136;
   background-color:#fff
 }
+
+// custom, for deleting various things like linkedin integration, user account, materials, premium subscription
+.btn.btn-primary.delete {
+  background-color: #ff0000;
+  border: none;
+
+  &:hover {
+    background-color: #e50000;
+  }
+
+}
+
+// custom, for uploading settings, new/edit reviews & materials
+// maybe refactor and change name from settings since used for other things than just settings
+.btn.btn-primary.settings {
+  background-color: #00b200;
+  border: none;
+
+  &:hover {
+    background-color: #009900;
+  }
+
+}
+
 .btn-xl {
   color:#fff;
   background-color:#fed136;
@@ -112,16 +139,20 @@ h1,h2,h3,h4,h5,h6 {
   color:#fed136;
   background-color:#fff
 }
-// for when navbar collapses, need to refactor 19 value just what worked
+// for when navbar collapses, maybe refactor, z-index 90 so textcomplete dropdown is visible over navbar
 .navbar-default {
   background-color:#8fb8e2;
   border-color:transparent;
   padding-bottom: 29px;
   z-index: 90;
 }
+// for _header.html.erb, setting color, font, and situating brand in top left corner
 .navbar-default .navbar-brand {
-  color:#fed136;
-  font-family:"Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive
+  color: #fed136;
+  font-family: "Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;
+  padding: 0;
+  padding-left: 10px;
+  padding-top: -10px;
 }
 .navbar-default .navbar-brand:hover,.navbar-default .navbar-brand:focus,.navbar-default .navbar-brand:active,.navbar-default .navbar-brand.active {
   color:#fec503
@@ -163,6 +194,7 @@ h1,h2,h3,h4,h5,h6 {
   color:#fff;
   background-color:#fec503
 }
+// probably refactor, should have some more max-width 768px for mobile
 @media (max-width:1200px) {
   .text-right {
     text-align: left;
@@ -193,7 +225,7 @@ h1,h2,h3,h4,h5,h6 {
     margin-left: auto;
   }
 }
-// change to 1100px since now collapsing at 1000px instead of 768px
+// maybe refactor, conflicts with normal screen size (currently these are overriden), at 1100px since now collapsing at 1000px instead of 768px
 @media (min-width:1100px) {
   .navbar-default {
     background-color: #8fb8e2;
@@ -292,20 +324,11 @@ h1,h2,h3,h4,h5,h6 {
     text-align:left;
     padding:0 30px 20px 20px
   }
-}
-// refactor, need li element text to wrap
-@media (max-width: 768px) {
-  ul.dropdown-menu.textcomplete-dropdown {
-    width: 70%;
-    overflow: auto;
-  }
-}
-// probably refactor, don't know why this has to be different from 768px
-@media (min-width:767px) {
   #portfolio .portfolio-item {
     margin:0 0 30px
   }
 }
+
 header {
   background-image:url(../img/header-bg.jpg);
   background-repeat:none;
@@ -463,6 +486,7 @@ section h3.section-subheading {
   left:-14px;
   right:auto
 }
+// z-index 80 so timeline-images go underneath navbar when scrolling
 .timeline>li .timeline-image {
   left:0;
   margin-left:0;
@@ -721,6 +745,11 @@ body {
   webkit-tap-highlight-color:#fed136
 }
 
+// for all lists, but mainly chat_rooms/show.html.erb
+ul {
+  list-style: none;
+}
+
 //to clear header
 .container {
   padding-top: 90px;
@@ -753,30 +782,37 @@ body.new {
 h2.new, h3.new, h4.new {
   color: white;
 }
-form.new label{
-  color: white;
-}
-form.new input {
-  color: black;
-}
-form.new textarea {
-  color: black;
-}
-form.new select {
-  color: black;
+
+// for new user and new session forms
+form.new {
+
+  label {
+    color: white;
+  }
+
+  input {
+    color: black;
+  }
+
+  textarea {
+    color: black;
+  }
+
+  select {
+    color: black;
+  }
 }
 
-//header
 #premium-header {
   color:#fed136;
   float:left;
 }
 
-//users search in header
 #search {
   display: inline-block;
 }
-.search-field {
+
+#search-field {
   margin-top: 12px;
   width: 175px;
 }
@@ -784,66 +820,53 @@ form.new select {
 // correcting dropdown-menus in navbar due to conflict with textcomplete
 .navbar .dropdown-menu {
   background-color: #000;
+  color: #fff;
   border: none;
+  padding: 0px;
+
+  li {
+    border: none;
+
+    a:hover {
+      background-color: #8fb8e2;
+      color: #fec503;
+    }
+
+  }
 }
 
-.navbar .dropdown-menu li {
-  border: none;
+// used to make li element orange when list is expanded beneath it
+li.boards-header.dropdown.open a.dropdown-toggle[aria-expanded="true"] {
+  background-color: #fec503;
 }
 
-.navbar .dropdown-menu li:hover {
-  background-color: #8fb8e2;
-}
-
-.navbar .dropdown-menu li a:hover {
-  background-color: #8fb8e2;
-  color: #fec503;
-}
-
-// !important was only way to get it to work
-.dropdown-toggle[aria-expanded="true"] {
-  background-color: #fec503 !important;
-}
-
-// for situating brand in top left corner
-.navbar-brand {
-  padding: 0;
-  padding-left: 10px;
-  padding-top: -10px;
-}
-
-// dropdown menu for jquery-textcomplete
-ul.dropdown-menu.textcomplete-dropdown {
-  z-index: 100;
-}
-
+// for message, post, or comment
 time {
   font-size: 9px;
   color: #ccc;
 }
 
-//for chat show page
-ul {
- list-style: none;
-}
-
-/* sidebar not using at moment may take out*/
+// sidebar not using at moment may take out
 aside {
   section.user_info {
     margin-top: 20px;
   }
+
   section {
     padding: 10px 0;
     margin-top: 20px;
+
     &:first-child {
       border: 0;
       padding-top: 0;
     }
+
     span {
       display: block;
       margin-bottom: 3px;
       line-height: 1;
     }
+
     h1 {
       font-size: 1.4em;
       text-align: left;
@@ -851,10 +874,10 @@ aside {
       margin-bottom: 3px;
       margin-top: 0px;
     }
-  }
-}
 
-/* footer */
+  }
+
+}
 
 footer {
   margin-top: 45px;
@@ -862,43 +885,39 @@ footer {
   border-top: 1px solid #eaeaea;
   color: #777;
   clear: both;
+
+  a {
+    color: #555;
+
+    &:hover {
+      color: #fed136;
+    }
+
+  }
+
+  small {
+    float: left;
+  }
+
+  ul {
+    float: right;
+    list-style: none;
+
+    li {
+      text-align: right;
+      margin-left: 15px;
+      font-size: 14px;
+    }
+
+  }
+
 }
-
-footer a {
-  color: #555;
-}
-
-footer a:hover {
-  color: #fed136;
-}
-
-footer small {
-  float: left;
-}
-
-footer ul {
-  float: right;
-  list-style: none;
-}
-
-// refactor add float: left for normal display
-footer ul li {
-  text-align: right;
-  margin-left: 15px;
-  font-size: 14px;
-}
-
-/* mixins, variables, etc. */
-
-$gray-medium-light: #eaeaea;
 
 @mixin box_sizing {
   -moz-box-sizing:    border-box;
   -webkit-box-sizing: border-box;
   box-sizing:         border-box;
 }
-
-/* miscellaneous */
 
 .debug_dump {
   clear: both;

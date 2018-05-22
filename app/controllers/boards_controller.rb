@@ -39,8 +39,8 @@ class BoardsController < ApplicationController
     # maybe refactor, need to check if nil first for it to work
     if board_notifications && board_notifications.count > 0
       @notification = board_notifications.first
-      # maybe refactor this and chat_room_mark_read to notification_mark_read, and delete notification
-      post_mark_read(@notification)
+      # maybe refactor - make this and chat_room_mark_read a notification helper method - like notification_mark_read (and use something like user.notification.where), and delete notification after, this notification only pertains to post here - like comment and vote notifications
+      @notification.update(read: true)
     # hack job, checking for posts should only be a problem in the beginning when there are no posts on a given board
     elsif @board.posts.any? && board_has_unread?(@board, current_user)
       # if board has unread get most recently updated post and the most recent notification for that post

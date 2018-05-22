@@ -13,6 +13,7 @@ module ApplicationHelper
     nil
   end
 
+  # maybe refactor - but probably not, this and #num_to_month could be in users_helper.rb so don't have to include application_helper.rb in user_mailer.rb
   def a_or_an(string)
     ['a','e','i','o','u'].include?(string[0].downcase) ? 'an' : 'a'
   end
