@@ -118,7 +118,7 @@ group :development, :test do
 end
 
 group :production do
-  ruby "2.3.3"
+  ruby "2.5.1"
   gem 'pg'
   gem 'rails_12factor'
   # for action cable to work
