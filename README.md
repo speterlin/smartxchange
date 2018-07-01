@@ -1,6 +1,6 @@
 # smartXchange
 
-A Ruby on Rails application to allow users to find each other for the purpose of practicing languages and sharing language learning material. Featured in prominent business school career newsletter with over 300 users across the world. Constantly adding new features, open to suggestions.
+A Ruby on Rails application to allow users to find each other for the purpose of practicing languages and sharing language learning material. Featured in prominent business school career newsletter with over 300 users across the world. Constantly adding new features, open to suggestions. See it [Live](http://smartexchange.herokuapp.com).
 
 ## Features and Gems
 
@@ -8,7 +8,7 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * Turbolinks for faster web navigation
 
-* Bootstrap template and sass for styling
+* Bootstrap template and Sass for styling
 
 * BCrypt for encryption
 
@@ -18,11 +18,11 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * Heroku for hosting
 
-* Braintree and gon for payments
+* Braintree and Gon for payments
 
-* Prototyping chatbot technology through chatbots.io and modified pandorabots_api gem
+* Prototyping chatbot technology through chatbots.io and modified Pandorabots_api gem
 
-* Basic Linkedin integration with omniauth-oauth2
+* Basic Linkedin integration with Omniauth-oauth2
 
 * Geocoder for location
 
@@ -30,7 +30,7 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * Delayed Job and Sendgrid for sending and tracking emails
 
-* Opengraph Parser for displaying link images and rails_autolink for recognizing links in text
+* Opengraph Parser for displaying link images and Rails_autolink for recognizing links in text
 
 * Searchkick for searching users and posts
 
