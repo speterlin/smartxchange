@@ -62,7 +62,7 @@ class TransactionsController < ApplicationController
   end
 
   def user_is_premium_or_admin?
-    redirect_to :back, notice: "User already has Premium Membership or is an Admin" if current_user.premium_or_admin?
+    redirect_to root_path, notice: "User already has Premium Membership or is an Admin" if current_user.premium_or_admin?
   end
 
   def customer_params

@@ -19,11 +19,11 @@ class SettingsController < ApplicationController
       @user.update!(password: new_password) # bang because this is an important step
       UserMailer.reset_password(@user, new_password).deliver_later
       flash[:success] = "Email sent with password reset instructions"
-      redirect_to :back # maybe refactor this
+      redirect_to root_path # maybe refactor this
     # maybe refactor and make this a pop up in the future
     else
       flash[:error] = "No user found with this email address"
-      redirect_to :back
+      redirect_to reset_password_users_path
     end
   end
 
@@ -41,15 +41,15 @@ class SettingsController < ApplicationController
           redirect_to user_settings_path(@user)
         else
           flash[:error] = @user.errors.full_messages.to_sentence
-          redirect_to :back
+          redirect_to change_password_user_settings_path(@user)
         end
       else
         flash[:error] = "New password does not match password confirmation"
-        redirect_to :back
+        redirect_to change_password_user_settings_path(@user)
       end
     else
       flash[:error] = "Password does not match existing password"
-      redirect_to :back
+      redirect_to change_password_user_settings_path(@user)
     end
   end
 
@@ -68,7 +68,7 @@ class SettingsController < ApplicationController
   def update_subscription
     @user = User.find_by_param(params[:user_id])
     if @user.email_subscription.update(email_params)
-      redirect_to :back, notice: 'Email subscription updated'
+      redirect_to email_subscription_user_settings_path(@user), notice: 'Email subscription updated'
     else
       flash.now[:alert] = 'There was a problem'
       render :email_subscription
@@ -79,12 +79,12 @@ class SettingsController < ApplicationController
     # could switch this and deactive to @user = User.find(params[:user_id])
     current_user.appear!
     flash[:success] = "You are now browsing in active mode"
-    redirect_to :back
+    redirect_to user_settings_path(@user)
   end
 
   def deactivate!
     current_user.disappear!
-    redirect_to :back, notice: "You are now browsing in stealth mode"
+    redirect_to user_settings_path(@user), notice: "You are now browsing in stealth mode"
   end
 
   def downgrade
@@ -95,7 +95,7 @@ class SettingsController < ApplicationController
     Braintree::Subscription.cancel(subscription.id)
     current_user.unsubscribe_to_premium
     UserMailer.premium_unsubscribe(current_user).deliver_later
-    redirect_to :back, notice: "Premium subscription cancelled! You now have the Standard package"
+    redirect_to user_settings_path(@user), notice: "Premium subscription cancelled! You now have the Standard package"
   end
 
   def activate_account!

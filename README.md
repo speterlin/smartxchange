@@ -28,7 +28,7 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * Recaptcha to protect against spam and abuse
 
-* Delayed Job and Sendgrid for sending and tracking emails
+* Delayed_job_active_record and Sendgrid-ruby for sending and tracking emails
 
 * Opengraph Parser for displaying link images and Rails_autolink for recognizing links in text
 

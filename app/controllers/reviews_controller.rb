@@ -26,8 +26,9 @@ class ReviewsController < ApplicationController
       UserMailer.notify_review(@review.reviewable, current_user, @review).deliver_later
       redirect_to user_reviews_path(current_user)
     else
-      flash[:error] = @review.errors.full_messages.to_sentence
-      redirect_to :back
+      # should never be the case since required fields are autopopulated and non-null, can't go back to new_user_reviews_path since need the id that identifies the other user
+      flash[:error] = @review.errors.full_messages.to_sentence + ", please visit link in email to re-open review"
+      redirect_to user_reviews_path(current_user)
     end
   end
 
@@ -44,7 +45,7 @@ class ReviewsController < ApplicationController
       redirect_to user_reviews_path(current_user)
     else
       flash[:error] = @review.errors.full_messages.to_sentence
-      redirect_to :back
+      redirect_to edit_user_review(current_user)
     end
   end
 
