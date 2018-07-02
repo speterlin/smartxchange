@@ -12,7 +12,7 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * BCrypt for encryption
 
-* Carrierwave, Mini_magick, Fog, File Validator, and Remotipart for uploading images and materials
+* Carrierwave, Mini_magick, Fog, File_validators, and Remotipart for uploading images and materials
 
 * AWS for storing images and materials
 
@@ -30,7 +30,7 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * Delayed_job_active_record and Sendgrid-ruby for sending and tracking emails
 
-* Opengraph Parser for displaying link images and Rails_autolink for recognizing links in text
+* Opengraph_parser for displaying link images and Rails_autolink for recognizing links in text
 
 * Searchkick for searching users and posts
 
