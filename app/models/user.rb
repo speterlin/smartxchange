@@ -407,7 +407,7 @@ class User < ApplicationRecord
 
   def boards_notifications
     boards_notifications = Hash.new
-    self.posts_notifications.each do |post_notification|
+    self.posts_notifications.includes(:notifiable).each do |post_notification|
       # bug, need to fix but there is a lag and a mismatch between total boards notifications and individual boards notifications displayed
       next unless post_notification.read == false
       board_id = post_notification.notifiable.board_id
