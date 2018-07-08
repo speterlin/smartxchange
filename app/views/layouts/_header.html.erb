@@ -12,7 +12,7 @@
         <a class="navbar-brand" href="<%= root_path %>">
           <!-- <%= image_tag('logo.png', alt: 'smartXchange') %> -->
         </a>
-        <!-- probably refactor need to reposition correctly and put css in a file, maybe make different styling for admin and premium-->
+        <!-- probably refactor need to reposition correctly and put css in a file, maybe make different styling for admin and premium, also makes 2 calls to database, can maybe make it 1 -->
         <% if signed_in? %>
           <% if current_user.admin? %>
             <span id="premium-header">Admin</span>

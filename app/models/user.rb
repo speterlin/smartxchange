@@ -205,6 +205,7 @@ class User < ApplicationRecord
   has_many :votes, :foreign_key => :owner_id, class_name: 'Vote', dependent: :destroy
   has_many :follows, :foreign_key => :follower_id, class_name: 'Follow', dependent: :destroy
   has_many :followed_posts, through: :follows, source: :followable, source_type: 'Post'
+  # in the future, if add more objects that user can read (besides Board), should add an association like :reads_of_boards, -> {where readable_type: 'Board'}
   has_many :reads, dependent: :destroy
   has_many :read_boards, through: :reads, source: :readable, source_type: 'Board'
   # for now can only purchase one package, may change this to feature add-ons to purchases

@@ -10,8 +10,8 @@ class BoardsController < ApplicationController
       # not sure why we need uniq, prob refactor
       @posts = Post.includes(:owner, :comments, {comments: :owner}, :followers).tagged_with(params[:tag]).uniq
     else
-      # refactor sql query, right now orders by sum(value) then updated_at, also not filtering posts based on board, and all comments are for post, group by just v.votable_id (ok in sql but not pg) is faster
-      # coalesce because postgres does not return sum of empty column
+      # maybe refactor, if have for example comments on comments
+      # coalesce because postgres does not return sum of empty column, group by just v.votable_id (ok in sql but not pg) is faster
       @posts = Post.find_by_sql("
         select p.*, v.votable_id, count(v.votable_id) as votes_count, coalesce(sum(v.value),0) as votes_value_sum
         from posts p
@@ -36,17 +36,16 @@ class BoardsController < ApplicationController
       @other_posts = @posts.select {|post| post.category == 'Other'}
     end
     board_notifications = current_user.boards_notifications[@board.id]
-    # maybe refactor, need to check if nil first for it to work
+    # maybe refactor, need to check if nil first
     if board_notifications && board_notifications.count > 0
       @notification = board_notifications.first
       # maybe refactor - make this and chat_room_mark_read a notification helper method - like notification_mark_read (and use something like user.notification.where), and delete notification after, this notification only pertains to post here - like comment and vote notifications
       @notification.update(read: true)
-    # hack job, checking for posts should only be a problem in the beginning when there are no posts on a given board
-    elsif @board.posts.any? && board_has_unread?(@board, current_user)
+    elsif @board.posts.any? && board_unread?(@board, current_user)
       # if board has unread, get notification from most recently updated post or create notification using most recently updated post
       @notification = Notification.where(notifiable: @board.posts.first).last ? Notification.where(notifiable: @board.posts.first).last : Notification.new(notified_id: current_user.id, notifier_id: current_user.id, notifiable_type: @board.posts.first.class.name, notifiable_id: @board.posts.first.id, sourceable_type: @board.posts.first.class.name, sourceable_id: @board.posts.first.id)
-      board_mark_read(@board)
     end
+    board_mark_read(@board)
   end
 
   private

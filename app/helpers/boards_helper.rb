@@ -1,27 +1,35 @@
 module BoardsHelper
 
-  def board_has_unread?(board, user)
-    return false if board.id == 9 # precautionary, not necessary
+  def board_unread?(board, user, read_of_board = nil)
+    return false if board.id == 9 # update if change boards_postable
     return false if board.id == 2 && !user.premium_or_admin?
-    # hack job here and below method don't want to add another column to users maybe refactor, + 1 since delay in when board is updated and readable is updated upon new post / comment / vote / follow etc
-    user.read_boards << board unless user.read_boards.include?(board)
-    if board.updated_at > user.reads.where(readable: board).first.updated_at + 1
-      return true
-    end
+    read_of_board ||= user.reads.where(readable: board).first
+    # maybe refactor, could also have this: return true unless user.read_boards.include?(board), but easier to use this variable here and below
+    return true if read_of_board.nil?
+    return true if board.updated_at > read_of_board.updated_at
     false
   end
 
-  # maybe refactor and change hash to array, hash takes up more memory but can label each board by its id
   def boards_unread(user)
     unread_boards = Hash.new
-    boards_postable.all.each do |board|
-      unread_boards[board.id] = true if board_has_unread?(board, user)
+    # at the moment reads only includes boards, in the future if it includes other objects, need to use an association in user.rb that takes reads.where(readable_type: "Board")
+    user.reads.includes(:readable).each do |read|
+      board = read.readable
+      # maybe refactor and have hash store both true and false values for all boards, not doing it now since like having if unread_boards.any? in _header.html.erb, would have to use unless unread_boards.values.none? if have both true and false values
+      unread_boards[board.id] = true if board_unread?(board, user, read)
     end
     unread_boards
   end
 
   def board_mark_read(board)
-    current_user.reads.where(readable: board).first.update(updated_at: Time.now)
+    # maybe refactor and add return if board.id == 9, right now can track who views the tags board by not including this
+    # maybe refactor, this current setup (below) has less database calls, can change back to: current_user.read_boards << board unless current_user.read_boards.include?(board) and current_user.reads.where(readable: board).first.update(updated_at: Time.now)
+    read_of_board = current_user.reads.where(readable: board).first
+    if read_of_board
+      read_of_board.update(updated_at: Time.now)
+    else
+      current_user.reads.create(readable: board)
+    end
   end
 
   def board_capitalize(string)

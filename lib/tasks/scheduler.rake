@@ -15,7 +15,7 @@ task :send_unread_board => :environment do
   # Cycle repeats every Monday (2017) morning
   users_group_by_day_of_week_and_group_num(1).each do |user|
     board = Board.find_by_title(user.language)
-    if board_has_unread?(board, user)
+    if board_unread?(board, user)
       UserMailer.unread_board(user, board).deliver
     end
   end
@@ -25,7 +25,7 @@ task :send_unread_jobs => :environment do
   board = Board.find(2)
   # Cycle repeats every Tuesday (2017) morning
   users_group_by_day_of_week_and_group_num(2).each do |user|
-    if board_has_unread?(board, user)
+    if board_unread?(board, user)
       UserMailer.unread_jobs(user).deliver
     end
   end
