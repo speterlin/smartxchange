@@ -96,11 +96,12 @@
     <% if @user.tutor? %>
       <br><h4>Tutor materials</h4>
       <ul id="materials">
+        <% @premium_or_admin = current_user.premium_or_admin? %>
         <% if @materials.any? %>
             <%= render @materials %>
-        <% elsif @user != current_user && current_user.premium_or_admin? %>
+        <% elsif @user != current_user && @premium_or_admin %>
           <h5>Tutoring materials are on their way...</h5>
-        <% elsif @user != current_user && !current_user.premium_or_admin?  %>
+        <% elsif @user != current_user && !@premium_or_admin  %>
           <%= link_to "Upgrade to Premium", "/about#premium", class: 'btn btn-primary premium' %>
         <% end %>
       </ul>
@@ -165,9 +166,9 @@
 
   <div id="user-reviews">
     <br><h4>Reviews</h4>
-    <% if @user.reviews.any? %>
+    <% if @reviews.any? %>
       <ul>
-        <% @user.reviews.each do |review| %>
+        <% @reviews.each do |review| %>
           <li id="review-<%= review.id %>"><span style="font-weight:700;"><%= review.language %></span>, rated  <i><span><%= user_convert_to_presented_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %></li>
         <% end %>
       </ul>
@@ -179,8 +180,9 @@
   <div id="user-chatbots">
     <!-- refactor for when there are chatbots -->
     <% if @user.id == 1 %>
+      <% chatbot = User.find(6) %>
       <br><h4>Contributed Chatbots</h4>
-      <ul><li><%= link_to "#{User.find(6).name}, ", user_path(User.find(6)) %><i><span><%= User.find(6).language %> <%= user_convert_to_presented_language_level(User.find(6).language_level) %></span></i> Chatbot</li></ul>
+      <ul><li><%= link_to "#{chatbot.name}, ", user_path(chatbot) %><i><span><%= chatbot.language %> <%= user_convert_to_presented_language_level(chatbot.language_level) %></span></i> Chatbot</li></ul>
     <% end %>
   </div>
 
@@ -189,6 +191,7 @@
 
 <script type="text/javascript">
   if (window.location.href.indexOf("#review-") != -1) {
+    // review is #review-{review_id}
     var review = window.location.href.split('#')[1]
     $('#'+review).css("background-color", "yellow");
   }

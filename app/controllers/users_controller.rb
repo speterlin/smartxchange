@@ -37,8 +37,9 @@ class UsersController < ApplicationController
       # maybe refactor, at the moment does not allow search across multiple language levels, i.e. 'Spanish b1 b2', could do this with 'or' operator, maybe add includes(:linkedin)
       # can refactor, add boosts, conversions (with searchjoy), autocomplete, custom search, highlight, boost_by_distance or within a geoshape, performance (persistent http connections, ...), routing - all on https://github.com/ankane/searchkick
       # performs misspelling search if less than 2 results without misspellings, can do misspellings after a certain number of characters (like prefix length), can add exclude_queries
-      @users = User.search(params[:search], misspellings: {below: 2, prefix_length: 2}).results.paginate(page: params[:page], per_page: 12)
+      @users = User.search(params[:search], misspellings: {below: 2, prefix_length: 2}, includes: [:linkedin]).results.paginate(page: params[:page], per_page: 12)
     else
+      # user.rb#sort_method has .includes(:linkedin)
       @users = current_user.sort_method.paginate(page: params[:page], per_page: 12)
     end
   end
@@ -82,7 +83,8 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by_param(params[:id])
-    @materials = @user.materials if @user.materials
+    @materials = @user.materials.includes(:owner)
+    @reviews = @user.reviews.includes(:reviewer)
   end
 
   def update
@@ -133,6 +135,7 @@ class UsersController < ApplicationController
   end
 
   def exchange
+    # user.rb#sort_exchange has .includes(:linkedin)
     @users = current_user.sort_exchange.paginate(page: params[:page], per_page: 12)
     render :index
   end

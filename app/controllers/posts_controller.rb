@@ -142,8 +142,8 @@ class PostsController < ApplicationController
   end
 
   def correct_post?
-    post = Post.find(params[:id])
-    unless post.owner == current_user
+    @post ||= Post.find(params[:id])
+    unless @post.owner == current_user
       flash[:error] = "Unauthorized access"
       redirect_to root_path
     end

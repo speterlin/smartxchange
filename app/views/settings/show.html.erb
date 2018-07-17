@@ -6,7 +6,7 @@
 <%= link_to "Manage Subscriptions", email_subscription_user_settings_path, class: 'btn btn-primary settings' %>
 
 <h3>Premium Membership</h3>
-<% if @user.package && @user.package.classification == "Premium" %>
+<% if @user.premium? %>
   You have the Premium Package, downgrade to the Standard Package: <%= link_to "Downgrade to Standard", downgrade_user_settings_path, data: {confirm: "Are you sure you want to cancel your premium membership? You will lose access to all premium services."}, class: 'btn btn-primary delete'%>
 <% else %>
   Upgrade to the smartXchange Premium Package: <%= link_to "smartXchange Premium", new_transaction_path, class: 'btn btn-primary premium' %>

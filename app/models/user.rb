@@ -192,7 +192,7 @@ class User < ApplicationRecord
   # maybe refactor and get rid of read_notifications, mainly used for destroying notifications not covered in above
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
   has_many :created_notifications, :foreign_key => :notifier_id, class_name: 'Notification', dependent: :destroy
-  # No dependent: :destroy here since covered in above, refactor: read: false not picking up when cycling through posts_notifications in user.rb#boards_notifications
+  # No dependent: :destroy here since covered in above
   has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification'
   has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification'
   # keeping this for the dependent: :destroy aspect
@@ -409,8 +409,7 @@ class User < ApplicationRecord
   def boards_notifications
     boards_notifications = Hash.new
     self.posts_notifications.includes(:notifiable).each do |post_notification|
-      # bug, need to fix but there is a lag and a mismatch between total boards notifications and individual boards notifications displayed
-      next unless post_notification.read == false
+      # bug, pretty sure it's resolved, no longer need check for next unless post_notification.read == false, used to be an issue with Boards() post notifications being 1 higher than sum of dropdown boards post notifications
       board_id = post_notification.notifiable.board_id
       boards_notifications[board_id] ? boards_notifications[board_id] << post_notification : boards_notifications[board_id] = [post_notification]
     end

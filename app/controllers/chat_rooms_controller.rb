@@ -5,7 +5,7 @@ class ChatRoomsController < ApplicationController
   before_action :chat_room_limit, only: [:create]
 
   def index
-    # includes is for chat room helper methods called when listing a chat room
+    # maybe refactor, includes is for chat room helper methods (chat_room_count_unread and chat_room_interlocutor-since current_user could be recipient or initiator) called when listing a chat room
     @chat_rooms = ChatRoom.includes(:notifications, :recipient, :initiator).involving(current_user)
   end
 
@@ -60,8 +60,8 @@ class ChatRoomsController < ApplicationController
   end
 
   def correct_chat_room?
-    chat_room = ChatRoom.find(params[:id])
-    unless (chat_room.initiator == current_user || chat_room.recipient == current_user)
+    @chat_room ||= ChatRoom.find(params[:id])
+    unless (@chat_room.initiator == current_user || @chat_room.recipient == current_user)
       flash[:error] = "Unauthorized access"
       redirect_to root_path
     end

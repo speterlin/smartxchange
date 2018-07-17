@@ -1,5 +1,6 @@
 module ChatRoomsHelper
 
+  # maybe refactor to something like user.id == chat_room.recipient_id ? chat_room.initiator_id so don't have to include :recipient and :initiator in chat_rooms_controller.rb#index, but would still need to fetch the resulting user information resulting in a database ping
   def chat_room_interlocutor(chat_room, user)
     user == chat_room.recipient ? chat_room.initiator : chat_room.recipient
   end
@@ -11,14 +12,12 @@ module ChatRoomsHelper
 
   # Ensures only 1 notification is created per new message(s) created
   def chat_room_notification_check(chat_room, receiver)
-    if chat_room.notifications.where(read: false, notified_id: receiver.id).count > 0
-      return false
-    end
+    return false if chat_room.notifications.where(read: false, notified_id: receiver.id).count > 0
     true
   end
 
   def chat_room_mark_read(chat_room, notified)
-    # assuming only one notification is created per new message(s) in chat room, by above method, maybe refactor to delete notification
+    # maybe refactor to delete notification (here and other notification updates), this method assumes only one notification is created per new message(s) in chat room(by chat_room_notification_check method)
     chat_room.notifications.where(read: false, notified_id: notified.id).update(read: true)
   end
 

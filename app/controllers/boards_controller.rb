@@ -2,7 +2,7 @@ class BoardsController < ApplicationController
   include PostsHelper
   include BoardsHelper
 
-  before_action :only_premium_or_admin_access_to_smart_jobs
+  before_action :only_premium_or_admin_access_to_smart_jobs, if: -> {params[:id] == "smart jobs"}
 
   def show
     @board = Board.find_by_title(board_capitalize(params[:id]))
@@ -41,9 +41,15 @@ class BoardsController < ApplicationController
       @notification = board_notifications.first
       # maybe refactor - make this and chat_room_mark_read a notification helper method - like notification_mark_read (and use something like user.notification.where), and delete notification after, this notification only pertains to post here - like comment and vote notifications
       @notification.update(read: true)
+    # if board has unread, get notification from most recently updated post (first post, last notification of that post - confusing but that is way scope is set up) or create notification using most recently updated post
     elsif @board.posts.any? && board_unread?(@board, current_user)
-      # if board has unread, get notification from most recently updated post or create notification using most recently updated post
-      @notification = Notification.where(notifiable: @board.posts.first).last ? Notification.where(notifiable: @board.posts.first).last : Notification.new(notified_id: current_user.id, notifier_id: current_user.id, notifiable_type: @board.posts.first.class.name, notifiable_id: @board.posts.first.id, sourceable_type: @board.posts.first.class.name, sourceable_id: @board.posts.first.id)
+      most_recently_updated_post_notification = Notification.where(notifiable: @board.posts.first).last
+      if most_recently_updated_post_notification
+        @notification = most_recently_updated_post_notification
+      else
+        most_recently_updated_post = @board.posts.first
+        @notification = Notification.new(notified_id: current_user.id, notifier_id: current_user.id, notifiable_type: "Post", notifiable_id: most_recently_updated_post.id, sourceable_type: "Post", sourceable_id: most_recently_updated_post.id)
+      end
     end
     board_mark_read(@board)
   end
@@ -51,8 +57,7 @@ class BoardsController < ApplicationController
   private
 
   def only_premium_or_admin_access_to_smart_jobs
-    # maybe refactor the "2"
-    if !current_user.premium_or_admin? && params[:id] == "smart jobs"
+    if !current_user.premium_or_admin?
       flash[:notice] = "Must be a <a href=\"#{about_path}#premium\">Premium</a> user to view the Smart Jobs Board"
       redirect_to root_path and return
     end

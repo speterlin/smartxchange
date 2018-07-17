@@ -66,8 +66,8 @@ class CommentsController < ApplicationController
   end
 
   def correct_comment?
-    comment = Comment.find(params[:id])
-    unless comment.owner == current_user
+    @comment ||= Comment.find(params[:id])
+    unless @comment.owner == current_user
       flash[:error] = "Unauthorized access"
       redirect_to root_path
     end
