@@ -18,4 +18,6 @@ class Vote < ApplicationRecord
   belongs_to :votable, polymorphic: true, touch: true
   belongs_to :owner, class_name: 'User'
 
+  has_many :sourced_notifications, as: :sourceable, class_name: 'Notification', dependent: :destroy
+
 end

@@ -23,7 +23,8 @@ class PostsController < ApplicationController
   end
 
   def update
-    @post = Post.find(params[:id])
+    # can only do ||= here and #destroy since #correct_post? called right before, therefore don't have to (cache) load post again
+    @post ||= Post.find(params[:id])
     add_or_update_url(@post, post_params[:content])
     if @post.update(post_params)
       post_create_notifications(@post, @post)
@@ -38,7 +39,7 @@ class PostsController < ApplicationController
   end
 
   def destroy
-    @post = Post.find(params[:id])
+    @post ||= Post.find(params[:id])
     @post.destroy
     respond_to do |format|
       format.js
@@ -87,7 +88,7 @@ class PostsController < ApplicationController
     follow = post_destroy_follow(@post, current_user)
     # hack here, since follow is destroyed, can't use follow.updated_at, since board is updated we will use that
     @post.updated_at = @post.board.updated_at
-    post_create_notifications(follow, @post)
+    # maybe add back post_create_notifications(follow, @post), but would need to alter logic of notification.sourceable since source is now deleted
     respond_to do |format|
       format.js
     end
@@ -142,7 +143,7 @@ class PostsController < ApplicationController
   end
 
   def correct_post?
-    @post ||= Post.find(params[:id])
+    @post = Post.find(params[:id])
     unless @post.owner == current_user
       flash[:error] = "Unauthorized access"
       redirect_to root_path

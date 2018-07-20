@@ -20,6 +20,8 @@ class Message < ApplicationRecord
   belongs_to :sender, class_name: 'User'
   belongs_to :chat_room, touch: true
 
+  has_many :sourced_notifications, as: :sourceable, class_name: 'Notification', dependent: :destroy
+
   # maybe refactor / take out not necessary since default is asc
   default_scope -> { order(created_at: :asc) }
 

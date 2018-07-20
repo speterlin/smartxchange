@@ -3,7 +3,8 @@ class ReviewsController < ApplicationController
   before_action :correct_user?
 
   def index
-    @user = User.find_by_param(params[:user_id])
+    # can only do ||= here since #correct_user? called right before, therefore don't have to (cache) load user again
+    @user ||= User.find_by_param(params[:user_id])
     @reviews = @user.reviews
     @created_reviews = @user.created_reviews
   end

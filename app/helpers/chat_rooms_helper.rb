@@ -10,7 +10,7 @@ module ChatRoomsHelper
     chat_room.notifications.select {|notification| notification.read == false && notification.notified_id == user.id}.count
   end
 
-  # Ensures only 1 notification is created per new message(s) created
+  # maybe refactor once have mentions in messages, method ensures user has at most 1 unread notification for given chat_room, ensures only 1 notification is created per new message(s) created
   def chat_room_notification_check(chat_room, receiver)
     return false if chat_room.notifications.where(read: false, notified_id: receiver.id).count > 0
     true
@@ -22,18 +22,18 @@ module ChatRoomsHelper
   end
 
   def chat_room_create_notification(message)
+    # maybe refactor recipient call, preload association for use in #chat_room_interlocutor
     recipient = chat_room_interlocutor(message.chat_room, message.sender)
     if chat_room_notification_check(message.chat_room, recipient)
       Notification.create(
         notified_id: recipient.id,
         notifier_id: message.sender.id,
-        notifiable_type: 'ChatRoom',
-        notifiable_id: message.chat_room.id,
-        sourceable_type: 'Message',
-        sourceable_id: message.id
+        notifiable: message.chat_room,
+        sourceable: message
       )
       WebNotificationsChannel.broadcast_to(
         recipient,
+        # maybe refactor, 2 calls to database here and broadcast below, one for chat_room specific notifications, other for general notifications
         chat_rooms_notifications: recipient.chat_rooms_notifications.count,
         total_notifications_count: recipient.notifications.count,
         sound: true

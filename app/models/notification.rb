@@ -15,8 +15,8 @@
 #
 
 class Notification < ApplicationRecord
-  # can't have notifable and sourceable in case these objects were deleted and we need to update the notification
-  validates_presence_of :notified_id, :notifier_id, :notifiable_type, :notifiable_id, :sourceable_type, :sourceable_id
+  # sourceable for a post is a vote, follow, comment, or post, and for a chatroom it is a message
+  validates_presence_of :notified, :notifier, :notifiable, :sourceable
 
   belongs_to :notified, class_name: 'User'
   belongs_to :notifier, class_name: 'User'

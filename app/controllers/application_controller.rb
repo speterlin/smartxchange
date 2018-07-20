@@ -58,7 +58,7 @@ class ApplicationController < ActionController::Base
   end
 
   def correct_user?
-    # need this for various controllers, maybe refactor - in methods where this method is called it's not necessary to find user again, can update calls to find() with ||=
+    # here because used in various controllers, finds user by name
     id = params[:user_id] ? params[:user_id] : params[:id]
     @user = User.find_by_param(id)
     unless @user == current_user

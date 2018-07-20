@@ -33,7 +33,7 @@ class Post < ApplicationRecord
   # maybe refactor and move this to a standard validation since want to check url before uploading image, but also want to set image before validation, could also make remove_url_and_image an after_validation call
   before_validation :upload_or_update_image, if: :url_present_and_changed?
   before_validation :remove_url_and_image, if: :url_not_present_and_changed?
-  # before_validation because content can change (remove invalid usertags) and don't want empty posts or comments created
+  # maybe refactor, before_validation because content can change (remove invalid usertags) and don't want empty posts or comments created
   before_validation :add_or_update_owned_tags, if: :content_present_and_changed?
 
   validates_presence_of :content, :owner, :board, :category
@@ -49,13 +49,16 @@ class Post < ApplicationRecord
   after_validation :remove_location, if: :location_not_present_and_changed?
   after_validation :error_and_remove_location, if: [:location_present_and_changed?, :latitude_unchanged?]
 
-  after_save :notify_usertag_mentions, if: [:content_present_and_changed?, :usertags_present?]
+  before_update :notify_usertag_mentions, if: [:content_present_and_changed?, :usertags_present?]
+  # needs to be called after record here and in comment.rb is created because need sourceable record to persist before validation in notification.rb
+  after_create :notify_usertag_mentions, if: :usertags_present?
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :votes, as: :votable, dependent: :destroy
   has_many :notifications, as: :notifiable, dependent: :destroy
+  has_many :sourced_notifications, as: :sourceable, class_name: 'Notification', dependent: :destroy
   has_many :follows, as: :followable, dependent: :destroy
   has_many :followers, through: :follows
 

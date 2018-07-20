@@ -4,7 +4,8 @@ class SettingsController < ApplicationController
   before_action :correct_user?, except: [:reset_password, :create_password!, :email_subscription, :update_subscription, :activate_account!]
 
   def show
-    @user = User.find_by_param(params[:user_id])
+    # can only do ||= here, #change_password, #update_password! since #correct_user? called right before, therefore don't have to (cache) load user again
+    @user ||= User.find_by_param(params[:user_id])
   end
 
   def reset_password
@@ -28,12 +29,12 @@ class SettingsController < ApplicationController
   end
 
   def change_password
-    @user = User.find_by_param(params[:user_id])
+    @user ||= User.find_by_param(params[:user_id])
   end
 
   def update_password!
     # probably need to refactor this, maybe add token
-    @user = User.find_by_param(params[:user_id])
+    @user ||= User.find_by_param(params[:user_id])
     if @user.try(:is_password?, user_params[:current_password])
       if user_params[:new_password] == user_params[:password_confirmation]
         if @user.update(password: user_params[:new_password])
@@ -54,8 +55,10 @@ class SettingsController < ApplicationController
   end
 
   def email_subscription
-    if signed_in? && correct_user? #this first to prevent unlikely scenario of person being logged into one account and opening 'Manage Subscriptions' from email associated with another account
-      @user = User.find_by_param(params[:user_id])
+    # this first to prevent unlikely scenario of person being logged into one account and opening 'Manage Subscriptions' from email associated with another account
+    if signed_in? && correct_user?
+      # can only do ||= here because #correct_user? called right before, therefore don't have to (cache) load user again
+      @user ||= User.find_by_param(params[:user_id])
     elsif params[:id]
       user_id = Rails.application.message_verifier(:unsubscribe).verify(params[:id])
       @user = User.find(user_id)

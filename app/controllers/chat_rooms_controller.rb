@@ -14,6 +14,7 @@ class ChatRoomsController < ApplicationController
   end
 
   def show
+    # can only do ||= here and #destroy since #create or #correct_chat_room? called right before, therefore don't have to (cache) load chat_room again
     @chat_room ||= ChatRoom.find(params[:id])
     # probably refactor, in cases where user has conversations and then switches to standard membership and tries to access those conversations
     if @chat_room.person_of_interest_or_chat_bot_or_tutor_and_not_premium_or_admin?
@@ -46,7 +47,7 @@ class ChatRoomsController < ApplicationController
   end
 
   def destroy
-    @chat_room = ChatRoom.find(params[:id])
+    @chat_room ||= ChatRoom.find(params[:id])
     @chat_room.destroy
     respond_to  do |format|
       format.js
@@ -60,7 +61,7 @@ class ChatRoomsController < ApplicationController
   end
 
   def correct_chat_room?
-    @chat_room ||= ChatRoom.find(params[:id])
+    @chat_room = ChatRoom.find(params[:id])
     unless (@chat_room.initiator == current_user || @chat_room.recipient == current_user)
       flash[:error] = "Unauthorized access"
       redirect_to root_path

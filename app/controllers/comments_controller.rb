@@ -24,7 +24,8 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @comment = Comment.find(params[:id])
+    # can only do ||= here and #destroy since #correct_comment? called right before, therefore don't have to (cache) load comment again
+    @comment ||= Comment.find(params[:id])
     if @comment.update(comment_params)
       post_create_notifications(@comment, @comment.commentable)
       respond_to do |format|
@@ -38,7 +39,7 @@ class CommentsController < ApplicationController
   end
 
   def destroy
-    @comment = Comment.find(params[:id])
+    @comment ||= Comment.find(params[:id])
     @comment.destroy
     @post = @comment.commentable
     # don't destroy follow if there is still a comment on the post owned by the current user
@@ -66,7 +67,7 @@ class CommentsController < ApplicationController
   end
 
   def correct_comment?
-    @comment ||= Comment.find(params[:id])
+    @comment = Comment.find(params[:id])
     unless @comment.owner == current_user
       flash[:error] = "Unauthorized access"
       redirect_to root_path

@@ -88,7 +88,8 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find_by_param(params[:id])
+    # can only do ||= here and #destroy since #correct_user? called right before, therefore don't have to (cache) load user again
+    @user ||= User.find_by_param(params[:id])
     if @user.update(user_params)
       flash[:success] = "Profile updated! " + welcome_messages(@user).sample
       redirect_to user_path(@user)
@@ -99,13 +100,14 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    User.find_by_param(params[:id]).destroy
+    @user ||= User.find_by_param(params[:id])
+    @user.destroy
     redirect_to new_user_path, notice: "User deleted"
   end
 
   # maybe refactor and move some code to the model
   def remove_image!
-    @user = User.find_by_param(params[:id])
+    @user ||= User.find_by_param(params[:id])
     @user.update_attributes(:remove_image => true)
     flash[:success] = "Image removed!"
     redirect_to user_path(@user)

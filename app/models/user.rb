@@ -152,8 +152,8 @@ class User < ApplicationRecord
 
   # Maybe refactor: get rid of :downcase_email (and all calls to downcase email throughout) or make :downcase_email and titleize_name before_save so emails and names are case insensitive, makes sense for these to be before_validation now since records can be found and added in database without conflict
   # maybe refactor, need if present since these are before_validation, really only a problem when creating an invalid user object from the command line
-  before_validation :downcase_email, if: -> { email.present? }
-  before_validation :titleize_name, if: -> { name.present? }
+  before_validation :downcase_email, if: -> { email.present? && email_changed? }
+  before_validation :titleize_name, if: -> { name.present? && name_changed? }
   before_validation :calculate_age, if: -> { birthdate.present? } # calculating age everytime user is updated since age should be updated everytime user performs action on platform
 
   # maybe refactor and take out :session_token so only fields that user can input
@@ -180,6 +180,7 @@ class User < ApplicationRecord
   validates :terms, acceptance: true
 
   after_validation :geocode, if: :location_present_and_changed?
+  # for case of just wanting to delete location
   after_validation :remove_location, if: :location_not_present_and_changed?
   after_validation :error_and_remove_location, if: [:location_present_and_changed?, :latitude_unchanged?]
 
@@ -329,14 +330,18 @@ class User < ApplicationRecord
 
   def appear!
     p "appear called in user"
-    self.active = true
-    self.save
+    if !self.active
+      self.active = true
+      self.save
+    end
   end
 
   def disappear!
     p "disappear called in user"
-    self.active = false
-    self.save
+    if self.active
+      self.active = false
+      self.save
+    end
   end
 
   def sort_method

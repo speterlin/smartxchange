@@ -1,34 +1,34 @@
 module PostsHelper
 
-  def post_notification_check(vote_or_comment_or_follow_or_post_or_comment_update, post, notified)
-    return false if vote_or_comment_or_follow_or_post_or_comment_update.is_a?(Comment) && post.notifications.where(read: false, notified_id: notified.id, sourceable_type: 'Comment', sourceable_id: vote_or_comment_or_follow_or_post_or_comment_update.id).count > 0
-    return false if vote_or_comment_or_follow_or_post_or_comment_update.is_a?(Vote) && post.notifications.where(read: false, notified_id: notified.id, sourceable_type: 'Vote').count > 0
-    return false if vote_or_comment_or_follow_or_post_or_comment_update.is_a?(Follow) && post.notifications.where(read: false, notified_id: notified.id, sourceable_type: 'Follow').count > 0
-    return false if vote_or_comment_or_follow_or_post_or_comment_update.is_a?(Post) && post.notifications.where(read: false, notified_id: notified.id, sourceable_type: 'Post').count > 0
+  def post_notification_check(sourceable, post, notified)
+    # maybe refactor, right now doesn't matter if comment has a mention or not, only want one notification per user per comment create/update/mention
+    return false if sourceable.is_a?(Comment) && post.notifications.where(read: false, notified_id: notified.id, sourceable: sourceable).count > 0
+    return false if sourceable.is_a?(Vote) && post.notifications.where(read: false, notified_id: notified.id, sourceable_type: 'Vote').count > 0
+    return false if sourceable.is_a?(Follow) && post.notifications.where(read: false, notified_id: notified.id, sourceable_type: 'Follow').count > 0
+    # maybe refactor, if sourceable is a Post, it has to be the same as the given post, and notification is a post create/update/mention, right now doesn't matter if post has a mention or not, only want one notification per user per post create/update/mention
+    return false if sourceable.is_a?(Post) && post.notifications.where(read: false, notified_id: notified.id, sourceable: sourceable).count > 0
     true
   end
 
-  def post_create_notifications(vote_or_comment_or_follow_or_post_or_comment_update, post)
+  def post_create_notifications(sourceable, post)
     # first notification for post owner then for followers
-    post_create_notification(vote_or_comment_or_follow_or_post_or_comment_update, post, post.owner) unless post.owner == vote_or_comment_or_follow_or_post_or_comment_update.owner
+    post_create_notification(sourceable, post, post.owner) unless post.owner == sourceable.owner
     if post.followers.any?
       post.followers.each do |follower|
-        next if vote_or_comment_or_follow_or_post_or_comment_update.owner == follower
-        post_create_notification(vote_or_comment_or_follow_or_post_or_comment_update, post, follower)
+        next if sourceable.owner == follower
+        post_create_notification(sourceable, post, follower)
       end
     end
   end
 
   # maybe refactor and get rid of post parameter, but would have to implement some additional logic to deal with notifiable_id
-  def post_create_notification(vote_or_comment_or_follow_or_post_or_comment_update, post, notified)
-    if post_notification_check(vote_or_comment_or_follow_or_post_or_comment_update, post, notified)
+  def post_create_notification(sourceable, post, notified, mention = false)
+    if post_notification_check(sourceable, post, notified)
       notification = Notification.create!(
         notified_id: notified.id,
-        notifier_id: vote_or_comment_or_follow_or_post_or_comment_update.owner.id,
-        notifiable_type: 'Post',
-        notifiable_id: post.id,
-        sourceable_type: vote_or_comment_or_follow_or_post_or_comment_update.class.name,
-        sourceable_id: vote_or_comment_or_follow_or_post_or_comment_update.id
+        notifier_id: sourceable.owner.id,
+        notifiable: post,
+        sourceable: sourceable
       )
       WebNotificationsChannel.broadcast_to(
         notified,
@@ -37,28 +37,8 @@ module PostsHelper
         sound: true
       )
       # delaying 30 seconds in case there are a lot of people getting updated
-      UserMailer.delay(run_at: 30.seconds.from_now).new_post(notification)
+      UserMailer.delay(run_at: 30.seconds.from_now).new_post(notification, mention)
     end
-  end
-
-  # maybe refactor and merge with above - could create variable that makes it go through if statement or not, could add variable context to notification.rb to describe that this is a mention
-  def post_mention_create_notification(post_or_comment, post, notified)
-    notification = Notification.create!(
-      notified_id: notified.id,
-      notifier_id: post_or_comment.owner.id,
-      notifiable_type: 'Post',
-      notifiable_id: post.id,
-      sourceable_type: post_or_comment.class.name,
-      sourceable_id: post_or_comment.id
-    )
-    WebNotificationsChannel.broadcast_to(
-      notified,
-      boards_notifications_count: notified.boards_notifications_count,
-      total_notifications_count: notified.notifications.count,
-      sound: true
-    )
-    # delaying 30 seconds in case there are a lot of people getting updated
-    UserMailer.delay(run_at: 30.seconds.from_now).new_post(notification, true)
   end
 
   def post_create_follow(post, user)

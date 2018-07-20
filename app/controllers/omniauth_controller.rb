@@ -2,6 +2,7 @@ class OmniauthController < ApplicationController
 
   skip_before_action :require_signed_in, only: [:register, :login, :create, :login_with_omniauth, :callback]
 
+  # probably refactor, don't like storing omniauth information in session variable
   def register
     session[:omniauth] = "register"
     redirect_to "/auth/linkedin"
@@ -30,7 +31,7 @@ class OmniauthController < ApplicationController
     end
   end
 
-  # refactor and add extra validation (i.e. correct_user), and maybe add if else statement for handling delete_omniauth! errors
+  # maybe refactor and add extra validation (like correct_user? - can't use it since this path is just omniauth), and maybe add if else statement for handling delete_omniauth! errors
   def destroy
     current_user.delete_omniauth!
     redirect_to user_path(current_user)

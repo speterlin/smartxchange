@@ -22,6 +22,8 @@ class Follow < ApplicationRecord
   # to make notification checks easier
   belongs_to :owner, :foreign_key => :follower_id, class_name: 'User'
 
+  has_many :sourced_notifications, as: :sourceable, class_name: 'Notification', dependent: :destroy
+
   private
 
   def ensure_post_owner_not_follower

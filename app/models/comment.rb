@@ -23,10 +23,13 @@ class Comment < ApplicationRecord
 
   belongs_to :owner, class_name: 'User'
   belongs_to :commentable, polymorphic: true, touch: true
-  # only doing has_one notification here because can't delete vote or message, no index on sourceable since only called here which is very rare
-  has_many :notifications, as: :sourceable, dependent: :destroy
 
-  after_save :notify_usertag_mentions, if: [:content_present_and_changed?, :usertags_present?]
+  has_many :sourced_notifications, as: :sourceable, class_name: 'Notification', dependent: :destroy
+
+  # maybe refactor, need this even though have touch: true which just updates the updated_at attribute and disregards previous changes, only before_save here and not post.rb since post is already the tag item, better to have here after validations for comment have passed (no point in updating tags if comment not saved)
+  before_save :save_tag_item, if: :content_present_and_changed?
+  before_update :notify_usertag_mentions, if: [:content_present_and_changed?, :usertags_present?]
+  after_create :notify_usertag_mentions, if: :usertags_present?
 
   before_destroy :remove_owned_tags
 
