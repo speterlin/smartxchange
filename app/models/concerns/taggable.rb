@@ -36,7 +36,7 @@ module Taggable
   def add_or_update_owned_usertags(other_owned_content)
     self_content_usertags = parse_usertags(self.content.scan(/(?<=\s|^)@[^\s]+/), true)
     other_owned_usertags = parse_usertags(other_owned_content.scan(/(?<=\s|^)@[^\s]+/))
-    owned_usertags = self_content_usertags + other_owned_usertags
+    owned_usertags = (self_content_usertags + other_owned_usertags).uniq
     # owned_usertag_list = tag_item.users_from(self.owner)
     # owned_usertag_list += content_usertags
     self.owner.tag(tag_item, :with => owned_usertags.join(","), :on => :users, :skip_save => true)
