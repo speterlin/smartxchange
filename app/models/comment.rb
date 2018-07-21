@@ -12,7 +12,7 @@
 #
 
 class Comment < ApplicationRecord
-  # probably refactor, helper files in model file, include PostsHelpers because posts_helper.rb#post_mention_create_notification called in #notify_usertag_mentions
+  # probably refactor, helper files in model file, include PostsHelpers because posts_helper.rb#post_create_notification called in taggable.rb#notify_usertag_mentions
   include PostsHelper
   include Taggable
 

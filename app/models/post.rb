@@ -55,12 +55,16 @@ class Post < ApplicationRecord
 
   belongs_to :owner, class_name: 'User'
   belongs_to :board, touch: true
-  has_many :comments, as: :commentable, dependent: :destroy
-  has_many :votes, as: :votable, dependent: :destroy
-  has_many :notifications, as: :notifiable, dependent: :destroy
-  has_many :sourced_notifications, as: :sourceable, class_name: 'Notification', dependent: :destroy
-  has_many :follows, as: :followable, dependent: :destroy
+  # dependent: :delete_all because of before_destroy callback in comment.rb which will add tags to a now non-existent post unless we use this to avoid invoking any callbacks in the child relation
+  has_many :comments, as: :commentable, dependent: :delete_all
+  # dependent: :delete_all here and :follows to avoid invoking dependent: :destroy on :sourced_notifications which is redundant
+  has_many :votes, as: :votable, dependent: :delete_all
+  has_many :follows, as: :followable, dependent: :delete_all
   has_many :followers, through: :follows
+  # maybe refactor, can use dependent: :delete_all here to be quicker, but not so much speed increase and not a very important speed increase
+  has_many :notifications, as: :notifiable, dependent: :destroy
+  # maybe refactor, dependent: :destroy redundant here, if all of post's notifications are destroyed, all of its notification with source as itself will already be deleted
+  has_many :sourced_notifications, as: :sourceable, class_name: 'Notification', dependent: :destroy
 
   default_scope -> { order(updated_at: :desc) }
 

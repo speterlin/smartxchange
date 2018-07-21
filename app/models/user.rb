@@ -199,6 +199,7 @@ class User < ApplicationRecord
   # keeping this for the dependent: :destroy aspect
   has_many :initiated_chat_rooms, :foreign_key => :initiator_id, class_name: 'ChatRoom', dependent: :destroy
   has_many :received_chat_rooms, :foreign_key => :recipient_id, class_name: 'ChatRoom', dependent: :destroy
+  # maybe refactor, dependent: :destroy redundant here, if all of user's chat_rooms are destroyed, all sent_messages should already be destroyed, messages can only belong to chat_rooms at the moment
   has_many :sent_messages, :foreign_key => :sender_id, class_name: 'Message', dependent: :destroy
   has_one :linkedin, dependent: :destroy
   has_many :posts, :foreign_key => :owner_id, class_name: 'Post', dependent: :destroy
@@ -213,8 +214,11 @@ class User < ApplicationRecord
   has_one :purchase, :foreign_key => :buyer_id, dependent: :destroy
   has_one :package, through: :purchase
   has_one :email_subscription, dependent: :destroy
+  # maybe refactor and remove dependent: :destroy for :reviews in case user returns to the platform
   has_many :reviews, as: :reviewable, dependent: :destroy
-  has_many :created_reviews, :foreign_key => :reviewer_id, class_name: 'Review', dependent: :destroy
+  # keep created reviews even if user is deleted
+  has_many :created_reviews, :foreign_key => :reviewer_id, class_name: 'Review'
+  # maybe refactor and keep materials (if materials are property of smartxchange) after user is deleted
   has_many :materials, :foreign_key => :owner_id, class_name: 'Material', dependent: :destroy
 
   default_scope -> { order(created_at: :asc) } #may refactor take this out, asc want oldest users around first

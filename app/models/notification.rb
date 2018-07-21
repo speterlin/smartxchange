@@ -15,6 +15,7 @@
 #
 
 class Notification < ApplicationRecord
+  # notifiable can be either a post or chat_room
   # sourceable for a post is a vote, follow, comment, or post, and for a chatroom it is a message
   validates_presence_of :notified, :notifier, :notifiable, :sourceable
 

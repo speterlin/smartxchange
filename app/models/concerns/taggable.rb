@@ -11,34 +11,31 @@ module Taggable
     false
   end
 
+  # maybe refactor regex so you can have periods or other characters in the hashtag
   def hashtags_present?
     return true if self.content.scan(/(?<=\s|^)#\w+/).any?
     false
   end
 
-  # maybe refactor, a lot of database calls
+  # maybe refactor, a lot of regex and database calls when post/comment doesn't affect hashtags/usertags
   def add_or_update_owned_tags
     owned_content_without_self_content = combine_owned_content_without_self_content
     add_or_update_owned_hashtags(self.content + " " + owned_content_without_self_content)
     add_or_update_owned_usertags(owned_content_without_self_content)
   end
 
-  # maybe refactor, a lot of database calls with tag_item.tags_from(self.owner), can probably use recursion, some repeat code, maybe change so you can have periods or other characters in the hashtag
   def add_or_update_owned_hashtags(content)
     owned_hashtags = parse_hashtags(content.scan(/(?<=\s|^)#\w+/))
     # owned_hashtag_list = tag_item.tags_from(self.owner)
-    # here and owned_usertag_list automatically call uniq when +=
-    # owned_hashtag_list += content_hashtags
-    # owned_tag_list |= hashtags - explain what this is
+    # owned_hashtag_list += content_hashtags # += here automatically calls uniq on resulting array
     self.owner.tag(tag_item, :with => owned_hashtags.join(","), :on => :tags, :skip_save => true)
   end
 
   def add_or_update_owned_usertags(other_owned_content)
+    # precautionary to seperate self_content and other_owned_content, should never have erroneous usertag in already created content and if so, unlikely that it would replace good content in self.content, also case of going through previous usertags and that user is deleted, would try to replace it in self.content to no avail
     self_content_usertags = parse_usertags(self.content.scan(/(?<=\s|^)@[^\s]+/), true)
     other_owned_usertags = parse_usertags(other_owned_content.scan(/(?<=\s|^)@[^\s]+/))
-    owned_usertags = (self_content_usertags + other_owned_usertags).uniq
-    # owned_usertag_list = tag_item.users_from(self.owner)
-    # owned_usertag_list += content_usertags
+    owned_usertags = (self_content_usertags + other_owned_usertags).uniq # could also |= which adds unique
     self.owner.tag(tag_item, :with => owned_usertags.join(","), :on => :users, :skip_save => true)
   end
 
@@ -65,7 +62,7 @@ module Taggable
   end
 
   def notify_usertag_mentions
-    # maybe refactor, worried about regex and @ picking up faulty usertags but all strings preceded by @ in self.content should be usertags after going through #parse_usertags when this method is called (after_save)
+    # maybe refactor, worried about regex and @ picking up faulty usertags but all strings preceded by whitespace and @ in self.content should be usertags after going through regex and #parse_usertags when this method is called (before_update, after_create)
     content_usertags = self.content.scan(/(?<=\s|^)@[^\s]+/).map{|usertag| usertag.delete('@')}
     # uniq in case user is mentioned more than once in content
     content_usertags.uniq.each do |usertag|
@@ -90,7 +87,7 @@ module Taggable
     return hashtags.map{|hashtag| hashtag.downcase.delete('#')}.uniq
   end
 
-  # maybe refactor self_content_only logic
+  # maybe refactor self_content_only logic, but good that gsub! is only called if self_content_only since this is a computational heavy action
   def parse_usertags(usertags, self_content_only = false)
     return usertags.map do |usertag|
       name = usertag.delete('@').split(".").join(" ").downcase.titleize
@@ -106,12 +103,12 @@ module Taggable
 
   # maybe refactor, assuming tags are only in post or comment and tag_item can only be post
   def tag_item
-    return self.is_a?(Comment) ? self.commentable : self
+    @tag_item ||= self.is_a?(Comment) ? self.commentable : self
   end
 
   def save_tag_item
     # also precautionary - should only be called when self is a comment, because if it is a post, tag_item is self and it will save at end
-    tag_item.save if !self.is_a?(Post)
+    tag_item.save unless self == tag_item # could also do if !self.is_a?(Post) but this way we use @tag_item which should be already set
   end
 
 end

@@ -19,7 +19,8 @@ class ChatRoom < ApplicationRecord
 
   belongs_to :initiator, class_name: 'User'
   belongs_to :recipient, class_name: 'User'
-  has_many :messages, dependent: :destroy
+  # dependent: :delete_all to avoid invoking dependent: :destroy on :sourced_notifications of message.rb which is redundant
+  has_many :messages, dependent: :delete_all
   has_many :notifications, as: :notifiable, dependent: :destroy
   # no dependent destroy want review to persist even if chat_room is deleted
   has_many :user_reviews, foreign_key: :chat_room_id, class_name: 'Review'
