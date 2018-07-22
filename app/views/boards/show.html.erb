@@ -80,7 +80,7 @@
     addEventEditPost(value);
   })
   $('.edit-comment').each(function(index, value) {
-    // regex and parents() hack to get post parent may need to change later
+    // refactor, regex and parents() hack to get post parent may need to change later
     var post_id = $(value).parents().eq(4)[0].id.match(/[0-9]+/i)[0];
     addEventEditComment(value, post_id);
   })

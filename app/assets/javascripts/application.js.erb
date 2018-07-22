@@ -14,17 +14,17 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require jquery.remotipart
+//= require jquery.textcomplete
 //= require turbolinks
 //= require bootstrap
 //= require cable
-//= require jquery.textcomplete
 
 function setTimeZoneOffset() {
     var current_time = new Date();
     // gets timezone offset in minutes, offset off of GMT
     document.cookie = 'time_zone='+current_time.getTimezoneOffset();
 }
-setTimeZoneOffset()
+setTimeZoneOffset();
 
 function translateText(response) {
   if (response.error) {

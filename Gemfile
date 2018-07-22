@@ -90,6 +90,9 @@ gem 'acts-as-taggable-on', '~> 5.0'
 # for boards and header autocomplete, path: '../jquery_textcomplete'
 gem 'jquery_textcomplete'
 
+# for app monitoring and keeping dynos running
+gem 'newrelic_rpm'
+
 # Use Unicorn as the app server
 # gem 'unicorn'
 
