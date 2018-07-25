@@ -189,6 +189,16 @@ class User < ApplicationRecord
   after_create :add_email_subscription
   after_create :add_standard_package
 
+  # keeping this for the dependent: :destroy aspect
+  has_many :initiated_chat_rooms, :foreign_key => :initiator_id, class_name: 'ChatRoom', dependent: :destroy
+  has_many :received_chat_rooms, :foreign_key => :recipient_id, class_name: 'ChatRoom', dependent: :destroy
+  # maybe refactor, dependent: :delete_all redundant here, if all of user's chat_rooms are destroyed, all sent_messages should already be destroyed, messages can only belong to chat_rooms at the moment, if message can belong to other objects or there are chat_rooms with more than 2 people change :delete_all to :destroy
+  has_many :sent_messages, :foreign_key => :sender_id, class_name: 'Message', dependent: :delete_all
+  has_many :posts, :foreign_key => :owner_id, class_name: 'Post', dependent: :destroy
+  has_many :comments, :foreign_key => :owner_id, class_name: 'Comment', dependent: :destroy
+  has_many :votes, :foreign_key => :owner_id, class_name: 'Vote', dependent: :destroy
+  has_many :follows, :foreign_key => :follower_id, class_name: 'Follow', dependent: :destroy
+  has_many :followed_posts, through: :follows, source: :followable, source_type: 'Post'
   has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
   # maybe refactor and get rid of read_notifications, mainly used for destroying notifications not covered in above
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
@@ -196,17 +206,7 @@ class User < ApplicationRecord
   # No dependent: :destroy here since covered in above
   has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification'
   has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification'
-  # keeping this for the dependent: :destroy aspect
-  has_many :initiated_chat_rooms, :foreign_key => :initiator_id, class_name: 'ChatRoom', dependent: :destroy
-  has_many :received_chat_rooms, :foreign_key => :recipient_id, class_name: 'ChatRoom', dependent: :destroy
-  # maybe refactor, dependent: :destroy redundant here, if all of user's chat_rooms are destroyed, all sent_messages should already be destroyed, messages can only belong to chat_rooms at the moment
-  has_many :sent_messages, :foreign_key => :sender_id, class_name: 'Message', dependent: :destroy
   has_one :linkedin, dependent: :destroy
-  has_many :posts, :foreign_key => :owner_id, class_name: 'Post', dependent: :destroy
-  has_many :comments, :foreign_key => :owner_id, class_name: 'Comment', dependent: :destroy
-  has_many :votes, :foreign_key => :owner_id, class_name: 'Vote', dependent: :destroy
-  has_many :follows, :foreign_key => :follower_id, class_name: 'Follow', dependent: :destroy
-  has_many :followed_posts, through: :follows, source: :followable, source_type: 'Post'
   # in the future, if add more objects that user can read (besides Board), should add an association like :reads_of_boards, -> {where readable_type: 'Board'}
   has_many :reads, dependent: :destroy
   has_many :read_boards, through: :reads, source: :readable, source_type: 'Board'
@@ -218,10 +218,10 @@ class User < ApplicationRecord
   has_many :reviews, as: :reviewable, dependent: :destroy
   # keep created reviews even if user is deleted
   has_many :created_reviews, :foreign_key => :reviewer_id, class_name: 'Review'
-  # maybe refactor and keep materials (if materials are property of smartxchange) after user is deleted
+  # maybe refactor and keep materials (if materials are property of smartxchange) after user is deleted, however issue of validating owner
   has_many :materials, :foreign_key => :owner_id, class_name: 'Material', dependent: :destroy
 
-  default_scope -> { order(created_at: :asc) } #may refactor take this out, asc want oldest users around first
+  default_scope -> { order(created_at: :asc) } # maybe refactor take this out, asc want oldest users around first
 
   def to_param
     name.downcase

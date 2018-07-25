@@ -7,7 +7,7 @@ include BoardsHelper
 task :send_language_matches => :environment do
   # Cycle repeats every Sunday (2017) morning
   users_group_by_day_of_week_and_group_num(0).each do |user|
-    UserMailer.language_matches(user, ["match", "exchange"].sample).deliver
+    UserMailer.language_matches(user, [true, false].sample).deliver
   end
 end
 

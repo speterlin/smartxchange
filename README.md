@@ -38,6 +38,8 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * Jquery_textcomplete for text autocomplete
 
+* Newrelic_rpm for monitoring and analysis
+
 * Database using Sqlite3 for development and Postgres in production
 
 ## Other Information

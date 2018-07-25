@@ -15,8 +15,8 @@
 #
 
 class Review < ApplicationRecord
-  # reviewable is only a User at the moment
-  validates_presence_of :reviewer, :reviewable, :chat_room, :language_level, :language
+  # reviewable is only a User at the moment, :reviewer_id since can have a review persist even if reviewer is destroyed
+  validates_presence_of :reviewer_id, :reviewable, :chat_room, :language_level, :language
   # too long to have this database validation
   validates :language, uniqueness: { scope: [:reviewer_id, :reviewable_type, :reviewable_id], message: "You have already submitted a review for this user in this language, please check your reviews (in your user settings) and edit this review" }
   validates :chat_room_id, uniqueness: { scope: :reviewer_id, message: "You may only give one review per conversation" }

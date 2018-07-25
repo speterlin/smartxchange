@@ -18,7 +18,7 @@ class UserMailerPreview < ActionMailer::Preview
   end
 
   def language_matches
-    UserMailer.language_matches(User.first, "match")
+    UserMailer.language_matches(User.first)
   end
 
   def notify_match

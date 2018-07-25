@@ -48,7 +48,7 @@ class BoardsController < ApplicationController
         @notification = most_recently_updated_post_notification
       else
         most_recently_updated_post = @board.posts.first
-        @notification = Notification.new(notified_id: current_user.id, notifier_id: current_user.id, notifiable_type: "Post", notifiable_id: most_recently_updated_post.id, sourceable_type: "Post", sourceable_id: most_recently_updated_post.id)
+        @notification = Notification.new(notified: current_user, notifier: current_user, notifiable: most_recently_updated_post, sourceable: most_recently_updated_post)
       end
     end
     board_mark_read(@board)

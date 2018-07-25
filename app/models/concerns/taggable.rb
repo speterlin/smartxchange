@@ -20,23 +20,8 @@ module Taggable
   # maybe refactor, a lot of regex and database calls when post/comment doesn't affect hashtags/usertags
   def add_or_update_owned_tags
     owned_content_without_self_content = combine_owned_content_without_self_content
-    add_or_update_owned_hashtags(self.content + " " + owned_content_without_self_content)
-    add_or_update_owned_usertags(owned_content_without_self_content)
-  end
-
-  def add_or_update_owned_hashtags(content)
-    owned_hashtags = parse_hashtags(content.scan(/(?<=\s|^)#\w+/))
-    # owned_hashtag_list = tag_item.tags_from(self.owner)
-    # owned_hashtag_list += content_hashtags # += here automatically calls uniq on resulting array
-    self.owner.tag(tag_item, :with => owned_hashtags.join(","), :on => :tags, :skip_save => true)
-  end
-
-  def add_or_update_owned_usertags(other_owned_content)
-    # precautionary to seperate self_content and other_owned_content, should never have erroneous usertag in already created content and if so, unlikely that it would replace good content in self.content, also case of going through previous usertags and that user is deleted, would try to replace it in self.content to no avail
-    self_content_usertags = parse_usertags(self.content.scan(/(?<=\s|^)@[^\s]+/), true)
-    other_owned_usertags = parse_usertags(other_owned_content.scan(/(?<=\s|^)@[^\s]+/))
-    owned_usertags = (self_content_usertags + other_owned_usertags).uniq # could also |= which adds unique
-    self.owner.tag(tag_item, :with => owned_usertags.join(","), :on => :users, :skip_save => true)
+    update_owned_hashtags(self.content + " " + owned_content_without_self_content)
+    update_owned_usertags(owned_content_without_self_content, true)
   end
 
   # only called in before_destroy in comment.rb
@@ -44,34 +29,38 @@ module Taggable
     hashtags_present, usertags_present = hashtags_present?, usertags_present?
     if hashtags_present || usertags_present
       owned_content_without_self_content = combine_owned_content_without_self_content
-      remove_owned_hashtags(owned_content_without_self_content) if hashtags_present
-      remove_owned_usertags(owned_content_without_self_content) if usertags_present
+      update_owned_hashtags(owned_content_without_self_content) if hashtags_present
+      update_owned_usertags(owned_content_without_self_content) if usertags_present
       # since before_save not called when destroying object
       save_tag_item
     end
   end
 
-  def remove_owned_hashtags(content)
-    owned_hashtags = parse_hashtags(content.scan(/(?<=\s|^)#\w+/))
-    self.owner.tag(tag_item, :with => owned_hashtags.join(","), :on => :tags, :skip_save => true)
-  end
-
-  def remove_owned_usertags(content)
-    owned_usertags = parse_usertags(content.scan(/(?<=\s|^)@[^\s]+/))
-    self.owner.tag(tag_item, :with => owned_usertags.join(","), :on => :users, :skip_save => true)
-  end
-
   def notify_usertag_mentions
     # maybe refactor, worried about regex and @ picking up faulty usertags but all strings preceded by whitespace and @ in self.content should be usertags after going through regex and #parse_usertags when this method is called (before_update, after_create)
-    content_usertags = self.content.scan(/(?<=\s|^)@[^\s]+/).map{|usertag| usertag.delete('@')}
+    self_content_usertags = self.content.scan(/(?<=\s|^)@[^\s]+/).map{|usertag| usertag.delete('@')}
     # uniq in case user is mentioned more than once in content
-    content_usertags.uniq.each do |usertag|
+    self_content_usertags.uniq.each do |usertag|
       next if usertag == self.owner.name.downcase.split(" ").join(".")
       post_create_notification(self, tag_item, User.find_by_name(usertag.split(".").join(" ").titleize), true)
     end
   end
 
-  # maybe refactor, need this because tag_item.users/tags stores unique usertags/hashtags, if -= deleted usertag/hashtag from this list and there are still tags for that usertag/hashtag in remaining comments/post, will result in incorrect 0 tags for that usertag/hashtag
+  def update_owned_hashtags(content)
+    owned_hashtags = parse_hashtags(content.scan(/(?<=\s|^)#\w+/))
+    # owned_hashtag_list = tag_item.tags_from(self.owner)
+    # owned_hashtag_list += content_hashtags # += here automatically calls uniq on resulting array
+    self.owner.tag(tag_item, :with => owned_hashtags.join(","), :on => :tags, :skip_save => true)
+  end
+
+  # maybe refactor, precautionary to seperate self_content and other_owned_content, should never have erroneous usertag in already created content (unless a user in previous content is deleted) and if so, may be a good thing to warn user about previously entered erroneous post/comment content before creating/updating/deleting current post/comment
+  def update_owned_usertags(other_owned_content, include_self_content = false)
+    owned_usertags = parse_usertags(other_owned_content.scan(/(?<=\s|^)@[^\s]+/))
+    owned_usertags |= parse_usertags(self.content.scan(/(?<=\s|^)@[^\s]+/), true) if include_self_content  # piping adds uniq more efficiently
+    self.owner.tag(tag_item, :with => owned_usertags.join(","), :on => :users, :skip_save => true)
+  end
+
+  # maybe refactor, need this because tag_item.users/tags stores unique usertags/hashtags, if -= deleted hashtag/usertag from this list and there are still tags for that hashtag/usertag in remaining comments/post, will result in incorrect 0 tags for that hashtag/usertag, also issue of updating a post/comment and removing a hashtag/usertag and having that reflect correctly
   def combine_owned_content_without_self_content
     content = ""
     if self.is_a?(Post)
@@ -83,21 +72,22 @@ module Taggable
     return content
   end
 
+  # maybe refactor, here and in parse_usertags .uniq not required since automatically called when updating tag_item but like it for method logic
   def parse_hashtags(hashtags)
     return hashtags.map{|hashtag| hashtag.downcase.delete('#')}.uniq
   end
 
-  # maybe refactor self_content_only logic, but good that gsub! is only called if self_content_only since this is a computational heavy action
+  # maybe refactor self_content_only logic (precautionary)
   def parse_usertags(usertags, self_content_only = false)
     return usertags.map do |usertag|
       name = usertag.delete('@').split(".").join(" ").downcase.titleize
       if User.find_by_name(name)
         usertag.downcase.delete('@')
       else
-        self.content.gsub!(usertag, "") if self_content_only
+        self.errors.add(:content, "No user found with usertag #{usertag}") if self_content_only
         next
       end
-    # maybe refactor, compact to get rid of nil values (created if there is an erroneous usertag), uniq here and in parse_hashtags because of #remove_owned_hashtags&usertags call, owned_usertag&hashtag_list in #add_or_update_owned_hashtags&usertags automatically calls uniq (still trying to figure out how)
+    # compact to get rid of nil values (created if there is an erroneous usertag)
     end.compact.uniq
   end
 

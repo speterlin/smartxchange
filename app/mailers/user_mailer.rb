@@ -51,21 +51,21 @@ class UserMailer < ApplicationMailer
     set_name_and_title_and_unsubscribe_and_header(@user, "smartXchange enters its 12th and final month!")
   end
 
-  def language_matches(user, match_or_exchange)
+  def language_matches(user, exchange = false)
     # refactor this, a bit messy
     @user = user
-    if match_or_exchange == "match"
-      @matches = @user.sort_method[0..24].shuffle[0..5]
-      campaign = campaign("matches")
-      @notify_message = "Are you interested in practicing #{@user.language} with any of the following users?"
-      @login_message = "to find more people practicing #{@user.language}."
-      title = "Have you messaged these language practice peers?"
-    elsif match_or_exchange == "exchange"
+    if exchange
       @matches = @user.sort_exchange[0..24].shuffle[0..5]
       campaign = campaign("exchanges")
       @notify_message = "Are you interested in exchanging your native #{user_convert_to_language(@user.nationality)} with the native #{@user.language} of any of the following users?"
       @login_message = "to find more native #{@user.language} speakers practicing #{user_convert_to_language(@user.nationality)}."
       title = "Have you messaged these language exchange options?"
+    else
+      @matches = @user.sort_method[0..24].shuffle[0..5]
+      campaign = campaign("matches")
+      @notify_message = "Are you interested in practicing #{@user.language} with any of the following users?"
+      @login_message = "to find more people practicing #{@user.language}."
+      title = "Have you messaged these language practice peers?"
     end
     @matches_token = @user.create_matches_token!
     if @matches.any?
@@ -227,7 +227,7 @@ class UserMailer < ApplicationMailer
   # assuming campaign comes in as plural
   def campaign(name)
     # don't singularize notifications, matches, or exchanges because these are emails that can send multiple notifications, matches, or exchanges
-    "?utm_source=#{name.in?(['notifications','matches','exchanges']) ? name : name.singularize}_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_#{name}"
+    "?utm_source=#{name}_email&utm_medium=email&utm_campaign=#{num_to_month(Time.now.month)}_#{name}"
   end
 
   def prevent_delivery_to_unsubscribed

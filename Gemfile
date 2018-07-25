@@ -85,7 +85,7 @@ gem 'searchkick'
 # gem 'searchjoy'
 
 # for tagging posts
-gem 'acts-as-taggable-on', '~> 5.0'
+gem 'acts-as-taggable-on', '~> 6.0'
 
 # for boards and header autocomplete, path: '../jquery_textcomplete'
 gem 'jquery_textcomplete'
