@@ -14,14 +14,13 @@ Rails.application.configure do
   config.action_controller.perform_caching = false
 
   # host header protection
-  config.action_controller.default_url_options = { host: ENV['HTTP_HOST'] }
+  config.action_controller.default_url_options = { protocol: 'https', host: ENV['HTTP_HOST'] }
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = true
 
   # So that you can use _url in email layouts
-  config.action_mailer.default_url_options = { host: ENV['HTTP_HOST'] }
-
+  config.action_mailer.default_url_options = { protocol: 'https', host: ENV['HTTP_HOST'] }
 
   # To access assets like images in email layouts
   config.action_mailer.asset_host = ENV['HTTP_HOST']
