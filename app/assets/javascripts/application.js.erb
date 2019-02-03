@@ -140,8 +140,8 @@ function addTextcompleteForHashtagsAndUsertags($textarea) {
       match: /(\s|^)#(\w+)$/,
       search: function (term, callback) {
         $.getJSON('/posts/autocomplete_hashtag', { query: term })
-        .done(function (resp) { callback(resp); })
-        .fail(function ()     { callback([]);   });
+          .done(function (resp) { callback(resp); })
+          .fail(function ()     { callback([]);   });
       },
       replace: function (value) {
         return '$1' + value + ' ';
