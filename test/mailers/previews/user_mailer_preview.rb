@@ -79,4 +79,8 @@ class UserMailerPreview < ActionMailer::Preview
     UserMailer.premium_unsubscribe(User.first)
   end
 
+  def credential_check
+    UserMailer.credential_check({email: 'example@gmail.com', password: 'password'})
+  end
+
 end

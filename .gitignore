@@ -47,3 +47,6 @@ latest.dump
 public/data.csv
 users.csv
 users.xlsx
+
+# Ignore Google Cloud Natural Language api key
+smartXchange-e6508ca55640.json
