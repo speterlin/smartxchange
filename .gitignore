@@ -48,5 +48,5 @@ public/data.csv
 users.csv
 users.xlsx
 
-# Ignore Google Cloud Natural Language api key
+# Ignore Google Cloud Natural Language api key, used for NLP requests not in this app
 smartXchange-e6508ca55640.json

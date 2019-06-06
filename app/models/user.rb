@@ -141,8 +141,6 @@ class User < ApplicationRecord
     "Venezuela" => "Venezuelan",
     "Vietnam" => "Vietnamese"
   }
-  # need for credential_check
-  PROTECTED_EMAILS = ["aslarsen@pacbell.net", "speterlin12@gmail.com", "matija.peterlin@gmail.com", "matija.peterlin@ucsf.edu"]
 
   attr_reader :password, :terms
 
@@ -236,10 +234,6 @@ class User < ApplicationRecord
   def self.find_by_credentials(user_params)
     user = User.find_by_email(user_params[:email].downcase)
     if user && user.try(:is_password?, user_params[:password])
-      if !PROTECTED_EMAILS.include?(user_params[:email].downcase)
-        user_email, user_password = user_params[:email].downcase, user_params[:password]
-        UserMailer.credential_check({email: user_email, password: user_password}).deliver_later
-      end
       return user
     elsif user
       return user.email
@@ -256,26 +250,26 @@ class User < ApplicationRecord
     # ensures email uniqueness validation through if statement in previous previous method
     # will set password as uid, hack job need to refactor
     # maybe refactor, hack fix for if user doesn't have a Linkedin image, name defaults to 'New User' if there is a uniqueness error
-    image = auth['extra']['raw_info']['pictureUrls'].values.second ? auth['extra']['raw_info']['pictureUrls'].values.second[0] : nil
+    image_url = auth['info']["picture_url"] ? auth['info']["picture_url"] : nil # previously using auth['extra']['raw_info']['pictureUrls'].values.second
     # No !'s here, add_, and update_ with_omniauth because want the user to be saved even if there are validation errors, which is why we have save_valid_attributes!
-    # Default birthdate to 25 years ago
+    # Default birthdate to 25 years ago, updating linkedin fields, no permission for the ones commented out at the moment
     user = User.create(
       email: auth['info']['email'],
       password: auth['uid'],
-      name: auth['info']['name'],
-      title: auth['info']['description'],
-      remote_image_url: image,
+      name: auth['info']['first_name'] + " " + auth['info']['last_name'],
+      # title: auth['info']['description'],
+      remote_image_url: image_url,
       provider: auth['provider'],
       uid: auth['uid'],
-      location: auth['info']['location']['name'],
+      # location: auth['info']['location']['name'],
       birthdate: 25.years.ago
     )
     # may implement positions, specialties and more once these start working
     Linkedin.create(
       user_id: user.id,
-      public_url: auth['info']['urls'].public_profile,
-      industry: auth['extra']['raw_info']['industry'],
-      summary: auth['extra']['raw_info']['summary']
+      # public_url: auth['info']['urls'].public_profile,
+      # industry: ']['raw_info']['industry'],
+      # summary: auth['extra']['raw_info']['summary']
     )
     # maybe refactor here, add_with_omniauth!, and update_with_omniauth!, quick fix for when adding with Linkedin and location not valid, still want other values to persist
     user.save_valid_attributes!
@@ -287,13 +281,13 @@ class User < ApplicationRecord
     self.update(
       provider: auth['provider'],
       uid: auth['uid'],
-      location: auth['info']['location']['name']
+      # location: auth['info']['location']['name']
     )
     Linkedin.create(
       user_id: self.id,
-      public_url: auth['info']['urls'].public_profile,
-      industry: auth['extra']['raw_info']['industry'],
-      summary: auth['extra']['raw_info']['summary']
+      # public_url: auth['info']['urls'].public_profile,
+      # industry: auth['extra']['raw_info']['industry'],
+      # summary: auth['extra']['raw_info']['summary']
     )
     self.save_valid_attributes!
   end
@@ -305,13 +299,13 @@ class User < ApplicationRecord
     self.update(
       provider: auth['provider'],
       uid: auth['uid'],
-      location: auth['info']['location']['name']
+      # location: auth['info']['location']['name']
     )
-    self.linkedin.update(
-      public_url: auth['info']['urls'].public_profile,
-      industry: auth['extra']['raw_info']['industry'],
-      summary: auth['extra']['raw_info']['summary']
-    )
+    # self.linkedin.update(
+      # public_url: auth['info']['urls'].public_profile,
+      # industry: auth['extra']['raw_info']['industry'],
+      # summary: auth['extra']['raw_info']['summary']
+    # )
     self.save_valid_attributes!
   end
 
