@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: smartexchange.herokuapp.com
+Token: 05c4ca4a41ad88dac2d1bf5902a7125f98175b32af0b8d905d2bb8e6960f99f5
