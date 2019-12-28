@@ -98,7 +98,7 @@
       <ul id="materials">
         <% @premium_or_admin = current_user.premium_or_admin? %>
         <% if @materials.any? %>
-            <%= render @materials %>
+            <%= render @materials.order('language, language_level ASC') %>
         <% elsif @user != current_user && @premium_or_admin %>
           <h5>Tutoring materials are on their way...</h5>
         <% elsif @user != current_user && !@premium_or_admin  %>
