@@ -96,13 +96,10 @@
     <% if @user.tutor? %>
       <br><h4>Tutor materials</h4>
       <ul id="materials">
-        <% @premium_or_admin = current_user.premium_or_admin? %>
         <% if @materials.any? %>
             <%= render @materials.order('language, language_level ASC') %>
-        <% elsif @user != current_user && @premium_or_admin %>
+        <% elsif @user != current_user %>
           <h5>Tutoring materials are on their way...</h5>
-        <% elsif @user != current_user && !@premium_or_admin  %>
-          <%= link_to "Upgrade to Premium", "/about#premium", class: 'btn btn-primary premium' %>
         <% end %>
       </ul>
       <!-- upload form -->
