@@ -50,3 +50,6 @@ users.xlsx
 
 # Ignore Google Cloud Natural Language api key, used for NLP requests not in this app
 smartXchange-e6508ca55640.json
+
+# Ignore Amazon s3 keys
+amazon_s3
