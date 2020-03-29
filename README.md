@@ -1,6 +1,6 @@
 # smartXchange
 
-A Ruby on Rails application to allow users to find each other for the purpose of practicing languages and sharing language learning material. Featured in prominent business school career newsletter with over 300 users across the world. Constantly adding new features, open to suggestions. See it [Live](http://smartexchange.herokuapp.com).
+A Ruby on Rails application to allow users to find each other for the purpose of practicing languages and sharing language learning material. Featured in prominent business school career newsletter with over 300 users across the world. Constantly adding new features, open to suggestions. See it [Live](http://smartexchange.herokuapp.com). <!--- Not using ENV['HTTP_HOST'] because upload with git not heroku therefore localhost:300 would be pushed not the public url -->
 
 ## Features and Gems
 

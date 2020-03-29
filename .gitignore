@@ -53,3 +53,6 @@ smartXchange-e6508ca55640.json
 
 # Ignore Amazon s3 keys
 amazon_s3
+
+# Ignore ConversationExchange spamming
+msg-conversation-exchange
