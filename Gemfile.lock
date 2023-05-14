@@ -317,7 +317,6 @@ DEPENDENCIES
   bootstrap-sass
   bootstrap-will_paginate
   braintree (~> 2.33.1)
-  bundler (~> 2.4.10)
   byebug
   carrierwave (~> 1.0)
   coffee-rails (~> 4.2)
