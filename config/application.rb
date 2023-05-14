@@ -8,9 +8,15 @@ require 'omniauth'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+module YAML
+  class << self
+    alias_method :load, :unsafe_load if YAML.respond_to? :unsafe_load
+  end
+end
+
 # preload tokens in application.yml to local ENV
 if Rails.env.development? || Rails.env.test?
-  config = YAML.safe_load(File.read(File.expand_path('../application.yml', __FILE__)))
+  config = YAML.load(File.read(File.expand_path('../application.yml', __FILE__)))
   config.merge! config.fetch(Rails.env, {})
   config.each do |key, value|
     ENV[key] = value.to_s unless value.kind_of? Hash
