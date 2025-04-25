@@ -46,6 +46,6 @@ module SmartXchange
 
     # for using delayed_job
     config.active_job.queue_adapter = :delayed_job
-
+    config.assets.initialize_on_precompile = false
   end
 end
