@@ -127,6 +127,6 @@ group :production do
   gem 'rails_12factor'
   # for action cable to work
   gem 'redis', '~> 3.0'
-  gem 'bundler', '~>2.4.10'
+  gem 'bundler', '~>2.4.22'
 
 end
