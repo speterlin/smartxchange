@@ -8,6 +8,8 @@ gem 'rails', '~> 5.0'
 gem 'sass-rails', '~> 5.0'
 #bootstrap
 gem 'bootstrap-sass'
+# There was an error while trying to load the gem 'bootstrap' - Gem Load Error is: bootstrap-rubygem requires a Sass engine
+gem 'sassc-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'bootstrap', '~> 5.2', '>= 5.2.3'
 gem 'uglifier', '>= 1.3.0'
@@ -103,6 +105,9 @@ gem 'newrelic_rpm'
 # For use in debugging and in user_mailer.rb#set_name_and_title_and_unsubscribe_and_header
 gem 'binding_of_caller'
 
+# rake acts_as_taggable_on_engine:install:migrations - warning: mutex_m was loaded from the standard library, but is not part of the default gems starting from Ruby 3.4.0.
+gem 'mutex_m', '~> 0.2.0'
+
 # Access an IRB console on exception pages or by using <%= console %> in views
 gem 'web-console', '~> 2.0', group: :development
 
@@ -122,11 +127,11 @@ group :development, :test do
 end
 
 group :production do
-  ruby "3.2.2" # "2.5.1"
+  ruby "3.4.3" # "2.5.1"
   gem 'pg'
   gem 'rails_12factor'
   # for action cable to work
   gem 'redis', '~> 3.0'
-  gem 'bundler', '~>2.4.22'
+  gem 'bundler', '~>2.6.8'
 
 end
