@@ -108,6 +108,9 @@ gem 'binding_of_caller'
 # rake acts_as_taggable_on_engine:install:migrations - warning: mutex_m was loaded from the standard library, but is not part of the default gems starting from Ruby 3.4.0.
 gem 'mutex_m', '~> 0.2.0'
 
+# During Running: rake assets:precompile - remote: /tmp/build_638f4032/vendor/bundle/ruby/3.4.0/gems/file_validators-3.0.0/lib/file_validators.rb:4: warning: ostruct was loaded from the standard library, but will no longer be part of the default gems starting from Ruby 3.5.0. remote: You can add ostruct to your Gemfile or gemspec to silence this warning, remote: rake aborted!
+gem 'ostruct'
+
 # Access an IRB console on exception pages or by using <%= console %> in views
 gem 'web-console', '~> 2.0', group: :development
 
