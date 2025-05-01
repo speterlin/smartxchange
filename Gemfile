@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.0'
+gem 'rails' #, '~> 6.1.7.9' # '~> 5.0'
 #will need postgres for heroku deployment
 #gem 'pg', '~> 0.18.4' error installing will keep out for now
 # Use SCSS for stylesheets
@@ -11,7 +11,7 @@ gem 'sass-rails', '~> 5.0'
 # There was an error while trying to load the gem 'bootstrap' - Gem Load Error is: bootstrap-rubygem requires a Sass engine
 gem 'sassc-rails'
 # Use Uglifier as compressor for JavaScript assets
-gem 'bootstrap' # to use most up to  date version with ruby 3.4, '~> 5.2', '>= 5.2.3'
+gem 'bootstrap' # to use most up to  date version with ruby 3.4 , '~> 5.2', '>= 5.2.3'
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
@@ -88,7 +88,7 @@ gem 'searchkick'
 # gem 'searchjoy'
 
 # for tagging posts
-gem 'acts-as-taggable-on', '~> 6.0'
+gem 'acts-as-taggable-on' #, '~> 6.0'
 
 # for boards and header autocomplete, path: '../jquery_textcomplete'
 gem 'jquery_textcomplete'
