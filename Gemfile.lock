@@ -56,8 +56,6 @@ GEM
       activerecord (>= 3.2, < 8.0)
       rake (>= 10.4, < 14.0)
     arel (9.0.0)
-    autoprefixer-rails (10.4.21.0)
-      execjs (~> 2)
     base64 (0.2.0)
     bcrypt (3.1.20)
     benchmark (0.4.0)
@@ -70,9 +68,6 @@ GEM
       debug_inspector (>= 1.2.0)
     bootstrap (5.3.5)
       popper_js (>= 2.11.8, < 3)
-    bootstrap-sass (3.4.1)
-      autoprefixer-rails (>= 5.2.1)
-      sassc (>= 2.0.0)
     bootstrap-will_paginate (1.0.0)
       will_paginate
     braintree (2.33.1)
@@ -188,7 +183,7 @@ GEM
     mini_mime (1.1.5)
     minitest (5.25.5)
     multi_json (1.15.0)
-    multi_xml (0.7.1)
+    multi_xml (0.7.2)
       bigdecimal (~> 3.1)
     mutex_m (0.2.0)
     net-http (0.6.0)
@@ -202,7 +197,7 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
-    newrelic_rpm (9.18.0)
+    newrelic_rpm (9.19.0)
     nio4r (2.7.4)
     nokogiri (1.18.8-arm64-darwin)
       racc (~> 1.4)
@@ -235,7 +230,7 @@ GEM
       method_source (~> 1.0)
     pry-rails (0.3.11)
       pry (>= 0.13.0)
-    public_suffix (6.0.1)
+    public_suffix (6.0.2)
     puma (3.12.6)
     racc (1.8.1)
     rack (2.2.13)
@@ -357,8 +352,7 @@ DEPENDENCIES
   bcrypt
   better_errors
   binding_of_caller
-  bootstrap (~> 5.2, >= 5.2.3)
-  bootstrap-sass
+  bootstrap
   bootstrap-will_paginate
   braintree (~> 2.33.1)
   bundler (~> 2.6.8)

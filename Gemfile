@@ -6,12 +6,12 @@ gem 'rails', '~> 5.0'
 #gem 'pg', '~> 0.18.4' error installing will keep out for now
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
-#bootstrap
-gem 'bootstrap-sass'
+#bootstrap, supposedly outdated with ruby 3.4
+# gem 'bootstrap-sass'
 # There was an error while trying to load the gem 'bootstrap' - Gem Load Error is: bootstrap-rubygem requires a Sass engine
 gem 'sassc-rails'
 # Use Uglifier as compressor for JavaScript assets
-gem 'bootstrap', '~> 5.2', '>= 5.2.3'
+gem 'bootstrap' # to use most up to  date version with ruby 3.4, '~> 5.2', '>= 5.2.3'
 gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
