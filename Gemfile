@@ -12,7 +12,8 @@ gem 'sass-rails', '~> 5.0'
 gem 'sassc-rails'
 # Use Uglifier as compressor for JavaScript assets
 gem 'bootstrap' # to use most up to  date version with ruby 3.4 , '~> 5.2', '>= 5.2.3'
-gem 'uglifier', '>= 1.3.0'
+gem 'terser'
+# gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes
