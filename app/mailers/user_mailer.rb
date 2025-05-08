@@ -6,9 +6,11 @@ class UserMailer < ApplicationMailer
   # end
 
   # for using #a_or_an in emails
-  add_template_helper(ApplicationHelper)
+  # add_template_helper(ApplicationHelper) # deprecated in rails 7.2.2.1
+  helper ApplicationHelper
   # for using #user_convert_to_presented_language_level in related_material.html.erb&text.erb
-  add_template_helper(UsersHelper)
+  # add_template_helper(UsersHelper) # deprecated in rails 7.2.2.1
+  helper UsersHelper
   # needed for #num_to_month
   include ApplicationHelper
   # needed for #user_convert_to_language and #user_related_material
