@@ -84,8 +84,12 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find_by_param(params[:id])
-    @materials = @user.materials.includes(:owner)
-    @reviews = @user.reviews.includes(:reviewer)
+    if @user.nil?
+      redirect_to root_path, alert: "User not found"
+    else
+      @materials = @user.materials.includes(:owner)
+      @reviews = @user.reviews.includes(:reviewer)
+    end
   end
 
   def update

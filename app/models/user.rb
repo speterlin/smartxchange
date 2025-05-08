@@ -146,7 +146,7 @@ class User < ApplicationRecord
 
   mount_uploader :image, AvatarUploader
   geocoded_by :location
-  serialize :interests, Array
+  serialize :interests, type: Array
 
   after_initialize :ensure_session_token
 

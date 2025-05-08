@@ -1,0 +1,46 @@
+.dropdown-menu {
+  // maybe refactor and get rid of border here and in li
+  border: 1px solid #ddd;
+  background-color: #fff;
+
+  // SHOULD not modify
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  // end
+
+  li {
+    border-top: 1px solid #ddd;
+
+    &:first-child {
+      border-top: none;
+    }
+
+    // hover in case there is a gap (i.e. padding) between li and a elements
+    &:hover, &.active {
+
+      // mainly (if there is no gap) for when cursor is not over a element (li is active)
+      a {
+        background-color: #6eb7db;
+
+        &:hover {
+          background-color: #6eb7db;
+        }
+
+      }
+
+    }
+
+  }
+
+  a:hover {
+    cursor: pointer; // SHOULD not modify
+  }
+
+  // for mobile and tablet
+  @media (max-width: 768px) {
+    width: 70%;
+    overflow: auto;
+  }
+
+}

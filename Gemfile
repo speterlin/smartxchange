@@ -10,10 +10,11 @@ gem 'sass-rails', '~> 5.0'
 # gem 'bootstrap-sass'
 # There was an error while trying to load the gem 'bootstrap' - Gem Load Error is: bootstrap-rubygem requires a Sass engine
 gem 'sassc-rails'
-# Use Uglifier as compressor for JavaScript assets
 gem 'bootstrap' # to use most up to  date version with ruby 3.4 , '~> 5.2', '>= 5.2.3'
-gem 'terser'
+# Use Uglifier as compressor for JavaScript assets
 # gem 'uglifier', '>= 1.3.0'
+# gem 'terser' as a replacement due to precompile assets issue Uglifier unable to adequately interpret ES6+ Javascript syntax
+gem 'terser'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.2'
 # See https://github.com/rails/execjs#readme for more supported runtimes

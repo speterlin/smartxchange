@@ -21,7 +21,7 @@
 $grid-float-breakpoint: 1100px;
 // maybe refactor, unused at the moment
 $gray-medium-light: #eaeaea;
-@import "bootstrap-sprockets";
+// @import "bootstrap-sprockets"; // deprecated
 @import "bootstrap";
 
 body {
@@ -801,7 +801,7 @@ form.new {
   select {
     color: black;
   }
-  
+
 }
 
 #premium-header {

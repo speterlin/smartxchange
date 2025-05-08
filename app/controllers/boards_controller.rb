@@ -20,7 +20,7 @@ class BoardsController < ApplicationController
         group by p.id, v.votable_id
         order by votes_value_sum desc, p.updated_at desc")
         # only way to get includes to work on the array returned from the sql statement above, maybe refactor don't need all followers information
-        ActiveRecord::Associations::Preloader.new.preload(@posts, [:owner, :comments, {comments: :owner}, :followers])
+        # ActiveRecord::Associations::Preloader.new.preload(records: @posts, associations: [:owner, :comments, {comments: :owner}, :followers]) # not needed according to chatgpt if using ActiveRecord query methods
     end
     # probably need to refactor this
     if (@board.id == 2 || @board.id == 9) && current_user.premium_or_admin?
