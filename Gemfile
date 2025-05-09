@@ -39,6 +39,7 @@ gem 'bcrypt'
 gem 'carrierwave', '~> 1.0'
 gem 'mini_magick'
 gem 'fog-aws'
+gem 'aws-sdk-s3', '~> 1' # part of heroku-24 migration
 # file size limit
 gem 'file_validators'
 
