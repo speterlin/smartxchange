@@ -1,4 +1,4 @@
-class CreateVotes < ActiveRecord::Migration[5.0]
+class CreateVotes < ActiveRecord::Migration[7.2]
   def change
     create_table :votes do |t|
       t.integer :value, null: false, limit: 1

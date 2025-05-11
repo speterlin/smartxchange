@@ -1,4 +1,4 @@
-class ChangeColumnsToNotifications < ActiveRecord::Migration
+class ChangeColumnsToNotifications < ActiveRecord::Migration[7.2]
   def change
     remove_reference :notifications, :user
     remove_reference :notifications, :subscribed_user

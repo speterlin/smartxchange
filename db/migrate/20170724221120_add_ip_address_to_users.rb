@@ -1,4 +1,4 @@
-class AddIpAddressToUsers < ActiveRecord::Migration[5.0]
+class AddIpAddressToUsers < ActiveRecord::Migration[7.2]
   def change
     add_column :users, :ip_address, :string
   end

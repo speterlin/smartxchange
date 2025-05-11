@@ -1,4 +1,4 @@
-class CreateChats < ActiveRecord::Migration
+class CreateChats < ActiveRecord::Migration[7.2]
   def change
     create_table :chats do |t|
       t.integer :sender_id

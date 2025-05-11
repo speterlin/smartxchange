@@ -1,4 +1,4 @@
-class AddIndexToEmailSubscriptionsAndFormatOthers < ActiveRecord::Migration[5.0]
+class AddIndexToEmailSubscriptionsAndFormatOthers < ActiveRecord::Migration[7.2]
   def change
     change_column :votes, :owner_id, :integer, null: false
     add_index :reads, [:user_id, :readable_type, :readable_id], unique: true

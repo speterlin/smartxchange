@@ -1,4 +1,4 @@
-class CreateBoards < ActiveRecord::Migration[5.0]
+class CreateBoards < ActiveRecord::Migration[7.2]
   def change
     create_table :boards do |t|
       t.string :title, null: false

@@ -1,4 +1,4 @@
-class AddNotifiableAndRemoveSomeColumnsToNotifications < ActiveRecord::Migration[5.0]
+class AddNotifiableAndRemoveSomeColumnsToNotifications < ActiveRecord::Migration[7.2]
   def change
     remove_column :notifications, :message_id
     remove_column :notifications, :chat_room_id

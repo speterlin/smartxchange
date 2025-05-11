@@ -1,4 +1,4 @@
-class AddColumnsToChatRooms < ActiveRecord::Migration[5.0]
+class AddColumnsToChatRooms < ActiveRecord::Migration[7.2]
   def change
     remove_column :chat_rooms, :user_id
     add_column :chat_rooms, :initiator_id, :integer

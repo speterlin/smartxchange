@@ -1,4 +1,4 @@
-class CreateReads < ActiveRecord::Migration[5.0]
+class CreateReads < ActiveRecord::Migration[7.2]
   def change
     create_table :reads do |t|
       t.integer :user_id, null: false

@@ -1,4 +1,4 @@
-class ChangeDefaultsInColumnsToUsers < ActiveRecord::Migration
+class ChangeDefaultsInColumnsToUsers < ActiveRecord::Migration[7.2]
   def change
     change_column :users, :title, :string, null: false
     change_column :users, :name, :string, null: false

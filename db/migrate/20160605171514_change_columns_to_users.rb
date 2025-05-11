@@ -1,4 +1,4 @@
-class ChangeColumnsToUsers < ActiveRecord::Migration
+class ChangeColumnsToUsers < ActiveRecord::Migration[7.2]
   def change
     # remove_column :users, :name
     change_column :users, :name, :string, null: false, default: 'User'

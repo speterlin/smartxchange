@@ -1,4 +1,4 @@
-class FormatIndexesToTables < ActiveRecord::Migration[5.0]
+class FormatIndexesToTables < ActiveRecord::Migration[7.2]
   def change
     add_index :chat_rooms, :initiator_id
     add_index :chat_rooms, :recipient_id
