@@ -46,9 +46,9 @@ gem 'file_validators'
 #for generating fake value
 gem 'faker'
 
-#for pagination
-gem 'will_paginate'
-gem 'bootstrap-will_paginate'
+#for pagination, rails 7.2.2.1 has certain requirements 
+gem 'will_paginate', '~> 3.3'
+# gem 'bootstrap-will_paginate'
 
 # new gems for chat
 gem 'puma', '~> 3.0'

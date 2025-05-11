@@ -10,7 +10,7 @@ class UsersController < ApplicationController
     if signed_in?
       redirect_to board_path(Board.find_by_title(current_user.language))
     else
-      @user_count = User.all.count - (User.all.count % 100)
+      @user_count = User.count - (User.count % 100)
       @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     end
   end
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     else
       flash.now[:error] = @user.errors.full_messages.to_sentence
     end
-    @user_count = User.all.count - (User.all.count % 100)
+    @user_count = User.count - (User.count % 100)
     @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     render :new
   end
@@ -132,7 +132,7 @@ class UsersController < ApplicationController
   end
 
   def all
-    @users = User.all.includes(:linkedin).paginate(page: params[:page], per_page: 12)
+    @users = User.includes(:linkedin).paginate(page: params[:page], per_page: 12)
     render :index
   end
 

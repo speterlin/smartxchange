@@ -2,15 +2,42 @@
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
+# This file is the source Rails uses to define your schema when running `bin/rails
+# db:schema:load`. When creating a new database, `bin/rails db:schema:load` tends to
+# be faster and is potentially less error prone than running all of your
+# migrations from scratch. Old migrations may fail to apply correctly if those
+# migrations use external dependencies or application code.
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_04_23_220808) do
+ActiveRecord::Schema[7.2].define(version: 2025_05_09_002621) do
+  create_table "active_storage_attachments", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "record_type", null: false
+    t.bigint "record_id", null: false
+    t.bigint "blob_id", null: false
+    t.datetime "created_at", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "filename", null: false
+    t.string "content_type"
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.datetime "created_at", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", force: :cascade do |t|
+    t.bigint "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
 
   create_table "basic_profiles", force: :cascade do |t|
     t.string "first_name"
@@ -25,22 +52,22 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "picture_url"
     t.string "public_profile_url"
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "boards", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["title"], name: "index_boards_on_title", unique: true
   end
 
   create_table "chat_rooms", force: :cascade do |t|
     t.string "title", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "initiator_id", null: false
     t.integer "recipient_id", null: false
     t.index ["initiator_id"], name: "index_chat_rooms_on_initiator_id"
@@ -51,8 +78,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
   create_table "chats", force: :cascade do |t|
     t.integer "sender_id"
     t.integer "recipient_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["created_at"], name: "index_chats_on_created_at"
     t.index ["recipient_id"], name: "index_chats_on_recipient_id"
     t.index ["sender_id"], name: "index_chats_on_sender_id"
@@ -63,8 +90,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.integer "owner_id", null: false
     t.string "commentable_type", null: false
     t.integer "commentable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["commentable_type", "commentable_id"], name: "index_comments_on_commentable_type_and_commentable_id"
     t.index ["created_at"], name: "index_comments_on_created_at"
     t.index ["owner_id"], name: "index_comments_on_owner_id"
@@ -75,13 +102,13 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.integer "attempts", default: 0, null: false
     t.text "handler", null: false
     t.text "last_error"
-    t.datetime "run_at"
-    t.datetime "locked_at"
-    t.datetime "failed_at"
+    t.datetime "run_at", precision: nil
+    t.datetime "locked_at", precision: nil
+    t.datetime "failed_at", precision: nil
     t.string "locked_by"
     t.string "queue"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
@@ -94,8 +121,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "activities"
     t.string "notes"
     t.integer "full_profile_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "email_subscriptions", force: :cascade do |t|
@@ -104,8 +131,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.boolean "monthly_update", default: true, null: false
     t.boolean "language_matches", default: true, null: false
     t.boolean "notify_match", default: true, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "new_conversation", default: true, null: false
     t.boolean "new_message", default: true, null: false
     t.boolean "peer_review", default: true, null: false
@@ -122,8 +149,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.integer "follower_id", null: false
     t.string "followable_type", null: false
     t.integer "followable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["followable_type", "followable_id"], name: "index_follows_on_followable_type_and_followable_id"
     t.index ["follower_id"], name: "index_follows_on_follower_id"
   end
@@ -133,16 +160,16 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "honors"
     t.string "interests"
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "linkedin_oauth_settings", force: :cascade do |t|
     t.string "atoken"
     t.string "asecret"
     t.integer "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "linkedins", force: :cascade do |t|
@@ -150,8 +177,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "public_url"
     t.string "industry"
     t.string "summary"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["user_id"], name: "index_linkedins_on_user_id", unique: true
   end
 
@@ -159,8 +186,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "name", null: false
     t.string "attachment", null: false
     t.integer "owner_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "language", default: "Spanish", null: false
     t.integer "language_level", default: 3, null: false
     t.index ["attachment", "owner_id"], name: "index_materials_on_attachment_and_owner_id", unique: true
@@ -169,8 +196,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
 
   create_table "messages", force: :cascade do |t|
     t.text "body", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "sender_id", null: false
     t.integer "chat_room_id", null: false
     t.index ["chat_room_id"], name: "index_messages_on_chat_room_id"
@@ -180,8 +207,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
 
   create_table "notifications", force: :cascade do |t|
     t.boolean "read", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "notified_id", null: false
     t.integer "notifier_id", null: false
     t.string "notifiable_type", null: false
@@ -197,8 +224,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
   create_table "packages", force: :cascade do |t|
     t.string "classification", null: false
     t.string "description", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.decimal "price", precision: 8, scale: 2
     t.index ["classification"], name: "index_packages_on_classification", unique: true
   end
@@ -211,16 +238,16 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.boolean "is_current"
     t.string "company"
     t.integer "full_profile_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
   end
 
   create_table "posts", force: :cascade do |t|
     t.text "content", null: false
     t.integer "owner_id", null: false
     t.integer "board_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "category", null: false
     t.string "location"
     t.float "latitude"
@@ -234,8 +261,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
   create_table "purchases", force: :cascade do |t|
     t.integer "buyer_id", null: false
     t.integer "package_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["buyer_id", "package_id"], name: "index_purchases_on_buyer_id_and_package_id", unique: true
     t.index ["buyer_id"], name: "index_purchases_on_buyer_id"
   end
@@ -244,8 +271,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.integer "user_id", null: false
     t.string "readable_type", null: false
     t.integer "readable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["readable_type", "readable_id"], name: "index_reads_on_readable_type_and_readable_id"
     t.index ["user_id", "readable_type", "readable_id"], name: "index_reads_on_user_id_and_readable_type_and_readable_id", unique: true
     t.index ["user_id"], name: "index_reads_on_user_id"
@@ -259,8 +286,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "language", null: false
     t.integer "language_level", null: false
     t.text "comment"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.index ["chat_room_id", "reviewer_id"], name: "index_reviews_on_chat_room_id_and_reviewer_id", unique: true
     t.index ["chat_room_id"], name: "index_reviews_on_chat_room_id"
     t.index ["reviewable_type", "reviewable_id"], name: "index_reviews_on_reviewable_type_and_reviewable_id"
@@ -274,7 +301,7 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "tagger_type"
     t.integer "tagger_id"
     t.string "context", limit: 128
-    t.datetime "created_at"
+    t.datetime "created_at", precision: nil
     t.index ["context"], name: "index_taggings_on_context"
     t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
@@ -302,8 +329,8 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.string "session_token", null: false
     t.string "image"
     t.boolean "active", default: false, null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.string "title", default: "Please fill in your profession", null: false
     t.string "provider"
     t.string "uid"
@@ -312,7 +339,7 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.float "longitude"
     t.string "nationality", default: "Spanish", null: false
     t.string "matches_token"
-    t.datetime "matches_sent_at"
+    t.datetime "matches_sent_at", precision: nil
     t.string "braintree_customer_id"
     t.boolean "person_of_interest", default: false, null: false
     t.boolean "tutor", default: false, null: false
@@ -331,11 +358,13 @@ ActiveRecord::Schema.define(version: 2018_04_23_220808) do
     t.integer "value", limit: 1, null: false
     t.string "votable_type", null: false
     t.integer "votable_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.integer "owner_id", null: false
     t.index ["owner_id"], name: "index_votes_on_owner_id"
     t.index ["votable_type", "votable_id"], name: "index_votes_on_votable_type_and_votable_id"
   end
 
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
 end
