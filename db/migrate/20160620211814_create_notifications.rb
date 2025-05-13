@@ -9,7 +9,7 @@ class CreateNotifications < ActiveRecord::Migration[7.2]
 
       t.timestamps null: false
     end
-    if foreign_key_exists?(:notifications, name: "fk_rails_b080fb4855"):
+    if table_exists?(:notifications) && foreign_key_exists?(:notifications, name: "fk_rails_b080fb4855")
       puts "Foreign key already exists"
     else
       add_foreign_key :notifications, :users
