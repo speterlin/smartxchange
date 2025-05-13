@@ -15,6 +15,10 @@ class CreateNotifications < ActiveRecord::Migration[7.2]
       add_foreign_key :notifications, :users
     end
     # add_foreign_key :notifications, :users, column: :subscribed_user_id
-    add_foreign_key :notifications, :chats
+    if table_exists?(:notifications) && foreign_key_exists?(:notifications, name: "fk_rails_0d5aac9e45")
+      puts "Foreign key already exists"
+    else
+      add_foreign_key :notifications, :chats
+    end
   end
 end
