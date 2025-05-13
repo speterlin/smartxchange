@@ -13,6 +13,7 @@ class CreateNotifications < ActiveRecord::Migration[7.2]
       puts "Foreign key already exists"
     else
       add_foreign_key :notifications, :users
+    end
     # add_foreign_key :notifications, :users, column: :subscribed_user_id
     add_foreign_key :notifications, :chats
   end
