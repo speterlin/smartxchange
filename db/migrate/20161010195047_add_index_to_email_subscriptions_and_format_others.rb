@@ -15,7 +15,7 @@ class AddIndexToEmailSubscriptionsAndFormatOthers < ActiveRecord::Migration[7.2]
     change_column :messages, :sender_id, :integer, null: false
     change_column :messages, :chat_room_id, :integer, null: false
     change_column :messages, :body, :text, null: false
-    add_index :messages, :sender_id
+    # add_index :messages, :sender_id # already established in db/migrate/20160620233421_change_user_column_to_messages.rb
     change_column :follows, :followable_type, :string, null: false
     change_column :follows, :followable_id, :integer, null: false
     add_index :email_subscriptions, :user_id, unique: true
