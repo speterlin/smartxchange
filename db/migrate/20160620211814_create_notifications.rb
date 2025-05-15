@@ -9,6 +9,7 @@ class CreateNotifications < ActiveRecord::Migration[7.2]
 
       t.timestamps null: false
     end
+    # removed in upcoming migration db/migrate/20160620235128_change_columns_to_notifications.rb but keeping, here and below foreign keys already established because of incomplete migration
     if table_exists?(:notifications) && foreign_key_exists?(:notifications, name: "fk_rails_b080fb4855")
       puts "Foreign key already exists"
     else
