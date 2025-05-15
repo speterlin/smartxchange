@@ -20,7 +20,7 @@ class ActsAsTaggableOnMigration < ActiveRecord::Migration[7.2]
       t.datetime :created_at
     end
 
-    add_index :taggings, :tag_id
+    # add_index :taggings, :tag_id  already established above in create_table :taggings do |t| t.references :tag
     add_index :taggings, [:taggable_id, :taggable_type, :context]
   end
 
