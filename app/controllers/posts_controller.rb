@@ -104,13 +104,14 @@ class PostsController < ApplicationController
 
   def autocomplete_hashtag
     # probably refactor, not great regex, could also use =~ for if statement
-    render json: Post.search(params[:query], {
+    render json: Post.search(
+      params[:query], # {
       fields: ["hashtags"],
       # match: :word_start,
       limit: 10,
       load: false,
-      misspellings: {below: 2}
-    }).map{|post| post.hashtags.split(" ").map{|hashtag| hashtag.prepend('#')}.join(" ") }
+      misspellings: {below: 2}  # }
+    ).map{|post| post.hashtags.split(" ").map{|hashtag| hashtag.prepend('#')}.join(" ") }
   end
 
   private

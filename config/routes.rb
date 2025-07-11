@@ -22,6 +22,7 @@ Rails.application.routes.draw do
     get 'active' => 'users#active', on: :collection
     get 'exchange' => 'users#exchange', on: :collection
     get 'tutors' => 'users#tutors', on: :collection
+    get 'persons_of_interest' => 'users#persons_of_interest', on: :collection
     get 'map' => 'users#map', on: :collection
     get 'remove_image' => 'users#remove_image!', on: :member
     patch 'update_interests' => 'users#update_interests!', on: :member

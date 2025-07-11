@@ -59,4 +59,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  # chatgpt recommends this if application fails to reindex  Usernames and Posts (hashtags), however application.rb already has: config.active_job.queue_adapter = :delayed_job
+  config.active_job.queue_adapter = :async # or :sidekiq, etc.
+
+
 end

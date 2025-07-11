@@ -1,5 +1,6 @@
 class OmniauthController < ApplicationController
 
+  skip_before_action :verify_authenticity_token, only: :callback
   skip_before_action :require_signed_in, only: [:register, :login, :create, :login_with_omniauth, :callback]
 
   # probably refactor, don't like storing omniauth information in session variable

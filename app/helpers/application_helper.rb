@@ -1,16 +1,20 @@
 module ApplicationHelper
-  def bootstrap_class_for flash_type
-    { success: "alert-success", error: "alert-danger", alert: "alert-warning", notice: "alert-info" }[flash_type.to_sym] || flash_type.to_s
+  def bootstrap_class_for(flash_type)
+    {
+      success: "alert-success",
+      error: "alert-danger",
+      alert: "alert-warning",
+      notice: "alert-info"
+    }[flash_type.to_sym] || flash_type.to_s
   end
 
-  def flash_messages(opts = {})
-    flash.each do |msg_type, message|
-      concat(content_tag(:div, message, class: "alert #{bootstrap_class_for(msg_type)} fade in") do
-              concat content_tag(:button, 'x', class: "close", data: { dismiss: 'alert' })
-              concat sanitize(message)
-            end)
-    end
-    nil
+  def flash_messages(_opts = {})
+    flash.map do |msg_type, message|
+      content_tag(:div, class: "alert #{bootstrap_class_for(msg_type)} alert-dismissible fade show", role: "alert") do # message,
+        content_tag(:button, nil, class: "btn-close", data: { bs_dismiss: 'alert' }, 'aria-label': 'Close') + # tag.button , 'x', turbo: false
+        sanitize(message, tags: %w[a], attributes: %w[href]) #
+      end
+    end.join.html_safe
   end
 
   # maybe refactor - but probably not, this and #num_to_month could be in users_helper.rb so don't have to include application_helper.rb in user_mailer.rb

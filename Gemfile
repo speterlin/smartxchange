@@ -37,7 +37,7 @@ gem 'bcrypt'
 
 #for uploading images and attachments, need mini_magick
 gem 'carrierwave', '~> 1.0'
-gem 'mini_magick'
+gem 'mini_magick', '~> 4.11' # resolve mini_magick 5.2 issue
 gem 'fog-aws'
 gem 'aws-sdk-s3', '~> 1' # part of heroku-24 migration
 # file size limit
@@ -87,6 +87,13 @@ gem 'opengraph_parser'
 
 # for searching users (and their linkedin, materials)
 gem 'searchkick'
+gem 'elasticsearch', '~> 7' # chatgpt: This means Searchkick is working at the Ruby level, but there's no search backend installed or connected, install and run a supported search engine, like Elasticsearch or OpenSearch, and make sure the Ruby gem is installed. Couldn't brew install elasticsearch locally so use:
+# docker run -d \
+  # --name elasticsearch \
+  # -p 9200:9200 \
+  # -e "discovery.type=single-node" \
+  # -e "xpack.security.enabled=false" \
+  # docker.elastic.co/elasticsearch/elasticsearch:7.17.16
 # for tracking searches
 # gem 'searchjoy'
 
@@ -115,7 +122,7 @@ gem 'mutex_m', '~> 0.2.0'
 gem 'ostruct'
 
 # Access an IRB console on exception pages or by using <%= console %> in views
-gem 'web-console', '~> 2.0', group: :development
+gem 'web-console', '~> 4.2', group: :development # ~> 2.0 - web-console 2.3.0, chatgpt: The web-console gem version 2.3.0 is not compatible with Ruby 3.4. In Ruby 3.x, some method signatures changed slightly, and older gems that relied on internal API details (like web-console) may break.
 
 group :development, :test do
   # Use sqlite3 as the database for Active Record

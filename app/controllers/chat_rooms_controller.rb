@@ -26,6 +26,7 @@ class ChatRoomsController < ApplicationController
     @message = Message.new
     @receiver = chat_room_interlocutor(@chat_room, current_user)
     # updating notifications for user as they visit chat room
+    # print('marking chat room read')
     chat_room_mark_read(@chat_room, current_user)
     render :show #needed since create action redirects here, needs to know what template to show
   end

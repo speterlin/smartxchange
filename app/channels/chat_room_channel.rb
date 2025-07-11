@@ -18,8 +18,8 @@ class ChatRoomChannel < ApplicationCable::Channel
     message = current_user.sent_messages.create!(body: data['message'], chat_room_id: data['chat_room_id'])
     # need to refactor and implement error message here
     if message
-      ActionCable.server.broadcast "chat_rooms_#{message.chat_room.id}_channel",
-                                   message: render_message(message)
+      ActionCable.server.broadcast("chat_rooms_#{message.chat_room.id}_channel",
+                                   { message: render_message(message) }) # In Rails 7.2+, broadcast now expects two arguments: the stream name and the data as a hash, but this form changed subtly.  But in Ruby 3.0+, especially 3.4.0, this breaks due to stricter keyword argument handling — you must pass a real hash.
       chat_room_create_notification(message)
     end
 
@@ -32,8 +32,8 @@ class ChatRoomChannel < ApplicationCable::Channel
       response_message = chat_room.recipient.sent_messages.create!(body: response["responses"][0], chat_room_id: chat_room.id)
       # maybe implement code for if there is an error in message creation here, like above
       if response_message
-        ActionCable.server.broadcast "chat_rooms_#{chat_room.id}_channel",
-                                     message: render_message(response_message)
+        ActionCable.server.broadcast("chat_rooms_#{chat_room.id}_channel",
+                                     { message: render_message(response_message) })
         chat_room_create_notification(response_message)
       end
     end
@@ -42,8 +42,10 @@ class ChatRoomChannel < ApplicationCable::Channel
   private
 
   def render_message(message)
-    MessagesController.render(partial: 'messages/message',
+    rendered = MessagesController.render(partial: 'messages/message',
                               locals: { message: message, current_user: current_user})
+    # Rails.logger.info "Rendered message: #{rendered.inspect}"
+    rendered
   end
 
 end

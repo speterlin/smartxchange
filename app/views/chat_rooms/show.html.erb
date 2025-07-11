@@ -23,10 +23,10 @@
 <br/><br/>
 <!-- class and id are new_message -->
 <div id="message-form">
-  <%= form_for @message, url: '#' do |f| %>
-  <%= f.text_area :body, id: 'message-body' %>
-  <%= f.submit 'Send', class: 'btn btn-primary send-message' %>
-  <% end %>
+<%= form_with model: @message, url: '#', id: "new_message" do %>
+  <%= text_area_tag :body, nil, id: 'message-body' %>
+  <%= submit_tag 'Send', class: 'btn btn-primary send-message' %>
+<% end %>
 </div>
 <br>
 <%= render 'layouts/translate' %>

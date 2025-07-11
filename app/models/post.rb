@@ -68,6 +68,13 @@ class Post < ApplicationRecord
 
   default_scope -> { order(updated_at: :desc) }
 
+  # to check for any existing posts created by you or followed by you
+  scope :involving, ->(user) {
+    left_outer_joins(:followers)
+      .where("posts.owner_id = :user_id OR users.id = :user_id", user_id: user.id)
+      .distinct
+  }
+
   def timestamp
     created_at.strftime('%H:%M:%S %d %B %Y')
   end

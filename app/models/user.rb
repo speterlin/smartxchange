@@ -34,7 +34,7 @@
 #
 
 class User < ApplicationRecord
-  # maybe refactor, anytime change user's active status searchkick is reindexed, which I don't think is necessary
+  # maybe refactor, anytime change user's active status searchkick is reindexed, which I don't think is necessary, also if user is created in rails c not reindexed? (fixed with a rails runner "User.reindex")
   searchkick callbacks: :async, text_start: [:name, :language_and_level, :location]
   # maybe refactor and add filter to only search activated accounts (precautionary)
   scope :search_import, -> { includes(:linkedin, :materials) }
@@ -199,13 +199,13 @@ class User < ApplicationRecord
   has_many :votes, :foreign_key => :owner_id, class_name: 'Vote', dependent: :destroy
   has_many :follows, :foreign_key => :follower_id, class_name: 'Follow', dependent: :destroy
   has_many :followed_posts, through: :follows, source: :followable, source_type: 'Post'
-  has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy
+  has_many :notifications, -> { where read: false}, :foreign_key => :notified_id, dependent: :destroy # works in Ruby 3.4 Rails 7.2 after updating boolean read value in Notifications in migration
   # maybe refactor and get rid of read_notifications, mainly used for destroying notifications not covered in above
   has_many :read_notifications, -> {where read: true}, :foreign_key => :notified_id, class_name: 'Notification', dependent: :destroy
   has_many :created_notifications, :foreign_key => :notifier_id, class_name: 'Notification', dependent: :destroy
   # No dependent: :destroy here since covered in above
-  has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification'
-  has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification'
+  has_many :posts_notifications, -> { where read: false, notifiable_type: 'Post'}, :foreign_key => :notified_id, class_name: 'Notification' # works in Ruby 3.4 Rails 7.2 after updating boolean read value in Notifications in migration
+  has_many :chat_rooms_notifications, -> { where read: false, notifiable_type: 'ChatRoom'}, :foreign_key => :notified_id, class_name: 'Notification' # works in Ruby 3.4 Rails 7.2 after updating boolean read value in Notifications in migration
   has_one :linkedin, dependent: :destroy
   # in the future, if add more objects that user can read (besides Board), should add an association like :reads_of_boards, -> {where readable_type: 'Board'}
   has_many :reads, dependent: :destroy

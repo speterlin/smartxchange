@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_09_002621) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_09_172649) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -127,12 +127,12 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_09_002621) do
 
   create_table "email_subscriptions", force: :cascade do |t|
     t.integer "user_id", null: false
+    t.datetime "created_at", precision: nil, null: false
+    t.datetime "updated_at", precision: nil, null: false
     t.boolean "weekly_notifications", default: true, null: false
     t.boolean "monthly_update", default: true, null: false
     t.boolean "language_matches", default: true, null: false
     t.boolean "notify_match", default: true, null: false
-    t.datetime "created_at", precision: nil, null: false
-    t.datetime "updated_at", precision: nil, null: false
     t.boolean "new_conversation", default: true, null: false
     t.boolean "new_message", default: true, null: false
     t.boolean "peer_review", default: true, null: false
@@ -206,7 +206,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_09_002621) do
   end
 
   create_table "notifications", force: :cascade do |t|
-    t.boolean "read", default: false, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.integer "notified_id", null: false
@@ -215,6 +214,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_09_002621) do
     t.integer "notifiable_id", null: false
     t.string "sourceable_type", null: false
     t.integer "sourceable_id", null: false
+    t.boolean "read", default: false, null: false
     t.index ["created_at"], name: "index_notifications_on_created_at"
     t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable_type_and_notifiable_id"
     t.index ["notified_id"], name: "index_notifications_on_notified_id"
@@ -328,7 +328,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_09_002621) do
     t.string "password_digest", null: false
     t.string "session_token", null: false
     t.string "image"
-    t.boolean "active", default: false, null: false
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "title", default: "Please fill in your profession", null: false
@@ -341,13 +340,14 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_09_002621) do
     t.string "matches_token"
     t.datetime "matches_sent_at", precision: nil
     t.string "braintree_customer_id"
-    t.boolean "person_of_interest", default: false, null: false
-    t.boolean "tutor", default: false, null: false
     t.text "interests"
     t.string "activation_token"
-    t.boolean "activated", default: false
     t.string "ip_address"
     t.date "birthdate"
+    t.boolean "tutor", default: false
+    t.boolean "active", default: false, null: false
+    t.boolean "person_of_interest", default: false, null: false
+    t.boolean "activated", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["name"], name: "index_users_on_name", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true

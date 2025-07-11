@@ -10,7 +10,8 @@ class UsersController < ApplicationController
     if signed_in?
       redirect_to board_path(Board.find_by_title(current_user.language))
     else
-      @user_count = User.count - (User.count % 100)
+      num_users = User.count
+      @user_count = num_users - (num_users % 10**(num_users.digits.length-1))
       @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     end
   end
@@ -52,34 +53,37 @@ class UsersController < ApplicationController
 
   def autocomplete_usertag
     # probably refactor, not great regex, could also use =~ for if statement
-    render json: User.search(params[:query], {
+    render json: User.search(
+      params[:query], # {
       fields: ["name"],
       # match: :word_start,
       limit: 10,
       load: false,
-      misspellings: {below: 2}
-    }).map{|user| user.name.downcase.prepend('@').split(' ').join('.')}
+      misspellings: {below: 2} # }
+    ).map{|user| user.name.downcase.prepend('@').split(' ').join('.')}
   end
 
   def autocomplete_language_and_level
     p params[:query]
-    User.search(params[:query], {
+    User.search(
+      params[:query], # {
       fields: ["language_and_level"],
       # match: :word_start,
       limit: 10,
       load: false,
-      misspellings: {below: 2}
-    }).map(&:language_and_level)
+      misspellings: {below: 2} # }
+    ).map(&:language_and_level)
   end
 
   def autocomplete_location
-    User.search(params[:query], {
+    User.search(
+      params[:query], # {
       fields: ["location"],
       # match: :word_start,
       limit: 10,
       load: false,
-      misspellings: {below: 2}
-    }).map(&:location)
+      misspellings: {below: 2} # }
+    ).map(&:location)
   end
 
   def show
@@ -113,7 +117,7 @@ class UsersController < ApplicationController
   # maybe refactor and move some code to the model
   def remove_image!
     @user ||= User.find_by_param(params[:id])
-    @user.update_attributes(:remove_image => true)
+    @user.remove_image! && @user.save # update_attributes removed after rails 6.1: @user.update_attributes(:remove_image => true)
     flash[:success] = "Image removed!"
     redirect_to user_path(@user)
   end
@@ -149,6 +153,11 @@ class UsersController < ApplicationController
 
   def tutors
     @users = User.where(tutor: true).includes(:linkedin).paginate(page: params[:page], per_page: 12)
+    render :index
+  end
+
+  def persons_of_interest
+    @users = User.where(person_of_interest: true).includes(:linkedin).paginate(page: params[:page], per_page: 12)
     render :index
   end
 

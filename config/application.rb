@@ -47,5 +47,8 @@ module SmartXchange
     # for using delayed_job
     config.active_job.queue_adapter = :delayed_job
     config.assets.initialize_on_precompile = false
+    config.api_only = false #
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
   end
 end

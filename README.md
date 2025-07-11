@@ -1,10 +1,10 @@
 # smartXchange
 
-A Ruby on Rails application to allow users to find each other for the purpose of practicing languages and sharing language learning material. Featured in prominent business school career newsletter with over 300 users across the world. Constantly adding new features, open to suggestions. See it [Live](http://smartexchange.herokuapp.com). <!--- Not using ENV['HTTP_HOST'] because upload with git not heroku therefore localhost:300 would be pushed not the public url -->
+A Ruby on Rails application to allow users to find each other for the purpose of practicing languages and sharing language learning material. Featured in prominent business school career newsletter with users over the world. Constantly adding new features, open to suggestions. Created in 2016, updated in 2025. See it [Live](http://smartexchange.herokuapp.com). <!--- Not using ENV['HTTP_HOST'] because upload with git not heroku therefore localhost:300 would be pushed not the public url -->
 
 ## Features and Gems
 
-* Ruby 2.5, Rails 5.2, using Puma server locally, Redis in production
+* Ruby, Rails (3.4.3, 7.2.2.1 update from 2.5, 5.2 in 2016), using Puma server locally, Redis in production<!--Ruby 2.5, Rails 5.2-->
 
 * Turbolinks for faster web navigation
 
@@ -16,7 +16,7 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * AWS for storing images and materials
 
-* Heroku for hosting
+* Heroku for hosting (heroku-24 stack update from heroku-19 stack in 2016)
 
 * Braintree and Gon for payments
 
@@ -32,9 +32,9 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 * Opengraph_parser for displaying link images and Rails_autolink for recognizing links in text
 
-* Searchkick for searching users and posts
+* Searchkick for searching users<!---  and posts -->
 
-* Acts-as-taggable-on for tagging posts
+* Acts-as-taggable-on for tagging posts and comments
 
 * Jquery_textcomplete for text autocomplete
 
