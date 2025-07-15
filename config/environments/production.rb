@@ -2,10 +2,10 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # allow origins can subscribe to the channels
-  config.actioncable.allowed_request_origins = ['https://' + ENV['HTTP_HOST']]
+  config.action_cable.allowed_request_origins = ['https://' + ENV['HTTP_HOST']]
 
   # action cable url provided
-  config.actioncable.url = "wss://sitepoint-actioncable.herokuapp.com/cable"
+  config.action_cable.url = "wss://sitepoint-actioncable.herokuapp.com/cable"
 
   # Code is not reloaded between requests.
   config.cache_classes = true
