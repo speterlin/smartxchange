@@ -20,6 +20,10 @@ jQuery(document).on 'turbolinks:load', ->
         console.log('chatroom - disconnected')
 
       received: (data) ->
+        if data.type == "error"
+          alert(data.message)
+          return
+
         console.log('chatroom - received')
         $last_message = $("#messages .message").last()
         $new_message = $(data['message'])

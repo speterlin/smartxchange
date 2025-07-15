@@ -6,22 +6,19 @@ class BoardsController < ApplicationController
 
   def show
     @board = Board.find_by_title(board_capitalize(params[:id]))
-    if @board.id == 9
-      # not sure why we need uniq, prob refactor
-      @posts = Post.includes(:owner, :comments, {comments: :owner}, :followers).tagged_with(params[:tag]).uniq
-    else
-      # maybe refactor, if have for example comments on comments
-      # coalesce because postgres does not return sum of empty column, group by just v.votable_id (ok in sql but not pg) is faster
-      @posts = Post.find_by_sql("
-        select p.*, v.votable_id, count(v.votable_id) as votes_count, coalesce(sum(v.value),0) as votes_value_sum
-        from posts p
-        left join votes v on p.id = v.votable_id
-        where p.board_id = #{@board.id}
-        group by p.id, v.votable_id
-        order by votes_value_sum desc, p.updated_at desc")
-        # only way to get includes to work on the array returned from the sql statement above, maybe refactor don't need all followers information
-        # ActiveRecord::Associations::Preloader.new.preload(records: @posts, associations: [:owner, :comments, {comments: :owner}, :followers]) # not needed according to chatgpt if using ActiveRecord query methods
-    end
+    # chatgpt recommendation with some own corrections
+    @posts = Post.includes(:owner, {comments: :owner}, :followers)
+      .then do |scope|
+        if @board.id == 9
+          scope.tagged_with(params[:tag]).distinct
+        else
+          scope = scope.left_joins(:votes)
+            .select('posts.*, COUNT(votes.id) AS votes_count, COALESCE(SUM(votes.value), 0) AS votes_value_sum')
+            .where(board_id: @board.id)
+            .group('posts.id')
+            .order('votes_value_sum DESC, posts.updated_at DESC')
+        end
+      end
     # probably need to refactor this
     if (@board.id == 2 || @board.id == 9) && current_user.premium_or_admin?
       @jobs_offered_posts = @posts.select {|post| post.category == 'Jobs-Offered'}

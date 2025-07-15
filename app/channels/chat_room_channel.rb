@@ -14,6 +14,7 @@ class ChatRoomChannel < ApplicationCable::Channel
   end
 
   def send_message(data)
+    return unless message_limit
     # keeping bang on create method here and in chatbot response so it stops downstream processes and gives correct validation error
     message = current_user.sent_messages.create!(body: data['message'], chat_room_id: data['chat_room_id'])
     # need to refactor and implement error message here
@@ -46,6 +47,25 @@ class ChatRoomChannel < ApplicationCable::Channel
                               locals: { message: message, current_user: current_user})
     # Rails.logger.info "Rendered message: #{rendered.inspect}"
     rendered
+  end
+
+  def message_limit
+    limit = 20 # a day
+    if Rails.env.production?
+      recent_messages = current_user.sent_messages.order(created_at: :desc).limit(limit) # asc / desc returning same order (asc) for all users in rails c and User.find(1) in localhost:3000 2025-07-15
+      last_message_in_limit = recent_messages.last
+    else
+      recent_messages = current_user.sent_messages.last(limit) # chatgpt likes this one better than: recent_messages = current_user.sent_messages[-limit..-1], both work fine in development
+      last_message_in_limit = recent_messages.first
+    end
+    # Rails.logger.debug ">>> Recent message count: #{recent_messages.size}"
+    # Rails.logger.debug ">>> Most recent message time: #{recent_messages.last&.created_at}"
+    if recent_messages.size >= limit && last_message_in_limit.created_at > 24.hours.ago
+      # Instead of flash or redirect, we can send an error back over the socket:
+      transmit({ type: "error", message: "You’ve exceeded your limit of #{limit} messages in 24 hours" })
+      return false
+    end
+    true
   end
 
 end
