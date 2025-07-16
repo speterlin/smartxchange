@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
     messages += ["Have you tried messaging <a href=\"#{user_path(random_match)}\">#{random_match.name}, #{random_match.title}</a> for a language exchange or practice?"] if random_match
     # include 3 tutor profiles only works on production environment, maybe refactor
     if Rails.env.production?
-      tutors_with_material = [User.find(1), User.find(131), User.find(329), User.find(340)]
+      tutors_with_material = [User.find(1)] # old app: , User.find(131), User.find(329), User.find(340)
       tutor = tutors_with_material.sample
       messages += ["Take a look at material uploaded by <a href=\"#{user_path(tutor)}#tutor-materials\">#{tutor.name}</a>!"]
     end

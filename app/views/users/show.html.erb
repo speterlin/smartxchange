@@ -176,11 +176,7 @@
 
   <div id="user-chatbots">
     <!-- refactor for when there are chatbots -->
-    <% if @user.id == 1 %>
-      <% chatbot = User.find(6) %>
-      <br><h4>Contributed Chatbots</h4>
-      <ul><li><%= link_to "#{chatbot.name}, ", user_path(chatbot) %><i><span><%= chatbot.language %> <%= user_convert_to_presented_language_level(chatbot.language_level) %></span></i> Chatbot</li></ul>
-    <% end %>
+    
   </div>
 
 </div>
