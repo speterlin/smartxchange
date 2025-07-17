@@ -87,7 +87,7 @@ gem 'opengraph_parser'
 
 # for searching users (and their linkedin, materials)
 gem 'searchkick'
-gem 'elasticsearch', '~> 7' # chatgpt: This means Searchkick is working at the Ruby level, but there's no search backend installed or connected, install and run a supported search engine, like Elasticsearch or OpenSearch, and make sure the Ruby gem is installed. Couldn't brew install elasticsearch locally so use:
+gem 'elasticsearch', '~> 7.13.3' # chatgpt: This means Searchkick is working at the Ruby level, but there's no search backend installed or connected, install and run a supported search engine, like Elasticsearch or OpenSearch, and make sure the Ruby gem is installed. Couldn't brew install elasticsearch locally so use:
 # docker run -d \
   # --name elasticsearch \
   # -p 9200:9200 \
