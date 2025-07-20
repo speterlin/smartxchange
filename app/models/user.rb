@@ -399,7 +399,7 @@ class User < ApplicationRecord
 
   # maybe add admin column if there are many admins in the future
   def admin?
-    self.id == 1 || self.id == 340 || self.id == 224
+    self.id == 1 || self.id == 8 # self.id == 340 || self.id == 224
   end
 
   def premium_or_admin?
