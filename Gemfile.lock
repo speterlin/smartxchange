@@ -374,7 +374,10 @@ GEM
       erb
       psych (>= 4.0.0)
     recaptcha (5.19.0)
-    redis (3.3.5)
+    redis (5.4.1)
+      redis-client (>= 0.22.0)
+    redis-client (0.25.1)
+      connection_pool
     reline (0.6.1)
       io-console (~> 0.5)
     remotipart (1.4.4)
@@ -493,7 +496,7 @@ DEPENDENCIES
   rails_12factor
   rails_autolink
   recaptcha
-  redis (~> 3.0)
+  redis (>= 4, < 6)
   remotipart (~> 1.2)
   sass-rails (~> 5.0)
   sassc-rails
