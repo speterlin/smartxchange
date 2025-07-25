@@ -144,7 +144,7 @@ group :production do
   gem 'pg'
   gem 'rails_12factor'
   # for action cable to work
-  gem 'redis', '~> 3.0' # gem 'redis', '>= 4', '< 6' #
+  gem 'redis', '>= 4', '< 6' # gem 'redis', '~> 3.0' #
   gem 'bundler', '~>2.6.8'
 
 end
