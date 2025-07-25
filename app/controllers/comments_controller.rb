@@ -7,6 +7,7 @@ class CommentsController < ApplicationController
   after_action -> { board_mark_read(@comment.commentable.board) }
 
   def create
+    Rails.logger.info params.inspect
     @comment = current_user.comments.new(comment_params)
     if @comment.save
       # assuming that the comment is for a post, will have to add code if add comment on a comment
