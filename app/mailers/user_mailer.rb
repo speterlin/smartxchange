@@ -1,3 +1,4 @@
+require 'open-uri'
 class UserMailer < ApplicationMailer
   # Call this in rails console to email everyone without redirect_to, make sure to do <9 every 10min after initial batch due to smtp settings
   # @users = User.all
@@ -243,7 +244,8 @@ class UserMailer < ApplicationMailer
       # need to use .url path without Rails.root due to images stored on amazon s3 servers
       # .path shows up nil for default_url call
       image_url = user.image.small_thumb.path ? user.image.small_thumb.url : root_url + user.image.small_thumb.url
-      attachments.inline["#{user.name}.jpg"] = open(image_url).read
+      attachments.inline['#{user.name}.jpg'] = URI.open(image_url).read # chatgpt answer
+      # attachments.inline["#{user.name}.jpg"] = open(image_url).read
     else
       attachments.inline["#{user.name}.jpg"] = File.read("#{Rails.root}/public/#{user.image.small_thumb.url}")
     end
