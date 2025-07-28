@@ -1,6 +1,5 @@
 Dear <%= @user.name %>,
 ===============================================
 
-  <%= image_tag(attachments["#{@initiator.name}.jpg"].url, alt: "#{@initiator.name}") %>
     <%= "#{@initiator.name}" %>, <%= "#{@initiator.title}, has started #{a_or_an(@initiator.language)} " %><span style="text-transform:uppercase;font-weight: 700;"><%= "#{@initiator.language}"%></span><%=" conversation with you" %>
     <%= link_to "View Conversation", @chat_room_url, class: 'mail-btn' %>
