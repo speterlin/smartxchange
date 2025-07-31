@@ -174,9 +174,15 @@
     <% end %>
   </div>
 
+  <!-- refactor for when there are chatbots -->
   <div id="user-chatbots">
-    <!-- refactor for when there are chatbots -->
-    
+    <% if @user.id == 1 %>
+      <br><h4>Contributed Narrow AI / Agentic AI</h4>
+        <ul>
+          <li>Where Do I Get the Best Coffee with Least Waittime Bot</li>
+          <li>Find Me the Best Odds for Tonights Basketball Game Bot</li>
+        </ul>
+    <% end %>
   </div>
 
 </div>
