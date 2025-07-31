@@ -176,13 +176,15 @@
 
   <!-- refactor for when there are chatbots -->
   <div id="user-chatbots">
-    <% if @user.id == 1 %>
-      <br><h4>Contributed Narrow AI / Agentic AI</h4>
+    <br><h4>Contributed Narrow AI / Agentic AI</h4>
+      <% if @user.id == 1 %>
         <ul>
           <li>Where Do I Get the Best Coffee with Least Waittime Bot</li>
           <li>Find Me the Best Odds for Tonights Basketball Game Bot</li>
         </ul>
-    <% end %>
+      <% else %>
+        <h5>No AI agents to display</h5>
+      <% end %>
   </div>
 
 </div>
