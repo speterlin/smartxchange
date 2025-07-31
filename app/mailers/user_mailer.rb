@@ -243,12 +243,20 @@ class UserMailer < ApplicationMailer
       # maybe refactor, if no image uploaded, need to fetch the image from default_url method, which for some reason wasn't finding the file - Errno::ENOENT: No such file or directory @ rb_sysopen - root_url + 'images/fallback/user/small_thumb_default.png'  even though the file exists and the link works (also wasn't able to use Rails.root since prepends 'app' to path), but this method works with remote fetch
       # need to use .url path without Rails.root due to images stored on amazon s3 servers
       # .path shows up nil for default_url call
+      # image_url = user.image&.small_thumb&.url.presence || "#{root_url}images/fallback/user/small_thumb_default.png" # chatgpt alternative for below
       image_url = user.image.small_thumb.path ? user.image.small_thumb.url : root_url + user.image.small_thumb.url
       attachments.inline["#{user.name.parameterize}.jpg"] = URI.open(image_url).read # chatgpt answer, attachments.inline['#{user.name}.jpg'] = URI.open(image_url).read # chatgpt answer
       # attachments.inline["#{user.name}.jpg"] = open(image_url).read
     else
-      attachments.inline["#{user.name}.jpg"] = File.read("#{Rails.root}/public/#{user.image.small_thumb.url}")
+      # fallback_path = Rails.root.join("#{Rails.root}/public/images/fallback/user/small_thumb_default.png") # app/assets
+      # attachments.inline["#{user.name.parameterize}.jpg"] = File.read(fallback_path)
+      attachments.inline["#{user.name.parameterize}.jpg"] = File.read("#{Rails.root}/public/#{user.image.small_thumb.url}")
     end
+    puts "Attached inline images: #{attachments.inline.map(&:filename).inspect}"
+    puts "Image URL: #{image_url}"
+    puts "Image URL: #{user.image.small_thumb.url}"
+    puts "User has image? #{user.image.present?}"
+    puts "Image exists? #{user.image.small_thumb.present?}"
   end
 
   def set_name_and_title_and_unsubscribe_and_header(user, title)
