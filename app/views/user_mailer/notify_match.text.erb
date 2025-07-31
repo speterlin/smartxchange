@@ -1,6 +1,6 @@
 Dear <%= @user.name %>,
 ===============================================
 
-<%= image_tag(attachments["#{@interested_user.name}.jpg"].url, alt: "#{@interested_user.name}") %>
+
   <%= "#{@interested_user.name}" %>, <%= "#{@interested_user.title} wants to start #{a_or_an(@interested_user.language)} " %><%= "#{@interested_user.language}"%><%=" conversation with you" %>
   <%= link_to "View Profile", @url_interested_user, class: 'mail-btn' %>

@@ -1,6 +1,6 @@
 Dear <%= @user.name %>,
 ===============================================
 
-    <%= image_tag(attachments["#{@other_user.name}.jpg"].url, alt: "#{@other_user.name}") %>
+
       <%= "#{@other_user.name}" %><%= " has left you a review of your #{@review.language} in your #{@review.chat_room.title} conversation together" %>
       <%= link_to "See Review", @peer_review_url, class: 'mail-btn' %>

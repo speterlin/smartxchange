@@ -6,7 +6,6 @@ Dear <%= @user.name %>,
   <ul>
     <% @matches.each do |match| %>
         <li>
-          <%= link_to image_tag(attachments["#{match.name}.jpg"].url, alt: "#{match.name}"), @match_urls[match.id][1] %>
           <%= "#{match.name}, #{match.title}" %>
           <%= link_to "Notify", @match_urls[match.id][0], class: 'mail-btn' %>
         </li>

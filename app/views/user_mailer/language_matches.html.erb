@@ -14,7 +14,7 @@
                 <div class="mail-user-img">
                   <!-- maybe refactor sort of a hackjob to get it to work -->
                   <div class="circle">
-                   <p><%= link_to image_tag(attachments["#{match.name}.jpg"].url, alt: "#{match.name}"), @match_urls[match.id][1] %></p>
+                   <p><%= link_to image_tag("cid:#{match.name.parameterize}.jpg", alt: "#{match.name}"), @match_urls[match.id][1] %></p>
                   </div>
                 </div>
                 <div class="mail-user-text">

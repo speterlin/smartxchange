@@ -6,7 +6,7 @@
       <div class="mail-user">
         <div class="mail-user-img">
           <div class="circle">
-            <p><%= image_tag(attachments["#{@notifier.name}.jpg"].url, alt: "#{@notifier.name}") %></p>
+            <p><%= image_tag("cid:#{@notifier.name.parameterize}.jpg", alt: "#{@notifier.name}") %></p>
           </div>
         </div>
         <div class="mail-user-text">
