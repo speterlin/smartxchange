@@ -1,6 +1,6 @@
 <li id="material-<%= material.id %>">
   <h5 style="display: inline; padding-right: 10px;"><span style="font-weight:normal"><b><%= material.name %></b><i><%= " #{material.language} #{user_convert_to_presented_language_level(material.language_level)}" %></i></span></h5>
-  <%= link_to "View", material.attachment.file.authenticated_url(expires: 600), target: "_blank", class: 'btn btn-primary settings' %>
+  <%= link_to "View", material.attachment_url, target: "_blank", class: 'btn btn-primary settings' %>
   <%= link_to "Remove", user_material_path(material, user_id: @user.to_param), method: :delete, remote: true, class: "btn btn-primary delete", data: {confirm: "Are you sure that you wish to delete #{material.name}?"} if @user == current_user %>
   <br><br>
 </li>
