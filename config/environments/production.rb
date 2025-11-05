@@ -97,6 +97,11 @@ Rails.application.configure do
     enable_starttls_auto: true
   }
 
+  # might be redundant mentioned in application_mailer.rb
+  config.action_mailer.default_options = {
+    from: ENV['MAIL_FROM']
+  }
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
