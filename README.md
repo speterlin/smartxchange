@@ -4,7 +4,7 @@ A Ruby on Rails application to allow users to find each other for the purpose of
 
 ## Features and Gems
 
-* Ruby, Rails (3.4.3, 7.2.2.1 update from 2.5, 5.2 in 2016), using Puma server locally, Redis in production<!--Ruby 2.5, Rails 5.2-->
+* Ruby, Rails (3.4.7, 7.2.3 update from 2.5, 5.2 in 2016), using Puma server locally, Redis in production<!--Ruby 2.5, Rails 5.2-->
 
 * Turbolinks for faster web navigation
 

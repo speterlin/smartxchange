@@ -46,12 +46,12 @@ gem 'file_validators'
 #for generating fake value
 gem 'faker'
 
-#for pagination, rails 7.2.2.1 has certain requirements 
+#for pagination, rails 7.2. has certain requirements
 gem 'will_paginate', '~> 3.3'
 # gem 'bootstrap-will_paginate'
 
 # new gems for chat
-gem 'puma', '~> 3.0'
+gem 'puma' # , '~> 3.0'
 
 # for chatbot,  modified repo
 gem 'pandorabots_api', :git => "https://github.com/speterlin/pb-ruby.git"
@@ -140,11 +140,11 @@ group :development, :test do
 end
 
 group :production do
-  ruby "3.4.3" # "2.5.1"
+  ruby "3.4.7" # "2.5.1"
   gem 'pg'
   gem 'rails_12factor'
   # for action cable to work
   gem 'redis', '>= 4', '< 6' # gem 'redis', '~> 3.0' #
-  gem 'bundler', '~>2.6.8'
+  gem 'bundler', '~>2.7.2'
 
 end
