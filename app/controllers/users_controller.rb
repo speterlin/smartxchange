@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       # maybe refactor, at the moment does not allow search across multiple language levels, i.e. 'Spanish b1 b2', could do this with 'or' operator, maybe add includes(:linkedin)
       # can refactor, add boosts, conversions (with searchjoy), autocomplete, custom search, highlight, boost_by_distance or within a geoshape, performance (persistent http connections, ...), routing - all on https://github.com/ankane/searchkick
       # performs misspelling search if less than 2 results without misspellings, can do misspellings after a certain number of characters (like prefix length), can add exclude_queries
-      @users = User.search(params[:search], misspellings: {below: 2, prefix_length: 2}, includes: [:linkedin]).results.paginate(page: params[:page], per_page: 12) # according to chatgpt could refactor: Doesn't support combined filters (e.g. language=French&search=Engineering)
+      @users = User.search(params[:search], misspellings: {below: 2, prefix_length: 2}, includes: [:linkedin], page: params[:page], per_page: 12) # according to chatgpt could refactor: Doesn't support combined filters (e.g. language=French&search=Engineering)
     else
       # user.rb#sort_method has .includes(:linkedin)
       @users = current_user.sort_method.paginate(page: params[:page], per_page: 12)

@@ -471,7 +471,7 @@ class User < ApplicationRecord
   end
 
   def calculate_age
-    self.age = ((Date.today - self.birthdate)/365).to_i
+    self.age = ((Date.today - self.birthdate)/365.25).to_i
   end
 
   def add_email_subscription
