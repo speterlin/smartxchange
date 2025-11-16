@@ -26,7 +26,8 @@ class UsersController < ApplicationController
     else
       flash.now[:error] = @user.errors.full_messages.to_sentence
     end
-    @user_count = User.count - (User.count % 100)
+    num_users = User.count
+    @user_count = num_users - (num_users % 10**(num_users.digits.length-1))
     @jobs_offered_count = Post.where(category: "Jobs-Offered").count
     render :new
   end
