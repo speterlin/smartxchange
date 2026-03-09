@@ -44,7 +44,7 @@ class User < ApplicationRecord
   # not sure if it's a good idea to have helpers in model files, maybe move methods into concern file or application_controller.rb#helper_method
   include UsersHelper
   # need to update _translate.html.erb, users_helper.rb#user_convert_to_language(nationality), #user_convert_to_nationalities(language), users/index.html.erb, routes.rb, and seeds.rb any time there is a change
-  LANGUAGES = ["English", "Spanish", "Italian", "German", "French", "Mandarin Chinese", "Danish"]
+  LANGUAGES = ["English", "Spanish", "Italian", "Portuguese", "French", "Danish", "German", "Python", "Ruby On Rails", "Javascript"] # "Mandarin Chinese", "Swift", 
   # need to update users_helper.rb#user_convert_to_presented_language_level(language_level) any time there is a change
   LANGUAGE_LEVELS = (1..6).to_a
   # maybe refactor, maybe need to change some ish to ian for language vs. nationality mix up, add other country names like 'Holland' to keys

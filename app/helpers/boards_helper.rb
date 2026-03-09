@@ -35,7 +35,7 @@ module BoardsHelper
   def board_capitalize(string)
     # refactor not beautiful code
     result = ""
-    string.split(" ").each_with_index do |sub_string, idx|
+    string.split(/ |%20/).each_with_index do |sub_string, idx| # .split(" ")
       result += sub_string.capitalize
       result += " " if idx != string.split(" ").count - 1
     end

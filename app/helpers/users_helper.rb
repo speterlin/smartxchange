@@ -28,8 +28,12 @@ module UsersHelper
     end
   end
 
-  def user_convert_language_or_nationality_to_img(nationality)
-    image_tag("country-flags/#{nationality}-flag-circular.png", alt: "#{nationality}")
+  def user_convert_language_or_nationality_to_img(language_or_nationality)
+    if language_or_nationality.in?(['Python', 'Ruby On Rails', 'Javascript'])
+      image_tag("computer-flags/#{language_or_nationality}-logo.png", alt: "#{language_or_nationality}")
+    else
+      image_tag("country-flags/#{language_or_nationality}-flag-circular.png", alt: "#{language_or_nationality}")
+    end
   end
 
   def user_convert_to_language(nationality)

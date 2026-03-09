@@ -166,7 +166,7 @@
     <% if @reviews.any? %>
       <ul>
         <% @reviews.each do |review| %>
-          <li id="review-<%= review.id %>"><span style="font-weight:700;"><%= review.language %></span>, rated  <i><span><%= user_convert_to_presented_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %></li>
+          <li id="review-<%= review.id %>"><span style="font-weight:700;"><%= review.language %></span>, rated  <i><span><%= user_convert_to_presented_language_level(review.language_level) %></span></i> by <%= link_to review.reviewer.name, user_path(review.reviewer) %> on <%= review.created_at.strftime("%B %d, %Y %l:%M %p") %></li>
         <% end %>
       </ul>
     <% else %>

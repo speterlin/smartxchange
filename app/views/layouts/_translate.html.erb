@@ -8,7 +8,7 @@
         <option value="de" <%= 'selected' if user_convert_to_language(current_user.nationality) == 'German' %> >German</option>
         <option value="fr" <%= 'selected' if user_convert_to_language(current_user.nationality) == 'French' %> >French</option>
         <option value="it" <%= 'selected' if user_convert_to_language(current_user.nationality) == 'Italian' %> >Italian</option>
-        <option value="zh-CN" <%= 'selected' if user_convert_to_language(current_user.nationality) == 'Mandarin Chinese' %> >Mandarin Chinese</option>
+        <option value="zh-CN" <%= 'selected' if user_convert_to_language(current_user.nationality) == 'Portuguese' %> >Portuguese</option>
         <option value="da" <%= 'selected' if user_convert_to_language(current_user.nationality) == 'Danish' %> >Danish</option>
      </select>
      To:
@@ -19,7 +19,7 @@
         <option value="de" <%= 'selected' if current_user.language=='German'%> >German</option>
         <option value="fr" <%= 'selected' if current_user.language=='French'%> >French</option>
         <option value="it" <%= 'selected' if current_user.language=='Italian'%> >Italian</option>
-        <option value="zh-CN" <%= 'selected' if current_user.language=='Mandarin Chinese'%> >Mandarin Chinese</option>
+        <option value="zh-CN" <%= 'selected' if current_user.language=='Portuguese'%> >Portuguese</option>
         <option value="da" <%= 'selected' if current_user.language == 'Danish' %> >Danish</option>
       </select>
   </div>
