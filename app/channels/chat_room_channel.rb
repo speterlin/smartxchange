@@ -51,13 +51,8 @@ class ChatRoomChannel < ApplicationCable::Channel
 
   def message_limit
     limit = 20 # a day
-    if Rails.env.production?
-      recent_messages = current_user.sent_messages.order(created_at: :desc).limit(limit) # asc / desc returning same order (asc) for all users in rails c and User.find(1) in localhost:3000 2025-07-15
-      last_message_in_limit = recent_messages.last
-    else
-      recent_messages = current_user.sent_messages.last(limit) # chatgpt likes this one better than: recent_messages = current_user.sent_messages[-limit..-1], both work fine in development
-      last_message_in_limit = recent_messages.first
-    end
+    recent_messages = current_user.sent_messages.last(limit) # .limit(limit) # asc / desc returning same order (asc) for all users in rails c and User.find(1) in localhost:3000 2025-07-15
+    last_message_in_limit = recent_messages.last
     # Rails.logger.debug ">>> Recent message count: #{recent_messages.size}"
     # Rails.logger.debug ">>> Most recent message time: #{recent_messages.last&.created_at}"
     if recent_messages.size >= limit && last_message_in_limit.created_at > 24.hours.ago
