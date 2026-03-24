@@ -4,6 +4,37 @@
 </div>
 <br>
 
+<!-- probably refactor -->
+<% if @board.id != 9 %>
+  <div class="post-form new">
+    <form action="<%= posts_path %>" method="post" data-remote="true">
+      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
+      <textarea id="message-body" class="textcomplete" name="post[content]"></textarea>
+      <input type="hidden" name="post[board_id]" value="<%= @board.id %>">
+      <input type="submit" class="btn btn-primary send-post"  value="Post">
+      <div id="post-category">
+        Category: <select name="post[category]">
+          <% if @board.id == 2 %>
+            <option value="Jobs-Offered">Jobs Offered</option>
+            <option value="Jobs-Wanted">Jobs Wanted</option>
+          <% else %>
+            <option value="Interest">Interest</option>
+            <option value="Educational">Educational</option>
+            <option value="Tutoring">Tutoring</option>
+            <option value="Meetup">Meetup</option>
+            <option value="Professional">Professional</option>
+            <option value="Other">Other</option>
+          <% end %>
+        </select>
+      </div>
+      <div id="post-location"></div>
+    </form>
+  </div>
+  <br>
+  <%= render 'layouts/translate' %>
+  <br>
+<% end %>
+
 <ul id="posts">
   <!-- probably refactor -->
   <% if (@board.id == 2 || @board.id == 9) && current_user.premium_or_admin? %>
@@ -44,36 +75,6 @@
   <% end %>
 </ul>
 <br>
-
-<!-- probably refactor -->
-<% if @board.id != 9 %>
-  <div class="post-form new">
-    <form action="<%= posts_path %>" method="post" data-remote="true">
-      <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>">
-      <textarea id="message-body" class="textcomplete" name="post[content]"></textarea>
-      <input type="hidden" name="post[board_id]" value="<%= @board.id %>">
-      <input type="submit" class="btn btn-primary send-post"  value="Post">
-      <div id="post-category">
-        Category: <select name="post[category]">
-          <% if @board.id == 2 %>
-            <option value="Jobs-Offered">Jobs Offered</option>
-            <option value="Jobs-Wanted">Jobs Wanted</option>
-          <% else %>
-            <option value="Interest">Interest</option>
-            <option value="Educational">Educational</option>
-            <option value="Tutoring">Tutoring</option>
-            <option value="Meetup">Meetup</option>
-            <option value="Professional">Professional</option>
-            <option value="Other">Other</option>
-          <% end %>
-        </select>
-      </div>
-      <div id="post-location"></div>
-    </form>
-  </div>
-  <br>
-  <%= render 'layouts/translate' %>
-<% end %>
 
 <script type="text/javascript">
   $('.edit-post').each(function(index, value) {
