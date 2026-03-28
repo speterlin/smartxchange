@@ -52,10 +52,10 @@ class ChatRoomChannel < ApplicationCable::Channel
   def message_limit
     limit = 20 # a day
     recent_messages = current_user.sent_messages.last(limit) # .limit(limit) # asc / desc returning same order (asc) for all users in rails c and User.find(1) in localhost:3000 2025-07-15
-    last_message_in_limit = recent_messages.last
+    first_message_in_limit = recent_messages.first
     # Rails.logger.debug ">>> Recent message count: #{recent_messages.size}"
     # Rails.logger.debug ">>> Most recent message time: #{recent_messages.last&.created_at}"
-    if recent_messages.size >= limit && last_message_in_limit.created_at > 24.hours.ago
+    if recent_messages.size >= limit && first_message_in_limit.created_at > 24.hours.ago
       # Instead of flash or redirect, we can send an error back over the socket:
       transmit({ type: "error", message: "You’ve exceeded your limit of #{limit} messages in 24 hours" })
       return false
